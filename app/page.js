@@ -1,11 +1,12 @@
-import Image from "next/image";
 import Loader from "./components/Loader";
 
 export default function Home() {
   return (
-    <div>
-      Home page
-      <Loader show/>
-    </div>
+    <>
+      <div>
+        Home page
+        <Loader show/>
+      </div>
+    </>
   );
 }
