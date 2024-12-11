@@ -1,4 +1,5 @@
 import Loader from "./components/Loader";
+// import toast from 'react-hot-toast';
 
 export default function Home() {
   return (
@@ -6,6 +7,7 @@ export default function Home() {
       <div>
         Home page
         <Loader show/>
+        {/* <button onClick={() => toast.success('Hello from toast')}>Toast</button> */}
       </div>
     </>
   );
