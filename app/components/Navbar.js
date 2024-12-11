@@ -2,18 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router';
-// import { useContext } from 'react';
-// import { UserContext } from '@lib/context';
-// import { auth } from '@lib/firebase';
-// import { signOut } from 'firebase/auth';
 
 
 // Top navbar
 export default function Navbar() {
     // const { user, username } = useContext(UserContext);
-    const user = true;
-    const username = true;
+    const user = null;
+    const username = null;
     // const router = useRouter(); // Hook to get the current path
     const pathname = usePathname(); // Get the current path
 
