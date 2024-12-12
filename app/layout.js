@@ -2,6 +2,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast'; 
 import Navbar from "./components/Navbar";
+// import { UserContext } from '@lib/context';
+// import { useUserData } from '@lib/hooks';
+import Provider from "./Provider";
 
 
 export const metadata = {
@@ -13,10 +16,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Toaster/>
-        <Navbar />
-
-        {children}
+        <Provider>
+          <Toaster/>
+          <Navbar />
+          {children}
+        </Provider>
       </body>
     </html>
   );

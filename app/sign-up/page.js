@@ -1,13 +1,15 @@
-'use client'
-import React from 'react';
+'use client';
 import { auth, firestore, googleAuthProvider } from '../lib/firebase';
 import { signInWithPopup, signInAnonymously, signOut } from 'firebase/auth';
+import { useContext } from 'react';
+import { UserContext } from "../Provider";
 import { FcGoogle } from "react-icons/fc";
 import toast from 'react-hot-toast';
 
 const SignUpPage = () => {
-  const user = null;
-  const username = null;
+  // const user = null;
+  // const username = null;
+  const { user, username } = useContext(UserContext)
 
   // 1. user signed out <SignInButton />
   // 2. user signed in, but missing username <UsernameForm />

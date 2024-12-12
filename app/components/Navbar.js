@@ -1,14 +1,16 @@
-'use client'
-
+'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useContext } from 'react';
+import { UserContext } from "../Provider";
 
 
 // Top navbar
 export default function Navbar() {
     // const { user, username } = useContext(UserContext);
-    const user = null;
-    const username = null;
+    const { user, username } = useContext(UserContext)
+    // const user = null;
+    // const username = null;
     // const router = useRouter(); // Hook to get the current path
     const pathname = usePathname(); // Get the current path
 
