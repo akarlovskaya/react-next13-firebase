@@ -1,11 +1,14 @@
 'use client';
 import { createContext } from 'react';
+import { useUserData } from './lib/hooks';
 
 export const UserContext = createContext({ user: null, username: null });
 
 function Provider({ children }) {
+    const userData = useUserData();
+
   return (
-    <UserContext.Provider value={{ user: {}, username: 'jeff' }}>
+    <UserContext.Provider value={userData}>
       {children}
     </UserContext.Provider>
   )
