@@ -3,7 +3,6 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore, collection, where, getDocs, query, limit } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyBhvWMXucX-rlkpw3dwhw8-OOTJbzqUhX8",
     authDomain: "react-next13-firebase.firebaseapp.com",
@@ -37,3 +36,33 @@ export const STATE_CHANGED = 'state_changed';
 
 /// Helper functions
 
+/**
+* Gets a users/{uid} document with username
+* @param  {string} username
+*/
+export async function getUserWithUsername(username) {
+ // const usersRef = collection(firestore, 'users');
+ // const query = usersRef.where('username', '==', username).limit(1);
+
+ const q = query(
+   collection(firestore, 'users'), 
+   where('username', '==', username),
+   limit(1)
+ )
+ const userDoc = ( await getDocs(q) ).docs[0];
+ return userDoc;
+}
+
+/**
+ * Converts a firestore document to JSON
+ * @param  {DocumentSnapshot} doc
+ */
+export function postToJSON(doc) {
+  const data = doc.data();
+  return {
+    ...data,
+    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
+    createdAt: data?.createdAt.toMillis() || 0,
+    updatedAt: data?.updatedAt.toMillis() || 0,
+  };
+}
