@@ -3,15 +3,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
 import { UserContext } from "../Provider";
+import Image from 'next/image';
 
 
 // Top navbar
 export default function Navbar() {
-    // const { user, username } = useContext(UserContext);
     const { user, username } = useContext(UserContext)
-    // const user = null;
-    // const username = null;
-    // const router = useRouter(); // Hook to get the current path
     const pathname = usePathname(); // Get the current path
 
     const LinkClass = (href) =>
@@ -24,24 +21,26 @@ export default function Navbar() {
         <nav className="flex justify-between items-center px-3 max-w-6xl mx-auto">
           {/* Logo */}
             <Link href="/" className="flex flex-shrink-0 items-center mr-4">
-              <img
-                className="h-20 w-auto"
-                src={'/vanKlas-logo-narrow.png'} 
-                alt="Vanklas Logo, Discover Fitness in Metro Vancouver"
+              <Image
+                  src={'/vanKlas-logo-narrow.png'} 
+                  alt="Vanklas Logo, Discover Fitness in Metro Vancouver"
+                  className="h-20 w-auto"
+                  width={500}
+                  height={500}
               />
             </Link>
             
           {/* user is signed-in and has username */}
           {username && (
-            <ul className="md:ml-auto flex space-x-2">
-              <li>
+            <ul className="flex md:ml-auto space-x-2">
+              <li className="content-center">
                 <Link href="/admin" className={LinkClass('/admin')}>
                         Add Class 
                 </Link>
               </li>
               <li>
                 <Link href={`/${username}`} className={LinkClass(`/${username}`)}>
-                        Profile <img src={user?.photoURL} />
+                  Profile
                 </Link>
               </li>
             </ul>

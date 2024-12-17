@@ -7,6 +7,8 @@ import { UserContext } from "../Provider";
 import { FcGoogle } from "react-icons/fc";
 import toast from 'react-hot-toast';
 import debounce from 'lodash.debounce';
+import SignOutButton from '../components/SignOutButton';
+import { useRouter } from "next/navigation";
 
 const SignUpPage = () => {
   const { user, username } = useContext(UserContext);
@@ -17,20 +19,25 @@ const SignUpPage = () => {
   return (
     <main>
       { user ? 
-        !username ? <UsernameForm /> : <SignOutButton /> 
+        !username ? <UsernameForm /> : <SignOutButton />
         : <SignInButton />
       }
+
     </main>
   );
 }
 
 // Sign in with Google button
 function SignInButton() {
+  const router = useRouter();
+
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleAuthProvider)
       // show success message
       toast.success('Sign up was successful!');
+      // Redirect to the home page
+      // router.push("/"); 
 
     } catch (error) {
       console.log('Error with signing in: ', error);
@@ -54,11 +61,6 @@ function SignInButton() {
       </button>
     </>
   );
-}
-
-// Sign out button
-function SignOutButton() {
-  return <button onClick={() => signOut(auth)}>Sign Out</button>;
 }
 
 // Username form
@@ -151,6 +153,7 @@ function UsernameForm() {
             Username Valid: {isValid.toString()}
           </div>
         </form>
+        <SignOutButton />
       </section>
     )
   );
