@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { auth } from '../lib/firebase';
 import { signOut } from 'firebase/auth';
 
-function SignOutButton() {
+function SignOutButton({style}) {
     const router = useRouter();
 
     const handleSignOut = async () => {
@@ -13,7 +13,7 @@ function SignOutButton() {
 
     return (
         <button 
-            className="white hover:text-purple text-navy font-bold py-2 px-4 rounded-full w-full border-2 focus:outline-none focus:shadow-outline"
+            className={style}
             onClick={handleSignOut}>Sign Out
         </button>
     )      

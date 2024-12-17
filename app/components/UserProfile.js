@@ -58,11 +58,6 @@ function UserProfile({ user }) {
                 className='flex bg-navy hover:bg-navy-light justify-center text-white py-4 rounded-full items-center focus:outline-none focus:shadow-outline'>
                 <IoCreateOutline className='mr-2 text-xl'/> Create Class
             </Link>
-
-            {/* Edit and Sign Out */}
-            <div className="whitespace-nowrap text-sm sm:text-lg mb-6 py-2">
-                <SignOutButton />
-            </div>
           </div>
         </aside>
 

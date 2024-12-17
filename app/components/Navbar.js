@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useContext } from 'react';
 import { UserContext } from "../Provider";
 import Image from 'next/image';
+import SignOutButton from './SignOutButton';
 
 
 // Top navbar
@@ -38,10 +39,13 @@ export default function Navbar() {
                         Add Class 
                 </Link>
               </li>
-              <li>
+              <li className="content-center">
                 <Link href={`/${username}`} className={LinkClass(`/${username}`)}>
                   Profile
                 </Link>
+              </li>
+              <li>
+                <SignOutButton style={LinkClass('')}/>
               </li>
             </ul>
           )}
