@@ -8,14 +8,12 @@ function ClassListing({ workout, admin = false })  {
   return (
     <div>
       <Link href={`/${workout.username}`}>
-        <a>
           <strong>By @{workout.username}</strong>
-        </a>
       </Link>
 
       <Link href={`/${workout.username}/${workout.slug}`}>
         <h2>
-          <a>{workout.title}</a>
+          {workout.title}
         </h2>
       </Link>
 
