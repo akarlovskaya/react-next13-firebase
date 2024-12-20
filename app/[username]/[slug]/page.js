@@ -5,16 +5,29 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import WorkoutPageContent from '../../components/WorkoutPageContent';
-import Metatags from '../../components/Metatags';
-import toast from 'react-hot-toast';
 
+// Metatags
+export async function generateMetadata({ params }) {
+  const { username, slug } = await params;
+
+  if (!slug) {
+    return {
+      title: "Workout Not Found",
+      description: "This workout could not be found.",
+    }
+  }
+
+  return {
+    title: slug,
+    description: `Join ${username} in ${slug} class!`,
+  }
+}
 
 // Export revalidation period (ISR). Pages are revalidated every 100 seconds
 export const revalidate = 100;
 
 // Fetch workout data during build or ISR
 export async function generateStaticParams() {
-  // Fetch posts for pre-rendering (limited to 20 for now)
   const q = query(collectionGroup(getFirestore(), 'workouts'), limit(20));
   const snapshot = await getDocs(q);
 
@@ -26,37 +39,49 @@ export async function generateStaticParams() {
   return paths;
 }
 
-// Dynamic page component
-export default async function WorkoutPage({ params }) {
-  // Await params before using it to destructure
-  const { username, slug } = await params;
-
+// Data fetching
+async function getWorkoutData(username, slug) {
   try {
-    // Fetch workout data
+    // Fetch workout data from firebase
     const userDoc = await getUserWithUsername(username);
 
     if (!userDoc) {
-        notFound();
+        return null;
     }
 
     const postRef = doc(getFirestore(), userDoc.ref.path, 'workouts', slug);
     const postSnapshot = await getDoc(postRef);
 
     if (!postSnapshot.exists()) {
-      notFound();
+      return null;
     }
 
-    const workout = postToJSON(postSnapshot);
-    console.log('Workout data:', workout);  // Verify fetched data
-
-    return (
-      <main>
-        <Metatags title={`This is ${workout.title} class page.`} description={`Join ${username} in ${workout.title} class!`} />
-        <WorkoutPageContent workout={workout} />
-      </main>
-    );
+    // Verify fetched data
+    // console.log('Verify fetched Workout data:', postToJSON(postSnapshot));  
+    return postToJSON(postSnapshot);
+    
   } catch (error) {
     console.error('Error fetching workout:', error);
+    return null;
+  }
+}
+
+// Dynamic page component
+export default async function WorkoutPage({ params }) {
+  const { username, slug } = await params;
+  const workout = await getWorkoutData(username, slug);
+
+  if (!workout) {
     notFound();
   }
+
+  // Generate metadata for this page
+  generateMetadata({ params, workout });
+
+  return (
+    <main>
+      <WorkoutPageContent workout={workout} />
+    </main>
+  );
+
 }

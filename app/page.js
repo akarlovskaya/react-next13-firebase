@@ -1,7 +1,6 @@
 
 import { getFirestore, collectionGroup, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 import { firestore, postToJSON, getIt } from './lib/firebase';
-import Metatags from './components/Metatags';
 import ClassListings from "./components/ClassListings";
 import LoadMoreWorkouts from "./components/LoadMoreWorkouts";
 
@@ -30,8 +29,6 @@ export default async function Home() {
 
   return (
     <main>
-      <Metatags title="Workouts" description="Discover the latest workouts" />
-
       <div className="card card-info">
         <h2>🔥 Workouts home page</h2>
         <p>Check out the latest workouts on our platform. Get inspired and stay fit!</p>

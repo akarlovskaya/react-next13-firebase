@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 import debounce from 'lodash.debounce';
 import SignOutButton from '../components/SignOutButton';
 import { useRouter } from "next/navigation";
-import Metatags from '../components/Metatags';
 
 const SignUpPage = () => {
   const { user, username } = useContext(UserContext);
@@ -20,7 +19,6 @@ const SignUpPage = () => {
   // <SignOutButton style={`white hover:text-purple text-navy font-bold py-2 px-4 rounded-full w-full border-2 focus:outline-none focus:shadow-outline`}/>
   return (
     <main>
-      <Metatags title='Sign Up' description='Sign Up to find fitness drop-in classes nearby!' />
       { user ? 
         !username ? <UsernameForm /> : null
         : <SignInButton />

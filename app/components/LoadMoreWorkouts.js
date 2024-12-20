@@ -58,7 +58,7 @@ export default function LoadMoreWorkouts({ initialWorkouts }) {
         </button>
       )}
       <Loader show={loading} />
-      {workoutsEnd && <p>You've reached the end!</p>}
+      {workoutsEnd && <p>You&#39;ve reached the end!</p>}
     </div>
   );
 }
