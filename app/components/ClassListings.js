@@ -2,6 +2,8 @@ import ClassListing from "./ClassListing";
 
 // aka post feed
 function ClassListings({workouts, admin}) {
+  // console.log('workoutsfrom Classlistings ', workouts);
+
   return (
     <>
       ClassListings Component

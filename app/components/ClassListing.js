@@ -5,6 +5,7 @@ import { FaTrash } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 
 function ClassListing({ workout, admin = false })  {
+  // console.log('workout from Classlisting', workout);
   return (
     <div>
       <Link href={`/${workout.username}`}>

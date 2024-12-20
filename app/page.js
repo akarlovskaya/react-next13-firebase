@@ -26,13 +26,14 @@ async function fetchInitialWorkouts() {
 
 export default async function Home() {
   const initialWorkouts = await fetchInitialWorkouts();
+  console.log('initialWorkouts ', initialWorkouts);
 
   return (
     <main>
       <Metatags title="Workouts" description="Discover the latest workouts" />
 
       <div className="card card-info">
-        <h2>🔥 Workouts</h2>
+        <h2>🔥 Workouts home page</h2>
         <p>Check out the latest workouts on our platform. Get inspired and stay fit!</p>
       </div>
 
