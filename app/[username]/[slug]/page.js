@@ -57,11 +57,6 @@ export default async function WorkoutPage({ params }) {
     );
   } catch (error) {
     console.error('Error fetching workout:', error);
-    return (
-      <main>
-        <h1>An error occurred</h1>
-        {toast.error('Failed to load workout. Please try again.')}
-      </main>
-    );
+    notFound();
   }
 }
