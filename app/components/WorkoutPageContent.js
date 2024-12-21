@@ -1,7 +1,7 @@
-// 'use client';
+'use client';
 import Link from 'next/link';
-// import { useContext } from 'react';
-// import { UserContext } from '../../lib/context';
+import { UserContext } from "../Provider";
+import { useContext } from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import { firestore, getUserWithUsername, postToJSON } from '../lib/firebase';
 import { doc, getDocs, getDoc, collectionGroup, query, limit, getFirestore } from 'firebase/firestore';
@@ -9,6 +9,8 @@ import ShareLink from './ShareLink';
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
 
 function WorkoutPageContent( {workout} ) {
+    const { user: currentUser } = useContext(UserContext);
+
   return (
     <>
     <section>
@@ -82,6 +84,12 @@ function WorkoutPageContent( {workout} ) {
                 </ul> */}
 
             </div>
+
+            {currentUser?.uid === workout.uid && (
+            <Link href={`/admin/${workout.slug}`}>
+                <button className="btn-blue">Edit Post</button>
+            </Link>
+            )}
         </main>
 
         {/* <!-- Sidebar --> */}

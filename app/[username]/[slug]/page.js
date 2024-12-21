@@ -1,10 +1,10 @@
-// import AuthCheck from '@components/AuthCheck';
 import { firestore, getUserWithUsername, postToJSON } from '../../lib/firebase';
 import { doc, getDocs, getDoc, collectionGroup, query, limit, getFirestore } from 'firebase/firestore';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import WorkoutPageContent from '../../components/WorkoutPageContent';
+// import AuthCheck from '@components/AuthCheck';
 
 // Metatags
 export async function generateMetadata({ params }) {
