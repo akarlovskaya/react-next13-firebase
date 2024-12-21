@@ -1,11 +1,12 @@
-import React from 'react'
+import AuthCheck from "../components/AuthCheck";
 
 const AdminPage = () => {
   return (
-    <div>
+    <main>
       AdminPage
-    </div>
+      <AuthCheck></AuthCheck>
+    </main>
   )
 }
 
-export default AdminPage
+export default AdminPage;
