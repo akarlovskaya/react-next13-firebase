@@ -9,7 +9,7 @@ import SignOutButton from './SignOutButton';
 
 // Top navbar
 export default function Navbar() {
-    const { user, username } = useContext(UserContext)
+    const { user, username } = useContext(UserContext);
     const pathname = usePathname(); // Get the current path
 
     const LinkClass = (href) =>
