@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 .loader {
-  border: 10px solid white; 
-  border-top: 10px solid navy; 
+  border: 10px solid white;
+  border-top: 10px solid navy;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -12,6 +12,10 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

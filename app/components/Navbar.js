@@ -39,9 +39,9 @@ export default function Navbar() {
                         Add Class 
                 </Link>
               </li>
-              <li className="content-center">
+              <li className="content-center capitalize">
                 <Link href={`/${username}`} className={LinkClass(`/${username}`)}>
-                  Profile
+                {`${username}`}
                 </Link>
               </li>
               <li>
