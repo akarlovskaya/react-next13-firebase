@@ -44,20 +44,40 @@ function CreateNewWorkout() {
     }
 
   return (
-    <form onSubmit={createWorkout}>
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="My Awesome Article!"
-        className={''}
-      />
-      <p>
-        <strong>Slug:</strong> {slug}
-      </p>
-      <button type="submit" disabled={!isValid} >
-        Create New Post
-      </button>
-    </form>
+  
+        <section className="bg-indigo-50">
+          <code>AdminPage</code>
+          <div className="container m-auto max-w-2xl py-24">
+          <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
+          <h1 className="text-3xl text-center font-semibold mb-6">Add Class</h1>
+          <h2 className="text-2xl text-center font-semibold mb-6">Enter Workout Name</h2>
+
+          <form onSubmit={createWorkout}>
+            <label htmlFor='workoutName' className="sr-only">
+              Workout Name
+            </label>
+            <input
+              id='workoutName'
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="My Awesome Workout!"
+              className="border rounded w-full py-2 px-3 mb-10"
+            />
+            {/* <p>
+              <strong>Slug:</strong> {slug}
+            </p> */}
+
+            <button 
+              className="bg-navy hover:bg-navy-light text-white py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+              type="submit" 
+              disabled={!isValid} >
+              Create
+            </button>
+          </form>
+
+          </div>
+          </div>
+        </section>
   )
 }
 

@@ -4,6 +4,7 @@ import { query, collection, orderBy, getFirestore } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import ClassListings from "../components/ClassListings";
 import Loader from "../components/Loader";
+import ClassListing from "./ClassListing";
 
 
 function WorkoutList() {
@@ -19,10 +20,15 @@ function WorkoutList() {
       const workouts = querySnapshot?.docs.map((doc) => doc.data());
     
       return (
-        <>
-          <h1>Manage your Workouts</h1>
-          <ClassListings workouts={workouts} admin />
-        </>
+        <section className="bg-indigo-50 px-4 py-10">
+          <div className="container-xl lg:container m-auto">
+            <h1 className="text-3xl font-bold text-navy mb-6 text-center">
+              Manage Your Workouts
+            </h1>
+            <ClassListings workouts={workouts} admin />
+          </div>
+        </section>
+
       )
 }
 

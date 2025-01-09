@@ -6,7 +6,6 @@ const AdminWorkoutEditPage = ({ params }) => {
 
   const { slug } = params; // Accessing slug directly
 
-  console.log('slug', slug); // Logs: "yoga-for-beginners"
   return (
     <div className={styles.container}>
       AdminWorkoutEditPage

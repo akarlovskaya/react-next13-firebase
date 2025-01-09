@@ -5,10 +5,9 @@ import CreateNewWorkout from "../components/CreateNewWorkout";
 const AdminPage = () => {
   return (
     <main>
-      AdminPage
       <AuthCheck>
-        <WorkoutList />
         <CreateNewWorkout />
+        <WorkoutList />
       </AuthCheck>
     </main>
   )

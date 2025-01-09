@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { firestore, auth } from '../lib/firebase';
 import { serverTimestamp, doc, deleteDoc, updateDoc, getFirestore } from 'firebase/firestore';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
-import WorkoutPostForm from './WorkoutPostForm';
+import WorkoutAddForm from './WorkoutAddForm';
 import DeleteWorkoutButton from './DeleteWorkoutButton';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+// import { useForm } from 'react-hook-form';
 
 
 function WorkoutPostManager({ slug }) {
@@ -20,14 +20,11 @@ function WorkoutPostManager({ slug }) {
     <section className="bg-indigo-50">
     <div className="container m-auto max-w-2xl py-24">
     <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-      <h1>WorkoutPostManager</h1>
+    <h1 className="text-3xl text-center font-semibold mb-6">Add Class</h1>
       {post && (
         <>
           <section>
-            <h1>{post.title}</h1>
-            <p>ID: {post.slug}</p>
-
-            {/* <PostForm postRef={postRef} defaultValues={post} preview={preview} /> */}
+            <WorkoutAddForm postRef={postRef} defaultValues={post} preview={preview} />
           </section>
 
           {/* <aside>
