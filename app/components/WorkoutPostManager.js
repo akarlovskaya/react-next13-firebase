@@ -14,13 +14,14 @@ function WorkoutPostManager({ slug }) {
 
   const postRef = doc(getFirestore(), 'users', auth.currentUser.uid, 'workouts', slug)
   const [post] = useDocumentDataOnce(postRef);
+  console.log('post data from Manager', post);
 
   return (
 
     <section className="bg-indigo-50">
     <div className="container m-auto max-w-2xl py-24">
     <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
-    <h1 className="text-3xl text-center font-semibold mb-6">Add Class</h1>
+    <h1 className="text-3xl text-center font-semibold mb-6">Add Class Details</h1>
       {post && (
         <>
           <section>

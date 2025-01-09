@@ -29,15 +29,25 @@ function CreateNewWorkout() {
             slug: slug || 'default-slug',
             uid: uid || 'default-uid',
             username: username || 'default-username',
+            description: '',
+            time: '', // To-do validate!
+            daysOfTheWeek: [],
+            fee: '',
+            address: {
+              locationName: '',
+              streetAddress: '',
+              city: '',
+              province: '',
+              zip: ''
+            },
+            paymentOptions: [],
             published: false,
-            // content: content || '# hello world!',
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            createdAt: serverTimestamp()
           };
 
           await setDoc(ref, data);
 
-          toast.success('Post created!');
+          // toast.success('Post created!');
       
           // Imperative navigation after doc is set
           router.push(`/admin/${slug}`);
