@@ -7,9 +7,28 @@ import { firestore, getUserWithUsername, postToJSON } from '../lib/firebase';
 import { doc, getDocs, getDoc, collectionGroup, query, limit, getFirestore } from 'firebase/firestore';
 import ShareLink from './ShareLink';
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
+import InstructorInfo from './InstructorInfo.js';
 
 function WorkoutPageContent( {workout} ) {
     const { user: currentUser } = useContext(UserContext);
+    console.log('workout', workout);
+    console.log('currentUser', currentUser);
+
+    const { title, address, description, fee, time, daysOfWeek, paymentOptions } = workout;
+
+    // Convert time to AM / PM for ClassPage.jsx
+    const changeTimeFormat = (time) => {
+        const timeString12hr = new Date('1970-01-01T' + time + 'Z')
+            .toLocaleTimeString('en-CA',
+            {timeZone:'UTC',hour12:true,hour:'numeric',minute:'numeric'}
+            );
+        return timeString12hr;
+    }
+
+    // Capitalize First Letter for Days Array and string together with comma for ClassPage.jsx
+    function formatDaysArray(daysArray) {
+    return daysArray.map(day => day.charAt(0).toUpperCase() + day.slice(1)).join(', ');
+    };
 
   return (
     <>
@@ -30,71 +49,68 @@ function WorkoutPageContent( {workout} ) {
             <div
                 className="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
 
-                    <div className='relative flex justify-between'>
+                    <div className='relative flex justify-end'>
                         <ShareLink />
                     </div>
 
                 <h1 className="text-3xl font-bold mb-4">
-                    { workout.title }
+                    { title }
                 </h1>
                 <div
                 className="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">
                     <FaMapMarker className='inline text-lg mb-1 mr-1 mt-1 text-orange-dark' />
-                    {/* <p className="text-orange-dark"> { workout.location.city } </p> */}
+                    <p className="text-orange-dark"> { address.city } </p>
                 </div>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-                <h3 className="text-indigo-800 text-lg font-bold mb-6">
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">
                     Class Description
                 </h3>
 
-                <p className="mb-4"> { workout.content } </p>
+                <p className="mb-4"> { description } </p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Fee</h3>
-
-                {/* { workout.type === "Session" ? 
-                    <p className="mb-4">${workout.cost} CAD per 10 sessions</p>
-                : 
-                    <p className="mb-4">${workout.cost} CAD</p> 
-                } */}
-
+                <p className="mb-4">${ fee } CAD</p> 
+                
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Schedule</h3>
 
-                {/* <p className="mb-4">{ changeTimeFormat(workout.time) } on {formatDaysArray(workout.days)} </p> */}
+                <p className="mb-4">{ changeTimeFormat(time) } on {formatDaysArray(daysOfWeek)} </p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Location</h3>
-                {/* <b className="mb-4">{ workout.location.place } </b>
+                <b className="mb-4">{ address.place } </b>
                 <address 
                     className="mb-4">
-                        { workout.location.address }<br/>
-                        {`${workout.location.city}, ${workout.location.region}`}<br/>
-                        { workout.location.zipcode }
-                </address> */}
+                        { address.street }<br/>
+                        {`${address.city}, ${address.region}`}<br/>
+                        { address.zipcode }
+                </address>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Payment Options</h3>
-                {/* <ul>
-                    { workout.payment_options.map( payment => {
+                <ul>
+                    { paymentOptions.map( payment => {
                         return (
                             <li key={payment}>
                                 {payment.charAt(0).toUpperCase() + payment.slice(1)}
                             </li>  
                         )                   
                     })}
-                </ul> */}
+                </ul>
 
             </div>
 
             {currentUser?.uid === workout.uid && (
             <Link href={`/admin/${workout.slug}`}>
-                <button className="btn-blue">Edit Post</button>
+                <button className="bg-navy hover:bg-navy-light text-white py-2 px-4 mt-5 rounded-full focus:outline-none focus:shadow-outline">
+                    Edit Post
+                </button>
             </Link>
             )}
         </main>
 
         {/* <!-- Sidebar --> */}
         <aside>
-            {/* <InstructorInfo workout={workout}/> */}
+            {/* <InstructorInfo workout={workout} currentUser={currentUser}/>  */}
             {/* <Message instructorId={workout.instructor.id} workout={workout}/> */}
 
             {/* <!-- Manage --> */}
@@ -106,7 +122,8 @@ function WorkoutPageContent( {workout} ) {
                     onClick={() => deleteWorkout(workout.id)}
                     className="bg-orange-dark hover:bg-dark-light text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
                     Delete Class
-                </button> */}
+                </button>
+                */}
 
         </aside>
         </div>
