@@ -31,16 +31,7 @@ function CreateNewWorkout() {
             username: username || 'default-username',
             description: '',
             time: '', // To-do validate!
-            // daysOfWeek: [],
             fee: '',
-            address: {
-              locationName: '',
-              streetAddress: '',
-              city: '',
-              province: '',
-              zip: ''
-            },
-            paymentOptions: [],
             published: false,
             createdAt: serverTimestamp()
           };

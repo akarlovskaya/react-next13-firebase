@@ -1,9 +1,11 @@
 import { useFormContext } from "react-hook-form";
 
 function DaysOfWeek() {
-  const { register } = useFormContext();
+  const { 
+    register, 
+    formState: { errors } } = useFormContext();
 
-  const days = [
+  const DAYS = [
     { name: "monday", label: "Monday" },
     { name: "tuesday", label: "Tuesday" },
     { name: "wednesday", label: "Wednesday" },
@@ -20,16 +22,18 @@ function DaysOfWeek() {
       </legend>
       <div className="mb-4">
 
-        {days.map((day) => (
+        {DAYS.map((day) => (
           <div key={day.name} className="relative flex gap-x-3">
             <div className="flex h-6 items-center">
               <input
                 id={day.name}
                 type="checkbox"
                 value={day.name}
-                // defaultChecked={defaultDays.includes(day.name)}
                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                {...register("daysOfWeek.name")}
+                {...register("daysOfWeek", {
+                  required: "Please select at least one day.",
+                  validate: (value) => value && value.length > 0 || "At least one day must be selected.",
+                })}
               />
             </div>
             <div className="text-sm leading-6">
@@ -39,6 +43,11 @@ function DaysOfWeek() {
             </div>
           </div>
         ))}
+
+        {errors.daysOfWeek && 
+        <p className="mb-4 text-sm text-red-600" role="alert">
+          {errors.daysOfWeek.message}
+        </p>}
       </div>
     </fieldset>
   );

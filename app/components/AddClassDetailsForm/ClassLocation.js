@@ -16,7 +16,7 @@ function ClassLocation() {
                     id="place"
                     className="border rounded w-full py-2 px-3 mb-2"
                     placeholder="Gym or Studio Name"
-                    {...register('place',                    
+                    {...register('address.place',                    
                     {
                       required: { value: true, message: 'Location name is required' },
                       maxLength: { value: 70, message: 'Location name is too long' },
@@ -24,20 +24,20 @@ function ClassLocation() {
                     })
                     }
                 />
-                {errors?.place && <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.address?.place && <p className="mb-4 text-sm text-red-600" role="alert">
                   {errors.place.message}
                 </p>}
             </div>
             {/* Street Address */}
             <div className="mb-4">
-              <label htmlFor="streetAddress" className='block text-gray-700 font-bold mb-2'>
+              <label htmlFor="street" className='block text-gray-700 font-bold mb-2'>
               Street Address
               </label>
                 <input
                     type="text"
-                    id="streetAddress"
+                    id="street"
                     className="border rounded w-full py-2 px-3 mb-2"
-                    {...register('streetAddress',                    
+                    {...register('address.street',                    
                     {
                       required: { value: true, message: 'Street address is required' },
                       maxLength: { value: 70, message: 'Street address is too long' },
@@ -45,8 +45,8 @@ function ClassLocation() {
                     })
                     }
                 />
-                {errors?.streetAddress && <p className="mb-4 text-sm text-red-600" role="alert">
-                  {errors.streetAddress.message}
+                {errors.address?.street && <p className="mb-4 text-sm text-red-600" role="alert">
+                  {errors.street.message}
                 </p>}
             </div>
   
@@ -59,7 +59,7 @@ function ClassLocation() {
                     type="text"
                     id="city"
                     className="border rounded w-full py-2 px-3 mb-2"
-                    {...register('city',                    
+                    {...register('address.city',                    
                     {
                       required: { value: true, message: 'City is required' },
                       maxLength: { value: 70, message: 'City is too long' },
@@ -67,7 +67,7 @@ function ClassLocation() {
                     })
                     }
                 />
-                {errors?.city && <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.address?.city && <p className="mb-4 text-sm text-red-600" role="alert">
                   {errors.city.message}
                 </p>}
             </div>
@@ -80,14 +80,14 @@ function ClassLocation() {
                     type="text"
                     id="region"
                     className="border rounded w-full py-2 px-3 mb-2"
-                    {...register('region',                    
+                    {...register('address.region',                    
                     {
                       required: { value: true, message: 'State / Province is required' },
                       maxLength: { value: 70, message: 'State / Province  is too long' }
                     })
                     }
                 />
-                {errors?.region && <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.address?.region && <p className="mb-4 text-sm text-red-600" role="alert">
                   {errors.region.message}
                 </p>}
             </div>
@@ -100,14 +100,14 @@ function ClassLocation() {
                     type="text"
                     id="zipcode"
                     className="border rounded w-full py-2 px-3 mb-2"
-                    {...register('zipcode',                    
+                    {...register('address.zipcode',                    
                     {
                       required: { value: true, message: 'ZIP / Postal code is required' },
                       maxLength: { value: 70, message: 'ZIP / Postal code  is too long' }
                     })
                     }
                 />
-                {errors?.zipcode && <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.address?.zipcode && <p className="mb-4 text-sm text-red-600" role="alert">
                   {errors.zipcode.message}
                 </p>}
             </div>

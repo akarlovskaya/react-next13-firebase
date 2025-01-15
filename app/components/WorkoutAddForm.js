@@ -1,10 +1,8 @@
 
 import { FormProvider, useForm, useFormContext  } from 'react-hook-form';
 import { serverTimestamp, doc, deleteDoc, updateDoc, getFirestore } from 'firebase/firestore';
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import kebabCase from 'lodash.kebabcase';
 
 import ClassInfo from './AddClassDetailsForm/ClassInfo.js';
 import ClassLocation from './AddClassDetailsForm/ClassLocation.js';
@@ -15,31 +13,43 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
   const router = useRouter();
   const methods = useForm({ 
     defaultValues: {
-      title: defaultValues?.title || '',
-      description: defaultValues?.description || '',
-      time: defaultValues?.time || '',
+      title: defaultValues?.title ?? '',
+      description: defaultValues?.description ?? '',
+      time: defaultValues?.time ?? '',
       daysOfWeek: defaultValues?.daysOfWeek,
-      fee: defaultValues?.fee || '',
+      fee: defaultValues?.fee ?? '',
+      address: {
+        place: defaultValues?.address?.place ?? '',
+        street: defaultValues?.address?.street ?? '',
+        city: defaultValues?.address?.city ?? '',
+        region: defaultValues?.address?.region ?? '',
+        zipcode: defaultValues?.address?.zipcode ?? '',
+      },
+      paymentOptions: defaultValues?.paymentOptions,
     }, 
-    // mode: 'onChange' 
+    // mode: 'onChange',
+    // reValidateMode: 'onBlur'
   });
 
   console.log('defaultValues from WorkoutAddForm', defaultValues);
-  console.log('defaultValues?.daysOfWeek.name from WorkoutAddForm', defaultValues?.daysOfWeek?.name);
 
   const { register, handleSubmit, formState: { isSubmitting }, reset, watch } = methods;
 
     const addWorkout = async (formData) => {
-      // await new Promise((resolve) => setTimeout(resolve, 3000));
-      console.log('formData', formData);
-
-      
-        // Merge existing data with the new form data
+      // Merge existing data with the new form data
         const updatedData = {
           ...defaultValues, // Retain all existing keys
-          ...formData
-        };
+          ...formData,
+          // Handle daysOfWeek to always produce an array of strings
+          daysOfWeek: Array.isArray(formData.daysOfWeek)
+          ? formData.daysOfWeek.map((day) => day.name || day) // If 'day' is an object, get its 'name'
+          : formData.daysOfWeek?.name || [], // Handle the case where formData.daysOfWeek might not be an array
 
+          // Handle paymentOptions to always produce an array of strings
+          paymentOptions: Array.isArray(formData.paymentOptions)
+            ? formData.paymentOptions.map((payment) => payment.name || payment) // If 'payment' is an object, get its 'name'
+            : formData.paymentOptions?.name || [],
+        };
 
       await updateDoc(postRef, {
         ...updatedData,
@@ -55,22 +65,16 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
 
     const onError = async (err) => {
       console.log('validation errors', err);
-
     }
 
-  // const { isValid, isDirty } = formState;
-  // const { title } = defaultValues;
-
-  // const selectedDays = watch("daysList", []); // Default to an empty array
-  // console.log('useForm', useForm());
 
   return (
     <form noValidate onSubmit={handleSubmit(addWorkout, onError)}>
       <FormProvider {...methods}>
         <ClassInfo />
         <DaysOfWeek />
-        {/* <ClassLocation /> */}
-        {/* <ClassPayments /> */}
+        <ClassLocation />
+        <ClassPayments />
       </FormProvider>
 
         <div>
