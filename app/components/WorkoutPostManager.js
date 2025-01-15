@@ -14,7 +14,7 @@ function WorkoutPostManager({ slug }) {
 
   const postRef = doc(getFirestore(), 'users', auth.currentUser.uid, 'workouts', slug)
   const [post] = useDocumentDataOnce(postRef);
-  console.log('post data from Manager', post);
+  console.log('post from WorkoutPostManager to WorkoutAddForm', post)
 
   return (
 

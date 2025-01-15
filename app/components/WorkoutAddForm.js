@@ -3,12 +3,13 @@ import { FormProvider, useForm, useFormContext  } from 'react-hook-form';
 import { serverTimestamp, doc, deleteDoc, updateDoc, getFirestore } from 'firebase/firestore';
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore';
 import toast from 'react-hot-toast';
-import { DAYS, PAYMENT_OPTIONS } from '../utilities/Utilities.js';
 import { useRouter } from 'next/navigation';
+import kebabCase from 'lodash.kebabcase';
 
 import ClassInfo from './AddClassDetailsForm/ClassInfo.js';
 import ClassLocation from './AddClassDetailsForm/ClassLocation.js';
 import ClassPayments from './AddClassDetailsForm/ClassPayments.js';
+import DaysOfWeek from './AddClassDetailsForm/DaysOfWeek.js';
 
 function WorkoutAddForm({ postRef, defaultValues, preview }) {
   const router = useRouter();
@@ -17,36 +18,38 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
       title: defaultValues?.title || '',
       description: defaultValues?.description || '',
       time: defaultValues?.time || '',
-      daysOfTheWeek: [],
+      daysOfWeek: defaultValues?.daysOfWeek,
       fee: defaultValues?.fee || '',
     }, 
     // mode: 'onChange' 
   });
 
+  console.log('defaultValues from WorkoutAddForm', defaultValues);
+  console.log('defaultValues?.daysOfWeek.name from WorkoutAddForm', defaultValues?.daysOfWeek?.name);
+
   const { register, handleSubmit, formState: { isSubmitting }, reset, watch } = methods;
 
-    // console.log('defaultValues', defaultValues)
-
     const addWorkout = async (formData) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log('formData', formData);
 
+      
         // Merge existing data with the new form data
-      //   const updatedData = {
-      //     ...defaultValues, // Retain all existing keys
-      //     ...formData,     // Overwrite with new form values
-      //   };
+        const updatedData = {
+          ...defaultValues, // Retain all existing keys
+          ...formData
+        };
 
 
-      // await updateDoc(postRef, {
-      //   formData,
-      //   updatedAt: serverTimestamp(),
-      // });
+      await updateDoc(postRef, {
+        ...updatedData,
+        updatedAt: serverTimestamp(),
+      });
 
-      // reset(formData);
+      reset(formData);
 
-      // toast.success('Workout added successfully!');
-      // router.push(`/${defaultValues.username}/${defaultValues.slug}`);
+      toast.success('Workout added successfully!');
+      router.push(`/${defaultValues.username}/${defaultValues.slug}`);
 
     }
 
@@ -65,6 +68,7 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
     <form noValidate onSubmit={handleSubmit(addWorkout, onError)}>
       <FormProvider {...methods}>
         <ClassInfo />
+        <DaysOfWeek />
         {/* <ClassLocation /> */}
         {/* <ClassPayments /> */}
       </FormProvider>

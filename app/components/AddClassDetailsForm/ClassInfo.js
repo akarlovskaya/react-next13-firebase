@@ -54,8 +54,28 @@ const ClassInfo = () => {
             {errors.description.message}
           </p>}
       </div>
-      {/* Time */}
+
+      {/* Fee */}
       <div className="mb-4">
+          <label
+              htmlFor="fee"
+              className="block text-sm font-semibold leading-6 text-gray-900 mb-2">Fee</label>
+          <input
+              type="number"
+              min={0}
+              className="border rounded w-full py-2 px-3 mb-2"
+              placeholder="Price per class"
+              {...register('fee',                     {
+                required: { value: true, message: 'Class fee is required' }
+              })
+              }
+          />
+          {errors?.fee && <p className="mb-4 text-sm text-red-600" role="alert">
+            {errors.fee.message}
+          </p>}
+      </div>
+            {/* Time */}
+            <div className="mb-4">
           <label 
               htmlFor="time" 
               className="block text-sm font-semibold leading-6 text-gray-900 mb-2">Time</label>
@@ -75,26 +95,6 @@ const ClassInfo = () => {
           />
           {errors?.time && <p className="mb-4 text-sm text-red-600" role="alert">
             {errors.time.message}
-          </p>}
-      </div>
-
-
-      {/* Fee */}
-      <div className="mb-4">
-          <label
-              htmlFor="fee"
-              className="block text-sm font-semibold leading-6 text-gray-900 mb-2">Fee</label>
-          <input
-              type="number"
-              className="border rounded w-full py-2 px-3 mb-2"
-              placeholder="Price per class"
-              {...register('fee',                     {
-                required: { value: true, message: 'Class fee is required' }
-              })
-              }
-          />
-          {errors?.fee && <p className="mb-4 text-sm text-red-600" role="alert">
-            {errors.fee.message}
           </p>}
       </div>
     </fieldset> 
