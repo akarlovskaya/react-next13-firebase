@@ -5,11 +5,8 @@ import SignOutButton from './SignOutButton';
 import { IoCreateOutline } from "react-icons/io5";
 
 function UserProfile({ user }) {
-    console.log('user: ', user);
 
   return (
-    <section className="bg-indigo-50">
-      <div className="container mx-auto py-8">
       <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
         <aside className="col-span-4 sm:col-span-3">
           {/* Profile Image */}
@@ -67,9 +64,6 @@ function UserProfile({ user }) {
           {/* Form */}
         </main>
       </div>
-
-      </div>
-    </section>
   )
 }
 
