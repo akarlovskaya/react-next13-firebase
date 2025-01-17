@@ -10,7 +10,7 @@ import { MdModeEdit } from "react-icons/md";
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
-function ClassListing({ workout })  {
+function ClassListing({ workout, admin })  {
   const { title, address, slug, fee, username, createdAt } = workout;
   let { description } = workout;
   const router = useRouter();
@@ -78,7 +78,7 @@ function ClassListing({ workout })  {
 
             {/* If admin view, show extra controls for user */}
 
-            {currentUser?.uid == workout.uid && (  
+            {admin && currentUser?.uid == workout.uid && (  
               <div>
                 <button 
                   className="absolute bottom-4 right-2 h-[14px] cursor-pointer text-orange-dark"
@@ -93,7 +93,7 @@ function ClassListing({ workout })  {
                   />
                 </Link>
               </div> 
-            )}
+              )  } 
           </div>
         </div>
     </li>

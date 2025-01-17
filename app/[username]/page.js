@@ -58,6 +58,7 @@ export default async function UserProfilePage({ params }) {
                   key={workout.slug}
                   classId={workout.slug}
                   workout={workout} 
+                  admin={true}
                 />
               ))}
             </ul>
