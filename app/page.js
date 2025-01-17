@@ -25,7 +25,7 @@ async function fetchInitialWorkouts() {
 
 export default async function Home() {
   const initialWorkouts = await fetchInitialWorkouts();
-  console.log('initialWorkouts ', initialWorkouts);
+  // console.log('initialWorkouts ', initialWorkouts);
 
   return (
     <main>

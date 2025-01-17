@@ -4,14 +4,14 @@ import { useContext, useState } from 'react';
 import { UserContext } from "../Provider";
 import Link from 'next/link';
 import {FaMapMarker} from 'react-icons/fa';
-// import Moment from 'react-moment';
+import Moment from 'react-moment';
 import { FaTrash } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 function ClassListing({ workout })  {
-  const { title, address, slug, fee, username } = workout;
+  const { title, address, slug, fee, username, createdAt } = workout;
   let { description } = workout;
   const router = useRouter();
   const { user: currentUser } = useContext(UserContext);
@@ -42,9 +42,9 @@ function ClassListing({ workout })  {
 
   return (
     <li key={slug} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-150 relative">
-        {/* <Moment className="absolute top-2 right-2 bg-beige uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg" fromNow>
-          {workout.timeStamp?.toDate()}
-        </Moment> */}
+        <Moment className="absolute top-2 right-2 bg-beige uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg" fromNow>
+          {createdAt}
+        </Moment>
         <div className="p-4">
           <div className="mb-6">
             <Link href={`/${username}/${slug}`}>
