@@ -34,7 +34,7 @@ export default async function Home() {
     <main>
       <HeroBanner/>
       {/* <HomePageCardsWrapper /> */}
-      <h2 className="text-3xl font-bold text-navy mb-6 text-center">Recently Added Classes</h2>
+      
       <ClassListings 
         workouts={initialWorkouts.props.workouts} 
         isHomepage={true}
@@ -42,7 +42,10 @@ export default async function Home() {
       />
 
       {/* Load more functionality in Client Component */}
+      <section className="m-auto max-w-lg my-10 px-6">
       <LoadMoreWorkouts initialWorkouts={initialWorkouts.props.workouts} />
+      </section>
+      
     </main>
   );
 }

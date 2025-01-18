@@ -50,15 +50,18 @@ export default function LoadMoreWorkouts({ initialWorkouts }) {
   };
 
   return (
-    <div>
+    <div className='flex justify-center'>
       {/* <ClassListings workouts={workouts} /> */}
       {!loading && !workoutsEnd && (
-        <button onClick={getMoreWorkouts}>
+        <button 
+          onClick={getMoreWorkouts}
+          className="bg-navy hover:bg-gray-900 text-white py-2 px-4 rounded-full w-52 mt-8 focus:outline-none focus:shadow-outline"
+          >
           Load more
         </button>
       )}
       <Loader show={loading} />
-      {workoutsEnd && <p>You&#39;ve reached the end!</p>}
+      {workoutsEnd && <p className='font-bold mt-8'>You&#39;ve reached the end!</p>}
     </div>
   );
 }
