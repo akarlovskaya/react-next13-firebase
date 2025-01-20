@@ -1,5 +1,5 @@
 
-import { getFirestore, collectionGroup, query, orderBy, limit, getDocs } from 'firebase/firestore';
+import { getFirestore, collectionGroup, query, orderBy, where, limit, getDocs } from 'firebase/firestore';
 import { postToJSON } from './lib/firebase';
 import HeroBanner from './components/HeroBanner';
 import HomePageCardsWrapper from './components/HomePageCardsWrapper';
@@ -14,6 +14,7 @@ async function fetchInitialWorkouts() {
   const workoutsQuery = query(
       ref,
       orderBy('createdAt', 'desc'),
+      where('published', '==', true),
       limit(LIMIT),
   );
   const workouts = (await getDocs(workoutsQuery)).docs.map(postToJSON);

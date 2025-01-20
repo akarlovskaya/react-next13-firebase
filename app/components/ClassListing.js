@@ -49,6 +49,7 @@ function ClassListing({ workout, admin })  {
           <div className="mb-6">
             <Link href={`/${username}/${slug}`}>
                <h3 className="text-xl font-bold">{title}</h3>
+               <p>by @{username}</p>
             </Link>
           </div>
 
