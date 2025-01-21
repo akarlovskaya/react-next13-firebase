@@ -47,19 +47,34 @@ function SignInButton() {
   };
 
   return (
-    <>
-      <button 
-        className='w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-navy-light'
-        onClick={signInWithGoogle}>
-          <FcGoogle className='mr-4 text-2xl bg-white rounded-full'/>  Sign in with Google
-      </button>
+    <section className="bg-blue-50 px-4 py-10 h-screen">
+    <div className="container-xl lg:container m-auto">
+        <h1 className="text-3xl font-bold text-navy mb-6 text-center">Sign In</h1>
 
-      <button 
-        className='w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-navy-light'
-        onClick={() => signInAnonymously(auth)}>
-        Sign in Anonymously
-      </button>
-    </>
+        <div className="w-full md:w-[67%] lg:w-[30%] m-auto">
+          <button 
+          type='button'
+          className='flex items-center justify-center w-full bg-orange-dark text-white px-7 py-3 text-sm font-medium 
+                    rounded shadow-md hover:bg-orange-light'
+          onClick={signInWithGoogle}>
+            <FcGoogle className='mr-4 text-2xl bg-white rounded-full'/>  Sign in with Google
+        </button>
+
+        <div className='flex items-center my-4 
+                        before:border-t before:flex-1 before:border-gray-300
+                        after:border-t after:flex-1 after:border-gray-300'>
+          <p className='text-center font-semibold mx-4'>OR</p>
+        </div>
+
+        <button 
+          className='w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-navy-light'
+          onClick={() => signInAnonymously(auth)}>
+          Sign in Anonymously
+        </button>
+        </div>
+      </div>
+      </section>
+    
   );
 }
 
@@ -135,41 +150,78 @@ function UsernameForm() {
 
   return (
     !username && (
-      <section>
-        <h3>Choose Username</h3>
+      <section className="bg-indigo-50">
+        <div className="container m-auto max-w-2xl py-24">
+        <div className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
+        <h1 className="text-3xl text-center font-semibold mb-6">Choose a Username</h1>
         <form onSubmit={onSubmit}>
-          <input name="username" placeholder="myname" value={formValue} onChange={onChange} />
+            <label htmlFor='username' className="sr-only">
+              Choose Username
+            </label>
+          <input 
+            id="username" 
+            name="username" 
+            placeholder="my user name" 
+            className="border rounded w-full py-2 px-3 mb-10"
+            value={formValue} 
+            onChange={onChange} />
           <UsernameMessage username={formValue} isValid={isValid} loading={loading} />
-          <button type="submit" className="btn-green" disabled={!isValid}>
-            Choose
+
+          <button 
+            type="submit" 
+            className="bg-navy hover:bg-navy-light text-white py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+            disabled={!isValid}>
+            Submit
           </button>
 
-          <h3>Debug State</h3>
+          {/* <h3>Debug State</h3>
           <div>
             Username: {formValue}
             <br />
             Loading: {loading.toString()}
             <br />
             Username Valid: {isValid.toString()}
-          </div>
+          </div> */}
         </form>
+        </div>
+        </div>
       </section>
     )
   );
 }
 
 function UsernameMessage({ username, isValid, loading }) {
+  
   if (loading) {
-    return <p>Checking...</p>;
+    return (
+      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
+        <p className="mb-10 text-base">Checking...</p>
+      </div>
+    )
+
   } else if (isValid) {
-    return <p className="text-success">{username} is available!</p>;
+    return (
+      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
+        <p className="mb-10 text-base text-green-600">
+         ${username} is available!
+        </p>
+      </div>
+    )
+
   } else if (username && !isValid) {
-    return <p className="text-danger">That username is taken!</p>;
+    return (
+      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
+        <p className="mb-10 text-base text-red-600">That username is taken!</p>
+      </div>
+    )
+
   } else {
-    return <p></p>;
+    return (
+      <div className="h-24 p-4 mb-4 text-m bg-white " role="alert">
+        <p className="mb-10 text-base"></p>
+      </div>
+    )
   }
 }
-
-
 
 export default SignUpPage;
