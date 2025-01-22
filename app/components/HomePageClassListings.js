@@ -52,7 +52,7 @@ function HomePageClassListings({ workouts, limit }) {
             {!loading && !workoutsEnd && (
                 <button 
                 onClick={getMoreWorkouts}
-                className="bg-navy hover:bg-gray-900 text-white py-2 px-4 rounded-full w-52 mt-8 focus:outline-none focus:shadow-outline"
+                className='w-40 bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900'
                 >
                 Load more
                 </button>

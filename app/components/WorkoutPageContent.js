@@ -63,7 +63,7 @@ function WorkoutPageContent( {workout} ) {
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+            <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-10">
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                     Class Description
                 </h3>
@@ -101,7 +101,8 @@ function WorkoutPageContent( {workout} ) {
 
             {currentUser?.uid === workout.uid && (
             <Link href={`/admin/${workout.slug}`}>
-                <button className="bg-navy hover:bg-navy-light text-white py-2 px-4 mt-5 rounded-full focus:outline-none focus:shadow-outline">
+                <button 
+                    className="w-40 justify-self-center bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900">
                     Edit Post
                 </button>
             </Link>

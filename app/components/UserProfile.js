@@ -52,7 +52,8 @@ function UserProfile({ user }) {
           <div className="bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
             <Link href="/admin"
-                className='flex bg-navy hover:bg-navy-light justify-center text-white py-4 rounded-full items-center focus:outline-none focus:shadow-outline'>
+                className='flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline'
+              >
                 <IoCreateOutline className='mr-2 text-xl'/> Create Class
             </Link>
           </div>

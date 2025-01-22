@@ -77,9 +77,9 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         <ClassPayments />
       </FormProvider>
 
-        <div>
+        <div className="grid mt-5">
           <button
-              className="bg-navy hover:bg-navy-light text-white py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline flex items-center justify-center space-x-2"
+              className='w-40 justify-self-center bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900'
               type="submit"
               disabled={isSubmitting}>
                 {!isSubmitting || (

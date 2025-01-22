@@ -53,7 +53,7 @@ function CreateNewWorkout() {
           <h1 className="text-3xl text-center font-semibold mb-6">Add Class</h1>
           <h2 className="text-2xl text-center font-semibold mb-6">Enter Workout Name</h2>
 
-          <form onSubmit={createWorkout}>
+          <form onSubmit={createWorkout} className="grid">
             <label htmlFor='workoutName' className="sr-only">
               Workout Name
             </label>
@@ -69,9 +69,10 @@ function CreateNewWorkout() {
             </p> */}
 
             <button 
-              className="bg-navy hover:bg-navy-light text-white py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline"
+              className='w-40 justify-self-center bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900'
               type="submit" 
-              disabled={!isValid} >
+              disabled={!isValid} 
+              onClick={createWorkout}>
               Create
             </button>
           </form>
