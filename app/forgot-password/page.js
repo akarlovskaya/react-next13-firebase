@@ -1,42 +1,33 @@
 "use client";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { auth, googleAuthProvider } from "../lib/firebase";
-import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { IoIosEye, IoIosEyeOff } from "react-icons/io";
-import { FcGoogle } from "react-icons/fc";
+import { useState } from "react";
+import {
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth, googleAuthProvider } from "../lib/firebase";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
 
-function SignInPage() {
+const ForgotPasswordPage = () => {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data) => {
-    const { email, password } = data;
-
+  async function onSubmit(data) {
     try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      if (userCredentials.user) {
-        toast.success("Sign in was successful!");
-        router.push("/");
-      }
+      await sendPasswordResetEmail(auth, data.email);
+      toast.success("Reset password link was sent");
+      router.push("/sign-in");
     } catch (error) {
-      console.error("Error during registration:", error);
-      toast.error("Something went wrong with user registration.");
+      toast.error("Could not sent reset password");
     }
-  };
+  }
 
   const signInWithGoogle = async () => {
     try {
@@ -56,7 +47,7 @@ function SignInPage() {
     <section className="bg-blue-50 px-4 py-10 h-screen">
       <div className="container-xl lg:container m-auto">
         <h1 className="text-3xl font-bold text-navy mb-6 text-center">
-          Sign In
+          Forgot Password
         </h1>
 
         <form
@@ -79,38 +70,6 @@ function SignInPage() {
             </span>
           )}
 
-          <div className="relative">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Enter password:
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              id="password"
-              name="password"
-              className="border rounded w-full py-2 px-3"
-              {...register("password", { required: true })}
-            />
-            {errors.password && (
-              <span className="mb-4 text-sm text-red-600" role="alert">
-                This field is required
-              </span>
-            )}
-
-            {showPassword ? (
-              <IoIosEye
-                className="absolute right-3 top-9 text-xl cursor-pointer"
-                onClick={() => setShowPassword((prevState) => !prevState)}
-              />
-            ) : (
-              <IoIosEyeOff
-                className="absolute right-3 top-9 text-xl cursor-pointer"
-                onClick={() => setShowPassword((prevState) => !prevState)}
-              />
-            )}
-          </div>
           <div className="flex justify-between text-sm sm:text-base mb-10">
             <p>
               Don't have account?
@@ -122,11 +81,8 @@ function SignInPage() {
               </Link>
             </p>
             <p>
-              <Link
-                href="/forgot-password"
-                className="text-navy hover:text-indigo-600"
-              >
-                Forgot Password?
+              <Link href="/sign-in" className="text-navy hover:text-indigo-600">
+                Sign In
               </Link>
             </p>
           </div>
@@ -134,20 +90,21 @@ function SignInPage() {
             type="submit"
             className="w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"
           >
-            Sign In
+            Sent Reset Password
           </button>
           <div
             className="flex items-center my-4 
-                         before:border-t before:flex-1 before:border-gray-300
-                         after:border-t after:flex-1 after:border-gray-300"
+                             before:border-t before:flex-1 before:border-gray-300
+                             after:border-t after:flex-1 after:border-gray-300"
           >
             <p className="text-center font-semibold mx-4">OR</p>
           </div>
+
           {/* Sign Up with Google */}
           <button
             type="button"
             className="flex items-center justify-center w-full bg-orange-dark text-white px-7 py-3 text-sm font-medium 
-                    rounded shadow-md hover:bg-orange-light"
+                        rounded shadow-md hover:bg-orange-light"
             onClick={signInWithGoogle}
           >
             <FcGoogle className="mr-4 text-2xl bg-white rounded-full" /> Sign in
@@ -157,6 +114,6 @@ function SignInPage() {
       </div>
     </section>
   );
-}
+};
 
-export default SignInPage;
+export default ForgotPasswordPage;
