@@ -131,15 +131,15 @@ function SignUpForm() {
             </div>
             <div className='flex justify-between text-sm sm:text-base mb-10'>
                 <p>Have an account? 
-                    <Link href="/" className='text-orange-dark hover:text-orange-light ml-1'>Sign In</Link>
+                    <Link href="/sign-in" className='text-orange-dark hover:text-orange-light ml-1'>Sign In</Link>
                 </p>
                 <p>
-                    <Link href="/" className='text-navy hover:text-indigo-600'>Forgot Password?</Link>
+                    <Link href="/forgot-password" className='text-navy hover:text-indigo-600'>Forgot Password?</Link>
                 </p>
             </div>
               <button 
                 type='submit'
-                className='w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-navy-light'
+                className='w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900'
                 >
                     Sign Up
               </button>
