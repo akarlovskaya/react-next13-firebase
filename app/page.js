@@ -1,21 +1,28 @@
-
-import { getFirestore, collectionGroup, query, orderBy, where, limit, getDocs } from 'firebase/firestore';
-import { postToJSON } from './lib/firebase';
-import HeroBanner from './components/HeroBanner';
-import HomePageCardsWrapper from './components/HomePageCardsWrapper';
-import HomePageClassListings from './components/HomePageClassListings';
+import {
+  getFirestore,
+  collectionGroup,
+  query,
+  orderBy,
+  where,
+  limit,
+  getDocs,
+} from "firebase/firestore";
+import { postToJSON } from "./lib/firebase";
+import HeroBanner from "./components/HeroBanner";
+import HomePageCardsWrapper from "./components/HomePageCardsWrapper";
+import HomePageClassListings from "./components/HomePageClassListings";
 
 // Max workout posts to query per page
 const LIMIT = 6;
 
 // Server-side data fetching
 async function fetchInitialWorkouts() {
-  const ref = collectionGroup(getFirestore(), 'workouts');
+  const ref = collectionGroup(getFirestore(), "workouts");
   const workoutsQuery = query(
-      ref,
-      orderBy('createdAt', 'desc'),
-      where('published', '==', true),
-      limit(LIMIT),
+    ref,
+    orderBy("createdAt", "desc"),
+    where("published", "==", true),
+    limit(LIMIT)
   );
   const workouts = (await getDocs(workoutsQuery)).docs.map(postToJSON);
 
@@ -28,12 +35,17 @@ async function fetchInitialWorkouts() {
 export default async function Home() {
   const initialWorkouts = await fetchInitialWorkouts();
 
-
   return (
     <main>
-      <HeroBanner/>
+      <HeroBanner />
       {/* <HomePageCardsWrapper /> */}
-      <HomePageClassListings workouts={ initialWorkouts.props.workouts } limit={LIMIT}/>
+      <h2 className="text-3xl font-bold text-navy mb-6 text-center">
+        Recent Fitness Classes
+      </h2>
+      <HomePageClassListings
+        workouts={initialWorkouts.props.workouts}
+        limit={LIMIT}
+      />
     </main>
   );
 }

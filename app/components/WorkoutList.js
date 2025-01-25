@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "../lib/firebase";
+import { auth, postToJSON } from "../lib/firebase";
 import { query, collection, orderBy, getFirestore } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 import ClassListings from "../components/ClassListings";
@@ -20,8 +20,7 @@ function WorkoutList() {
 
   const [querySnapshot] = useCollection(postQuery);
 
-  const workouts = querySnapshot?.docs.map((doc) => doc.data());
-  console.log("workouts", workouts);
+  const workouts = querySnapshot?.docs.map(postToJSON);
 
   return (
     <>
