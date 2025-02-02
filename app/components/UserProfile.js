@@ -1,61 +1,73 @@
-
-import Link from 'next/link';
-import Image from 'next/image';
-import SignOutButton from './SignOutButton';
+"use client";
+import { useEffect, useState, useCallback, useContext } from "react";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { UserContext } from "../Provider";
+import Link from "next/link";
+import Image from "next/image";
+import SignOutButton from "./SignOutButton";
+import UserProfileAside from "./UserProfileForm/UserProfileAside.js";
+import UserDetailsForm from "./UserProfileForm/UserDetailsForm.js";
 import { IoCreateOutline } from "react-icons/io5";
 
-function UserProfile({ user }) {
+function UserProfile() {
+  const { user, username } = useContext(UserContext);
+  // console.log("user from context", user?.photoURL);
+  const socialLinks = [
+    { name: "facebook", link: "", label: "Facebook" },
+    { name: "instagram", link: "", label: "Instagram" },
+    { name: "linkedin", link: "", label: "LinkedIn" },
+    { name: "x_com", link: "", label: "witter / X.com" },
+  ];
+
+  const methods = useForm({
+    defaultValues: {
+      avatarImage: user?.photoURL,
+      fullName: user?.displayName,
+      instructorTitle: "",
+      instructorDescription: "",
+      contactEmail: user?.email,
+      contactPhone: "",
+      socials: socialLinks,
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = methods;
+
+  // const [editInfo, setEditInfo] = useState();
+  const [isEditing, setIsEditing] = useState(false);
+
+  // const onSubmit = (data) => {
+  //   //   console.log(data);
+  // };
+  // console.log("user from UserProfile", user);
 
   return (
-      <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+    <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+      <FormProvider {...methods}>
         <aside className="col-span-4 sm:col-span-3">
-          {/* Profile Image */}
-          <div className="bg-white shadow rounded-lg p-6">
-            <div className="flex flex-col items-center">
-              <div className="flex flex-col items-center">
-                <Image
-                    src={user.photoURL  || '/avatar-img.png'}
-                    alt={`${user.displayName}'s Avatar Picture` || "Profile Avatar"}
-                    className="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"
-                    width={500}
-                    height={500}
-                />
-
-                  {user.displayName &&
-                    <h1 className="text-xl font-bold">{user.displayName}</h1> 
-                  }
-                  {/* {instructorTitle &&
-                    <p className="text-gray-700">{instructorTitle}</p>
-                  } */}
-                    {user.username &&
-                    <p className="text-gray-700">@{user.username}</p>
-                  }
-              </div>
-              <div className="mt-6 flex flex-wrap gap-4 justify-center">
-                {/* <button
-                  type="submit"
-                  className="white hover:text-purple text-navy font-bold py-2 px-4 rounded-full w-full border-2 focus:outline-none focus:shadow-outline"
-                  onClick={()=> {
-                    editInfo && onSubmit();
-                    setEditInfo(prevState => !prevState) 
-                  }}
-              >
-                  { editInfo ? "Save" : "Edit" }
-              </button> */}
-              </div>
-            </div>
-            <hr className="my-6 border-t border-gray-300" />
-            {/* <SocialLinksProfileForm socialLinks={formData.socials} onSocialLinkChange={onChange} editInfo={editInfo}/> */}
-            
-          </div>
+          <UserProfileAside user={user} />
           {/* <!-- Manage --> */}
-          <div className="bg-white p-6 rounded-lg shadow-md mt-6">
+          <div className="self-center bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
-            <Link href="/admin"
-                className='flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline'
-              >
-                <IoCreateOutline className='mr-2 text-xl'/> Create Class
+            <Link
+              href="/admin"
+              className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
+            >
+              <IoCreateOutline className="mr-2 text-xl" /> Create Class
             </Link>
+
+            <button
+              type="button"
+              className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 mt-5 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
+              onClick={(e) => setIsEditing(!isEditing)}
+            >
+              Edit Profile
+            </button>
           </div>
         </aside>
 
@@ -63,9 +75,11 @@ function UserProfile({ user }) {
           {/* Image upload */}
 
           {/* Form */}
+          <UserDetailsForm isEditing={isEditing} setIsEditing={setIsEditing} />
         </main>
-      </div>
-  )
+      </FormProvider>
+    </div>
+  );
 }
 
 export default UserProfile;

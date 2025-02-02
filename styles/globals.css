@@ -20,6 +20,10 @@
   all: revert;
 }
 
+.markdown-editor p {
+  margin-bottom: 1rem; 
+}
+
 .markdown-editor ul,
 .markdown-editor ol {
   all: revert;

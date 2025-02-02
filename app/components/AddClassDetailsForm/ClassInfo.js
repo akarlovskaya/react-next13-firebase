@@ -124,7 +124,7 @@ const ClassInfo = () => {
           id="description"
           className="h-80 border rounded w-full py-2 px-3 resize"
           rows="5"
-          placeholder="Tell what to expect from your classes - e.g. goal of the class, duration, what participants should bring and wear, if any eguipment will be used in your class. Note: Make your first sentence as informative and catchy as possible, as only the first 130 characters will be visible on the Home Page. The full description will be visible on the Class Details page."
+          placeholder="Tell what to expect from your classes - e.g. goal of the class, duration, what participants should bring and wear, if any equipment will be used in your class. Note: Make your first sentence as informative and catchy as possible, as only the first 130 characters will be visible on the Home Page. The full description will be visible on the Class Details page."
           {...register("description", {
             required: { value: true, message: "Description is required" },
             maxLength: { value: 20000, message: "Description is too long" },
