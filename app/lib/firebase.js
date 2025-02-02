@@ -49,16 +49,35 @@ export const STATE_CHANGED = "state_changed";
  * @param  {string} username
  */
 export async function getUserWithUsername(username) {
-  // const usersRef = collection(firestore, 'users');
-  // const query = usersRef.where('username', '==', username).limit(1);
+  try {
+    const q = query(
+      collection(firestore, "users"),
+      where("username", "==", username),
+      limit(1)
+    );
+    const querySnapshot = await getDocs(q);
 
-  const q = query(
-    collection(firestore, "users"),
-    where("username", "==", username),
-    limit(1)
-  );
-  const userDoc = (await getDocs(q)).docs[0];
-  return userDoc;
+    if (querySnapshot.empty) {
+      return null;
+    }
+
+    return querySnapshot.docs[0];
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    // For Firebase-specific errors
+    if (error.code === "permission-denied") {
+      throw new Error("You do not have permission to view this profile");
+    }
+
+    if (error.code === "unavailable") {
+      throw new Error(
+        "Service temporarily unavailable. Please try again later"
+      );
+    }
+
+    // A generic error
+    throw new Error("Unable to load user profile");
+  }
 }
 
 /**

@@ -10,7 +10,7 @@ const UserProfileAside = ({ user }) => {
     formState: { errors },
   } = useFormContext();
 
-  console.log("user from Aside", user);
+  // console.log("user from Aside", user);
 
   return (
     // <aside className="col-span-4 sm:col-span-3">
@@ -26,13 +26,13 @@ const UserProfileAside = ({ user }) => {
             height={500}
           />
 
-          {user.displayName && (
+          {user?.displayName && (
             <h1 className="text-xl font-bold">{user?.displayName}</h1>
           )}
           {/* {instructorTitle &&
                 <p className="text-gray-700">{instructorTitle}</p>
               } */}
-          {user.username && <p className="text-gray-700">@{user?.username}</p>}
+          {user?.username && <p className="text-gray-700">@{user?.username}</p>}
         </div>
         <div className="mt-6 flex flex-wrap gap-4 justify-center">
           {/* <button
