@@ -2,41 +2,56 @@
 import { useEffect, useState, useCallback, useContext } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { UserContext } from "../../Provider";
+import { getAuth } from "firebase/auth";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
+import toast from "react-hot-toast";
+import Spinner from "../../components/Loader.js";
 
-function UserDetailsForm({ user, isEditing, setIsEditing }) {
+function UserDetailsForm({ isEditing, setIsEditing }) {
   const {
+    getValues,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useFormContext();
-  // const { user, username } = useContext(UserContext);
-  // const {
-  //   register,
-  //   handleSubmit,
-  //   formState: { errors, isSubmitting },
-  // } = useForm({
-  //   defaultValues: {
-  //     avatarImage: user?.photoURL,
-  //     fullName: user?.displayName,
-  //     instructorTitle: "",
-  //     instructorDescription: "",
-  //     contactEmail: user?.email,
-  //     contactPhone: "",
-
-  //     //   socials: socialLinks
-  //   },
-  // });
-
-  // const [isEditing, setIsEditing] = useState(false);
-
-  // console.log("isEditing", isEditing);
-  // console.log("setIsEditing", setIsEditing);
+  const auth = getAuth();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log(data);
-    setIsEditing(false);
+    setLoading(true);
+    console.log("data from form", data);
+    const updatedUserData = {
+      displayName: data.fullName,
+      photoURL: data.avatarImage,
+      // username: data.userName,
+      instructorTitle: data.instructorTitle || "",
+      instructorDescription: data.instructorDescription || "",
+      contactEmail: data.contactEmail,
+      contactPhone: data.contactPhone,
+      socials: data.socials || [],
+    };
+
+    // console.log("updatedUserData from form", updatedUserData);
+    // setIsEditing(false);
+
+    try {
+      // Update user data in Firestore
+      const userRef = doc(getFirestore(), "users", auth.currentUser.uid);
+      await updateDoc(userRef, updatedUserData);
+      setLoading(false);
+      toast.success("Profile updated successfully!");
+      setIsEditing(false);
+    } catch (error) {
+      console.log("Error updating profile: ", error);
+      setLoading(false);
+      toast.error("Failed to update profile.");
+    }
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -54,8 +69,15 @@ function UserDetailsForm({ user, isEditing, setIsEditing }) {
               id="fullName"
               name="fullName"
               className="border rounded w-full py-2 px-3"
-              {...register("fullName")}
+              {...register("fullName", {
+                required: { value: true, message: "Full name is required" },
+              })}
             />
+            {errors?.fullName && (
+              <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.fullName.message}
+              </p>
+            )}
           </div>
 
           <div className="mb-4">
@@ -71,8 +93,15 @@ function UserDetailsForm({ user, isEditing, setIsEditing }) {
               name="instructorTitle"
               className="border rounded w-full py-2 px-3"
               placeholder="Ex. Group Fitness Instructor"
-              {...register("instructorTitle")}
+              {...register("instructorTitle", {
+                required: { value: true, message: "Title is required" },
+              })}
             />
+            {errors?.instructorTitle && (
+              <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.instructorTitle.message}
+              </p>
+            )}
           </div>
 
           {/* About */}
@@ -89,8 +118,15 @@ function UserDetailsForm({ user, isEditing, setIsEditing }) {
               className="border rounded w-full py-2 px-3"
               rows="4"
               placeholder="Tell a bit about yourself - experience, what moves you?"
-              {...register("instructorDescription")}
+              {...register("instructorDescription", {
+                required: { value: true, message: "About section is required" },
+              })}
             ></textarea>
+            {errors?.instructorDescription && (
+              <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.instructorDescription.message}
+              </p>
+            )}
           </div>
           {/* Contact Email */}
           <div className="mb-4">
@@ -107,8 +143,15 @@ function UserDetailsForm({ user, isEditing, setIsEditing }) {
               //   disabled={!editInfo}
               className="border rounded w-full py-2 px-3"
               placeholder="You email address"
-              {...register("contactEmail")}
+              {...register("contactEmail", {
+                required: { value: true, message: "Email is required" },
+              })}
             />
+            {errors?.contactEmail && (
+              <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.contactEmail.message}
+              </p>
+            )}
           </div>
           {/* Contact Phone */}
           <div className="mb-4">
@@ -172,29 +215,30 @@ function UserDetailsForm({ user, isEditing, setIsEditing }) {
       ) : (
         <div className="">
           <h2 className="text-xl font-bold mb-4 text-center">
-            {user?.displayName || "Your Name"}
+            {getValues("fullName") || "Your Name"}
           </h2>
           <h3 className="text-gray-700 font-bold text-center">
             {" "}
-            {user?.instructorTitle || "Title"}
+            {getValues("instructorTitle") || "Title"}
           </h3>
 
           <h2 className="text-xl font-bold mb-4 mt-4">About Me</h2>
           <p className="text-gray-700">
-            {user?.instructorDescription || "Tell people about yourself."}
+            {getValues("instructorDescription") ||
+              "Tell people about yourself."}
           </p>
           <h2 className="text-xl font-bold mb-4 mt-4">Contacts</h2>
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Email</span>
             </div>
-            <p className="mt-2">{user?.email || "N/A"}</p>
+            <p className="mt-2">{getValues("contactEmail") || "N/A"}</p>
           </div>
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Phone</span>
             </div>
-            <p className="mt-2">{user?.contactPhone || "N/A"}</p>
+            <p className="mt-2">{getValues("contactPhone") || "N/A"}</p>
           </div>
         </div>
       )}

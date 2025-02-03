@@ -4,17 +4,15 @@ import Image from "next/image";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 // import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
 
-const UserProfileAside = ({ user }) => {
+const UserProfileAside = ({ user, username }) => {
   const {
     register,
     formState: { errors },
   } = useFormContext();
 
-  // console.log("user from Aside", user);
+  // console.log("getValues from Aside", getValues());
 
   return (
-    // <aside className="col-span-4 sm:col-span-3">
-    //   {/* Profile Image */}
     <div className="bg-white shadow rounded-lg p-6">
       <div className="flex flex-col items-center">
         <div className="flex flex-col items-center">
@@ -26,17 +24,11 @@ const UserProfileAside = ({ user }) => {
             height={500}
           />
 
-          {user?.displayName && (
-            <h1 className="text-xl font-bold">{user?.displayName}</h1>
-          )}
-          {/* {instructorTitle &&
-                <p className="text-gray-700">{instructorTitle}</p>
-              } */}
-          {user?.username && <p className="text-gray-700">@{user?.username}</p>}
+          {username && <h1 className="text-xl font-bold">@{username}</h1>}
         </div>
-        <div className="mt-6 flex flex-wrap gap-4 justify-center">
-          {/* <button
-              type="submit"
+        {/* <div className="mt-6 flex flex-wrap gap-4 justify-center">
+          <button
+              type="button"
               className="white hover:text-purple text-navy font-bold py-2 px-4 rounded-full w-full border-2 focus:outline-none focus:shadow-outline"
                 onClick={()=> {
                   editInfo && onSubmit();
@@ -45,8 +37,8 @@ const UserProfileAside = ({ user }) => {
               }
             >
               {editInfo ? "Save" : "Edit"}
-            </button> */}
-        </div>
+            </button>
+        </div> */}
       </div>
       <hr className="my-6 border-t border-gray-300" />
       {/* <SocialLinksProfileForm
@@ -56,7 +48,6 @@ const UserProfileAside = ({ user }) => {
         /> */}
       <p>Link Socials</p>
     </div>
-    // </aside>
   );
 };
 
