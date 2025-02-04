@@ -1,39 +1,38 @@
 "use client";
-import { useEffect, useState, useCallback, useContext } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { UserContext } from "../../Provider";
+import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/Loader.js";
 
-function UserDetailsForm({ isEditing, setIsEditing }) {
+function UserDetailsForm({ userData, isEditing, setIsEditing }) {
   const {
     getValues,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useFormContext();
+
   const auth = getAuth();
   const [loading, setLoading] = useState(false);
+  // console.log("register from form", register());
+  // console.log("getValues from form", getValues());
 
   const onSubmit = async (data) => {
     setLoading(true);
     console.log("data from form", data);
+
     const updatedUserData = {
-      displayName: data.fullName,
-      photoURL: data.avatarImage,
-      // username: data.userName,
+      displayName: data.displayName,
+      photoURL: data.photoURL,
+      username: data.username,
       instructorTitle: data.instructorTitle || "",
       instructorDescription: data.instructorDescription || "",
-      contactEmail: data.contactEmail,
       contactPhone: data.contactPhone,
       socials: data.socials || [],
     };
-
-    // console.log("updatedUserData from form", updatedUserData);
-    // setIsEditing(false);
 
     try {
       // Update user data in Firestore
@@ -59,17 +58,17 @@ function UserDetailsForm({ isEditing, setIsEditing }) {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <label
-              htmlFor="fullName"
+              htmlFor="displayName"
               className="block text-gray-700 font-bold mb-2"
             >
               Name
             </label>
             <input
               type="text"
-              id="fullName"
-              name="fullName"
+              id="displayName"
+              name="displayName"
               className="border rounded w-full py-2 px-3"
-              {...register("fullName", {
+              {...register("displayName", {
                 required: { value: true, message: "Full name is required" },
               })}
             />
@@ -140,7 +139,6 @@ function UserDetailsForm({ isEditing, setIsEditing }) {
               type="email"
               id="contactEmail"
               name="contactEmail"
-              //   disabled={!editInfo}
               className="border rounded w-full py-2 px-3"
               placeholder="You email address"
               {...register("contactEmail", {
@@ -215,17 +213,14 @@ function UserDetailsForm({ isEditing, setIsEditing }) {
       ) : (
         <div className="">
           <h2 className="text-xl font-bold mb-4 text-center">
-            {getValues("fullName") || "Your Name"}
+            {getValues("displayName") || "Your Name"}
           </h2>
           <h3 className="text-gray-700 font-bold text-center">
-            {" "}
             {getValues("instructorTitle") || "Title"}
           </h3>
-
           <h2 className="text-xl font-bold mb-4 mt-4">About Me</h2>
           <p className="text-gray-700">
-            {getValues("instructorDescription") ||
-              "Tell people about yourself."}
+            {getValues("instructorDescription") || "Tell people about yourself"}
           </p>
           <h2 className="text-xl font-bold mb-4 mt-4">Contacts</h2>
           <div className="mb-6">

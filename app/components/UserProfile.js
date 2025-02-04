@@ -1,92 +1,62 @@
 "use client";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { useEffect, useState, useCallback, useContext } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { useEffect, useState, useContext } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 import { UserContext } from "../Provider";
 import Link from "next/link";
 import Image from "next/image";
-import SignOutButton from "./SignOutButton";
 import UserProfileAside from "./UserProfileForm/UserProfileAside.js";
 import UserDetailsForm from "./UserProfileForm/UserDetailsForm.js";
 import { IoCreateOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
 
 function UserProfile() {
   const db = getFirestore();
   const auth = getAuth();
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
-
   const { user, username } = useContext(UserContext);
-  console.log("user from UserProfile context", user);
   const [isEditing, setIsEditing] = useState(false);
 
-  const socialLinks = [
-    { name: "facebook", link: "", label: "Facebook" },
-    { name: "instagram", link: "", label: "Instagram" },
-    { name: "linkedin", link: "", label: "LinkedIn" },
-    { name: "x_com", link: "", label: "witter / X.com" },
-  ];
-
   const methods = useForm({
-    defaultValues: {
-      userName: user?.username ?? "",
-      avatarImage: user?.photoURL ?? "",
-      fullName: user?.displayName ?? "",
-      instructorTitle: user?.instructorTitle ?? "",
-      instructorDescription: user?.instructorDescription ?? "",
-      contactEmail: user?.email ?? "",
-      contactPhone: user?.phoneNumber ?? "",
-      socials: user?.socials ?? [],
-    },
+    photoURL: user?.photoURL ?? "",
+    displayName: user?.displayName ?? "",
+    instructorTitle: user?.instructorTitle ?? "",
+    instructorDescription: user?.instructorDescription ?? "",
+    contactEmail: user?.email ?? "",
+    contactPhone: user?.phoneNumber ?? "",
+    socials: user?.socials ?? [],
+    username: username ?? "",
   });
 
-  console.log("defaultValues from UserProfile", methods.getValues());
+  const { reset } = methods;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = methods;
-
+  // Fetch user data from Firestore db
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) return;
 
-      const userDocRef = doc(db, "users", userId);
-
       try {
+        const userDocRef = doc(db, "users", userId);
         const docSnap = await getDoc(userDocRef);
 
         if (docSnap.exists()) {
-          // console.log("User data from Firestore:", docSnap.data());
-          const userData = docSnap.data();
-
-          reset({
-            userName: userData.username || "",
-            avatarImage: userData.photoURL || "",
-            fullName: userData.displayName || "",
-            instructorTitle: userData.instructorTitle || "",
-            instructorDescription: userData.instructorDescription || "",
-            contactEmail: userData.contactEmail || "",
-            contactPhone: userData.contactPhone || "",
-            socials: userData.socials || [],
-          });
-        } else {
-          console.log("No user found in Firestore");
+          const fetchedUserData = docSnap.data();
+          reset(fetchedUserData);
         }
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.log("Error fetching user data", error);
+        toast.error("Error retrieving user data");
       }
     };
     fetchUserData();
-  }, [auth.currentUser?.uid, reset]);
+  }, [userId, reset]);
 
   return (
     <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
       <FormProvider {...methods}>
         <aside className="col-span-4 sm:col-span-3">
-          <UserProfileAside user={user} username={username} />
+          <UserProfileAside />
           {/* <!-- Manage --> */}
           <div className="self-center bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
