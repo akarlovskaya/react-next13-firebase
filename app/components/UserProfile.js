@@ -17,16 +17,19 @@ function UserProfile() {
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
   const { user, username } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
+  const [photoURL, setPhotoURL] = useState("/avatar-img.png");
 
   const methods = useForm({
-    photoURL: user?.photoURL ?? "",
-    displayName: user?.displayName ?? "",
-    instructorTitle: user?.instructorTitle ?? "",
-    instructorDescription: user?.instructorDescription ?? "",
-    contactEmail: user?.email ?? "",
-    contactPhone: user?.phoneNumber ?? "",
-    socials: user?.socials ?? [],
-    username: username ?? "",
+    defaultValues: {
+      photoURL: user?.photoURL ?? "",
+      displayName: user?.displayName ?? "",
+      instructorTitle: user?.instructorTitle ?? "",
+      instructorDescription: user?.instructorDescription ?? "",
+      contactEmail: user?.email ?? "",
+      contactPhone: user?.phoneNumber ?? "",
+      socials: user?.socials ?? [],
+      username: username ?? "",
+    },
   });
 
   const { reset } = methods;
@@ -43,6 +46,7 @@ function UserProfile() {
         if (docSnap.exists()) {
           const fetchedUserData = docSnap.data();
           reset(fetchedUserData);
+          setPhotoURL(fetchedUserData?.photoURL); // Set the avatar URL in state
         }
       } catch (error) {
         console.log("Error fetching user data", error);
@@ -56,7 +60,7 @@ function UserProfile() {
     <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
       <FormProvider {...methods}>
         <aside className="col-span-4 sm:col-span-3">
-          <UserProfileAside />
+          <UserProfileAside photoURL={photoURL} />
           {/* <!-- Manage --> */}
           <div className="self-center bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
@@ -81,7 +85,12 @@ function UserProfile() {
           {/* Image upload */}
 
           {/* Form */}
-          <UserDetailsForm isEditing={isEditing} setIsEditing={setIsEditing} />
+          <UserDetailsForm
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+            photoURL={photoURL}
+            setPhotoURL={setPhotoURL}
+          />
         </main>
       </FormProvider>
     </div>

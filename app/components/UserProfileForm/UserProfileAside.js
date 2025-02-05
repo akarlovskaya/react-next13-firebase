@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 // import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
 
-const UserProfileAside = () => {
+const UserProfileAside = ({ photoURL }) => {
   const { getValues } = useFormContext();
 
   return (
@@ -12,7 +12,7 @@ const UserProfileAside = () => {
       <div className="flex flex-col items-center">
         <div className="flex flex-col items-center">
           <Image
-            src={getValues("photoURL") || "/avatar-img.png"}
+            src={photoURL || "/avatar-img.png"}
             alt={
               `${getValues("displayName")}'s Avatar Picture` || "Profile Avatar"
             }
@@ -25,19 +25,6 @@ const UserProfileAside = () => {
             <h1 className="text-xl font-bold">@{getValues("username")}</h1>
           )}
         </div>
-        {/* <div className="mt-6 flex flex-wrap gap-4 justify-center">
-          <button
-              type="button"
-              className="white hover:text-purple text-navy font-bold py-2 px-4 rounded-full w-full border-2 focus:outline-none focus:shadow-outline"
-                onClick={()=> {
-                  editInfo && onSubmit();
-                  setEditInfo(prevState => !prevState)
-                }
-              }
-            >
-              {editInfo ? "Save" : "Edit"}
-            </button>
-        </div> */}
       </div>
       <hr className="my-6 border-t border-gray-300" />
       {/* <SocialLinksProfileForm

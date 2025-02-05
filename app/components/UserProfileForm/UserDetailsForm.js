@@ -6,8 +6,9 @@ import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/Loader.js";
+import UserImageUpload from "./UserImageUpload.js";
 
-function UserDetailsForm({ userData, isEditing, setIsEditing }) {
+function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
   const {
     getValues,
     register,
@@ -17,27 +18,21 @@ function UserDetailsForm({ userData, isEditing, setIsEditing }) {
 
   const auth = getAuth();
   const [loading, setLoading] = useState(false);
-  // console.log("register from form", register());
-  // console.log("getValues from form", getValues());
 
   const onSubmit = async (data) => {
     setLoading(true);
-    console.log("data from form", data);
 
     const updatedUserData = {
-      displayName: data.displayName,
-      photoURL: data.photoURL,
-      username: data.username,
-      instructorTitle: data.instructorTitle || "",
-      instructorDescription: data.instructorDescription || "",
-      contactPhone: data.contactPhone,
-      socials: data.socials || [],
+      ...data,
+      photoURL,
     };
 
     try {
       // Update user data in Firestore
       const userRef = doc(getFirestore(), "users", auth.currentUser.uid);
       await updateDoc(userRef, updatedUserData);
+      setPhotoURL(updatedUserData.photoURL);
+
       setLoading(false);
       toast.success("Profile updated successfully!");
       setIsEditing(false);
@@ -56,6 +51,7 @@ function UserDetailsForm({ userData, isEditing, setIsEditing }) {
     <>
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)}>
+          <UserImageUpload setPhotoURL={setPhotoURL} />
           <div className="mb-4">
             <label
               htmlFor="displayName"
