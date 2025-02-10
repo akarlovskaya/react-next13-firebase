@@ -81,7 +81,7 @@ function UserProfile() {
             isLoading={isLoading}
           />
           {/* <!-- Manage --> */}
-          <div className="self-center bg-white p-6 rounded-lg shadow-md mt-6">
+          <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
             <Link
               href="/admin"
