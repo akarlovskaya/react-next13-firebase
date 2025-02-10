@@ -10,6 +10,7 @@ import UserProfileAside from "./UserProfileForm/UserProfileAside.js";
 import UserDetailsForm from "./UserProfileForm/UserDetailsForm.js";
 import { IoCreateOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
+import Spinner from "./Loader";
 
 function UserProfile() {
   const db = getFirestore();
@@ -18,17 +19,25 @@ function UserProfile() {
   const { user, username } = useContext(UserContext);
   const [isEditing, setIsEditing] = useState(false);
   const [photoURL, setPhotoURL] = useState("/avatar-img.png");
+  const [isLoading, setIsLoading] = useState(false);
+  const [socialLinks, setSocialLinks] = useState([
+    { name: "facebook", link: "" },
+    { name: "instagram", link: "" },
+    { name: "linkedin", link: "" },
+    { name: "x_com", link: "" },
+    { name: "tiktok", link: "" },
+  ]);
 
   const methods = useForm({
     defaultValues: {
-      photoURL: user?.photoURL ?? "",
+      photoURL: photoURL,
       displayName: user?.displayName ?? "",
-      instructorTitle: user?.instructorTitle ?? "",
-      instructorDescription: user?.instructorDescription ?? "",
+      instructorTitle: "",
+      instructorDescription: "",
       contactEmail: user?.email ?? "",
       contactPhone: user?.phoneNumber ?? "",
-      socials: user?.socials ?? [],
       username: username ?? "",
+      socialLinks: socialLinks,
     },
   });
 
@@ -38,6 +47,7 @@ function UserProfile() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) return;
+      setIsLoading(true);
 
       try {
         const userDocRef = doc(db, "users", userId);
@@ -47,6 +57,11 @@ function UserProfile() {
           const fetchedUserData = docSnap.data();
           reset(fetchedUserData);
           setPhotoURL(fetchedUserData?.photoURL); // Set the avatar URL in state
+
+          if (fetchedUserData?.socialLinks) {
+            setSocialLinks(fetchedUserData.socialLinks);
+          }
+          setIsLoading(false);
         }
       } catch (error) {
         console.log("Error fetching user data", error);
@@ -60,7 +75,11 @@ function UserProfile() {
     <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
       <FormProvider {...methods}>
         <aside className="col-span-4 sm:col-span-3">
-          <UserProfileAside photoURL={photoURL} />
+          <UserProfileAside
+            photoURL={photoURL}
+            socialLinks={socialLinks}
+            isLoading={isLoading}
+          />
           {/* <!-- Manage --> */}
           <div className="self-center bg-white p-6 rounded-lg shadow-md mt-6">
             {/* Create Class Listing Button*/}
@@ -82,14 +101,15 @@ function UserProfile() {
         </aside>
 
         <main className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0 col-span-4 sm:col-span-9">
-          {/* Image upload */}
-
           {/* Form */}
           <UserDetailsForm
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             photoURL={photoURL}
             setPhotoURL={setPhotoURL}
+            socialLinks={socialLinks}
+            setSocialLinks={setSocialLinks}
+            isLoading={isLoading}
           />
         </main>
       </FormProvider>

@@ -3,12 +3,20 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { getAuth } from "firebase/auth";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
-import SocialLinksProfileForm from "../SocialLinksProfileForm.js";
+import SocialLinksProfileForm from "./SocialLinksProfileForm.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/Loader.js";
 import UserImageUpload from "./UserImageUpload.js";
 
-function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
+function UserDetailsForm({
+  isEditing,
+  setIsEditing,
+  photoURL,
+  setPhotoURL,
+  socialLinks,
+  setSocialLinks,
+  isLoading,
+}) {
   const {
     getValues,
     register,
@@ -22,9 +30,25 @@ function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
   const onSubmit = async (data) => {
     setLoading(true);
 
+    // convert user input (Object) to array
+    const updatedSocials = Object.entries(data.socialLinks).map(
+      ([name, link]) => ({ name, link })
+    );
+
+    const allSocialLinks = socialLinks.map((defaultItem) => {
+      const updatedItem = updatedSocials.find(
+        (item) => item.name === defaultItem.name
+      );
+      return updatedItem || defaultItem; // If updatedItem exists, use it; otherwise, use defaultItem
+    });
+
+    // Update local state
+    setSocialLinks(allSocialLinks);
+
     const updatedUserData = {
       ...data,
       photoURL,
+      socialLinks: allSocialLinks,
     };
 
     try {
@@ -32,7 +56,7 @@ function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
       const userRef = doc(getFirestore(), "users", auth.currentUser.uid);
       await updateDoc(userRef, updatedUserData);
       setPhotoURL(updatedUserData.photoURL);
-
+      console.log("updatedUserData", updatedUserData);
       setLoading(false);
       toast.success("Profile updated successfully!");
       setIsEditing(false);
@@ -148,7 +172,7 @@ function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
             )}
           </div>
           {/* Contact Phone */}
-          <div className="mb-4">
+          <div className="mb-8">
             <label
               htmlFor="contactPhone"
               className="block text-gray-700 font-bold mb-2"
@@ -165,6 +189,7 @@ function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
               {...register("contactPhone")}
             />
           </div>
+          <SocialLinksProfileForm socialLinks={socialLinks} />
 
           <div className="flex justify-center mt-5">
             <button
@@ -214,11 +239,11 @@ function UserDetailsForm({ isEditing, setIsEditing, photoURL, setPhotoURL }) {
           <h3 className="text-gray-700 font-bold text-center">
             {getValues("instructorTitle") || "Title"}
           </h3>
-          <h2 className="text-xl font-bold mb-4 mt-4">About Me</h2>
+          <h2 className="font-semibold uppercase mb-2 mt-8">About Me</h2>
           <p className="text-gray-700">
             {getValues("instructorDescription") || "Tell people about yourself"}
           </p>
-          <h2 className="text-xl font-bold mb-4 mt-4">Contacts</h2>
+          <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Email</span>

@@ -1,6 +1,11 @@
-import { FaFacebookSquare, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { useFormContext } from "react-hook-form";
+import {
+  FaFacebookSquare,
+  FaInstagram,
+  FaLinkedin,
+  FaTiktok,
+} from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-// import Spinner from "../components/Loader.jsx";
 
 // Mapping social names to their corresponding icons
 const iconMap = {
@@ -8,25 +13,21 @@ const iconMap = {
   instagram: <FaInstagram />,
   linkedin: <FaLinkedin />,
   x_com: <FaXTwitter />,
+  tiktok: <FaTiktok />,
 };
 
-const SocialLinksProfileForm = ({
-  socialLinks,
-  // onSocialLinkChange,
-  // editInfo,
-}) => {
-  console.log("socialLinks from ProfileForm", socialLinks);
-  //   const [loading, setLoading] = useState(false);
+const SocialLinksProfileForm = ({ socialLinks }) => {
+  const { register } = useFormContext();
 
   return (
     <>
       <fieldset>
-        <legend className="font-semibold uppercase mb-2 mt-8">
+        <legend className="font-semibold uppercase mb-2 mt-12">
           Social Accounts
         </legend>
         <div className="mb-4">
-          {socialLinks.map((socialLink, index) => (
-            <div key={index} className="relative flex gap-x-3 mb-4">
+          {socialLinks.map((socialLink) => (
+            <div key={socialLink.name} className="relative flex gap-x-3 mb-4">
               <label
                 htmlFor={socialLink.name}
                 className="flex text-lg h-10 items-center"
@@ -37,10 +38,10 @@ const SocialLinksProfileForm = ({
               <input
                 type="text"
                 id={socialLink.name}
-                name={socialLink.name}
                 className="border rounded w-full py-2 px-3"
-                placeholder={`Link to ${socialLink.label} profile. Optional`}
-                onChange={(e) => onSocialLinkChange(e, index)}
+                placeholder={`Link to ${socialLink.name} profile. Optional`}
+                defaultValue={socialLink.link}
+                {...register(`socialLinks.${socialLink.name}`)}
               />
             </div>
           ))}
@@ -51,3 +52,5 @@ const SocialLinksProfileForm = ({
 };
 
 export default SocialLinksProfileForm;
+
+// To do: Dynamic Inputs using useFieldArray from react-hook-form
