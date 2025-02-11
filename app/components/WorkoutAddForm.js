@@ -36,7 +36,7 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
     // reValidateMode: 'onBlur'
   });
 
-  console.log("defaultValues from WorkoutAddForm", defaultValues);
+  // console.log("defaultValues from WorkoutAddForm", defaultValues);
 
   const {
     register,
@@ -77,6 +77,10 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
     console.log("validation errors", err);
   };
 
+  const cancel = () => {
+    router.push("/admin");
+  };
+
   return (
     <form noValidate onSubmit={handleSubmit(addWorkout, onError)}>
       <FormProvider {...methods}>
@@ -86,9 +90,17 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         <ClassPayments />
       </FormProvider>
 
-      <div className="grid mt-5">
+      <div className="flex flex-row justify-between mt-10">
         <button
-          className="flex justify-self-center bg-navy text-white text-center px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"
+          type="button"
+          className="w-40 bg-orange-dark text-white px-7 py-3 mb-7 text-sm font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-orange-light"
+          onClick={cancel}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="w-40 bg-navy text-white px-7 py-3 mb-7 text-sm font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
           type="submit"
           disabled={isSubmitting}
         >
@@ -117,6 +129,13 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
             {isSubmitting ? "Adding..." : "Add Class"}
           </span>
         </button>
+
+        {/* <Link
+          className="w-40 block bg-navy text-white px-7 py-3 mb-7 text-sm font-medium text-center rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
+          href={`/${post.username}/${post.slug}`}
+        >
+          <button className="">Live view</button>
+        </Link> */}
       </div>
     </form>
   );
