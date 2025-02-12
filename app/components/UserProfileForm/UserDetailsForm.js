@@ -15,13 +15,13 @@ function UserDetailsForm({
   setPhotoURL,
   socialLinks,
   setSocialLinks,
-  isLoading,
 }) {
   const {
     getValues,
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    reset,
   } = useFormContext();
 
   const auth = getAuth();
@@ -65,6 +65,11 @@ function UserDetailsForm({
       setLoading(false);
       toast.error("Failed to update profile.");
     }
+  };
+
+  const handleCancel = () => {
+    reset();
+    setIsEditing(false);
   };
 
   if (loading) {
@@ -225,7 +230,7 @@ function UserDetailsForm({
             <button
               type="button"
               className="w-40 bg-orange-dark text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-orange-light"
-              onClick={() => setIsEditing(false)}
+              onClick={handleCancel}
             >
               Cancel
             </button>
