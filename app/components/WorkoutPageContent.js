@@ -2,27 +2,14 @@
 import Link from "next/link";
 import { UserContext } from "../Provider";
 import { useContext } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { firestore, getUserWithUsername, postToJSON } from "../lib/firebase";
-import {
-  doc,
-  getDocs,
-  getDoc,
-  collectionGroup,
-  query,
-  limit,
-  getFirestore,
-} from "firebase/firestore";
 import ShareLink from "./ShareLink";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import InstructorInfo from "./InstructorInfo.js";
 import ReactMarkdown from "react-markdown";
+import Spinner from "./Loader";
 
 function WorkoutPageContent({ workout }) {
   const { user: currentUser } = useContext(UserContext);
-  console.log("workout", workout);
-  console.log("currentUser", currentUser);
-
   const { title, address, description, fee, time, daysOfWeek, paymentOptions } =
     workout;
 
@@ -47,6 +34,10 @@ function WorkoutPageContent({ workout }) {
         .join(", ");
     }
     return "";
+  }
+
+  if (!currentUser) {
+    return <Spinner />;
   }
 
   return (
@@ -142,20 +133,25 @@ function WorkoutPageContent({ workout }) {
 
             {/* <!-- Sidebar --> */}
             <aside>
-              {/* <InstructorInfo workout={workout} currentUser={currentUser}/>  */}
-              {/* <Message instructorId={workout.instructor.id} workout={workout}/> */}
+              <InstructorInfo workout={workout} currentUser={currentUser} />
 
               {/* <!-- Manage --> */}
-              {/* <Link
+              {/* {currentUser?.uid === workout.uid && (
+                <>
+                  <Link
                     to={`/edit-class/${workout.id}`}
                     className="bg-navy hover:gray-700 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                    >Edit Class</Link>
-                <button 
+                  >
+                    Edit Class
+                  </Link>
+                  <button
                     onClick={() => deleteWorkout(workout.id)}
-                    className="bg-orange-dark hover:bg-dark-light text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
+                    className="bg-orange-dark hover:bg-dark-light text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                  >
                     Delete Class
-                </button>
-                */}
+                  </button>
+                </>
+              )} */}
             </aside>
           </div>
         </div>

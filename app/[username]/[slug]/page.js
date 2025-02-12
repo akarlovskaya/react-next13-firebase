@@ -77,7 +77,6 @@ async function getWorkoutData(username, slug) {
 export default async function WorkoutPage({ params }) {
   const { username, slug } = await params;
   const workout = await getWorkoutData(username, slug);
-  console.log("workout from WP", workout);
 
   if (!workout) {
     notFound();
