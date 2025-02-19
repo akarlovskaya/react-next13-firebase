@@ -86,13 +86,13 @@ function InstructorInfo({ workout }) {
         {instructorData?.contactPhone && (
           <>
             <h3 className="text-xl mt-4">Phone:</h3>
-            <p className="my-2 bg-beige p-2 font-bold">
+            <p className="my-2 mb-6 bg-beige p-2 font-bold">
               {instructorData.contactPhone}
             </p>
           </>
         )}
 
-        {instructorData?.socials && (
+        {instructorData?.socialLinks && (
           <SocialLinks
             socialLinks={instructorData.socialLinks}
             loading={loading}

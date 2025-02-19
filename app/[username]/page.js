@@ -1,6 +1,7 @@
 import { getUserWithUsername, postToJSON } from "../lib/firebase";
 import {
   query,
+  where,
   collection,
   getDocs,
   orderBy,
@@ -38,7 +39,7 @@ export default async function UserProfilePage({ params }) {
     try {
       const postsQuery = query(
         collection(getFirestore(), userDoc.ref.path, "workouts"),
-        // where('published', '==', true),
+        // where("published", "==", true),
         orderBy("createdAt", "desc")
         // limit(5)
       );

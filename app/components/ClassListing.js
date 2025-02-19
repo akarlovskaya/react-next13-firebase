@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 function ClassListing({ workout, admin }) {
-  const { title, address, slug, fee, username, createdAt } = workout;
+  const { title, address, slug, fee, username, createdAt, published } = workout;
   let { description } = workout;
   const router = useRouter();
   const { user: currentUser } = useContext(UserContext);
@@ -78,7 +78,7 @@ function ClassListing({ workout, admin }) {
           ) : null}
         </div>
 
-        {fee ? (
+        {published ? (
           <h3 className="text-navy mb-2">${fee} CAD</h3>
         ) : (
           <h3 className="text-navy mb-2 ">Draft</h3>

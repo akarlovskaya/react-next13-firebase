@@ -31,22 +31,22 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         zipcode: defaultValues?.address?.zipcode ?? "",
       },
       paymentOptions: defaultValues?.paymentOptions,
+      published: defaultValues?.published ?? false,
     },
     // mode: 'onChange',
     // reValidateMode: 'onBlur'
   });
 
-  // console.log("defaultValues from WorkoutAddForm", defaultValues);
-
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     reset,
     watch,
   } = methods;
 
   const addWorkout = async (formData) => {
+    console.log("formData", formData);
     // Merge existing data with the new form data
     const updatedData = {
       ...defaultValues, // Retain all existing keys
@@ -61,6 +61,8 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         ? formData.paymentOptions.map((payment) => payment.name || payment) // If 'payment' is an object, get its 'name'
         : formData.paymentOptions?.name || [],
     };
+
+    console.log("updatedData", updatedData);
 
     await updateDoc(postRef, {
       ...updatedData,
@@ -88,6 +90,30 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         <DaysOfWeek />
         <ClassLocation />
         <ClassPayments />
+
+        <fieldset>
+          <legend className="font-semibold uppercase mb-2 mt-8">
+            Published Status
+          </legend>
+          <div className="relative flex gap-x-3">
+            <div className="flex h-6 items-center">
+              <input
+                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                name="published"
+                type="checkbox"
+                {...register("published")}
+              />
+            </div>
+            <div className="text-sm leading-6">
+              <label>Published</label>
+            </div>
+          </div>
+          {/* {errors?.published && (
+            <p className="mb-4 text-sm text-red-600" role="alert">
+              {errors.published.message}
+            </p>
+          )} */}
+        </fieldset>
       </FormProvider>
 
       <div className="flex flex-row justify-between mt-10">
@@ -100,7 +126,7 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
         </button>
 
         <button
-          className="w-40 bg-navy text-white px-7 py-3 mb-7 text-sm font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
+          className="flex items-center justify-center w-40 bg-navy text-white px-7 py-3 mb-7 text-sm font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
           type="submit"
           disabled={isSubmitting}
         >
