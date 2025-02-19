@@ -1,15 +1,18 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { auth, googleAuthProvider } from "../lib/firebase";
 import { signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc, setDoc, getFirestore } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { UserContext } from "../Provider";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
 
 function SignInPage() {
+  const { user, username } = useContext(UserContext);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const {
@@ -40,11 +43,24 @@ function SignInPage() {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleAuthProvider);
-      // show success message
-      toast.success("Sign up was successful!");
-      // Redirect to the home page
-      router.push("/");
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const user = result.user;
+
+      if (!user) return;
+
+      // Reference to Firestore document
+      const userRef = doc(getFirestore(), "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists() || !userSnap.data().username) {
+        // User is new or missing a username → redirect them to set a username
+        await setDoc(userRef, { email: user.email }, { merge: true }); // Ensure at least an empty record exists
+        router.push("/set-username");
+      } else {
+        // User has a username → proceed to home page
+        toast.success("Sign in was successful!");
+        router.push("/");
+      }
     } catch (error) {
       console.log("Error with signing in: ", error);
       // show toast error message
@@ -101,12 +117,12 @@ function SignInPage() {
 
             {showPassword ? (
               <IoIosEye
-                className="absolute right-3 top-9 text-xl cursor-pointer"
+                className="absolute right-3 top-11 text-xl cursor-pointer"
                 onClick={() => setShowPassword((prevState) => !prevState)}
               />
             ) : (
               <IoIosEyeOff
-                className="absolute right-3 top-9 text-xl cursor-pointer"
+                className="absolute right-3 top-11 text-xl cursor-pointer"
                 onClick={() => setShowPassword((prevState) => !prevState)}
               />
             )}
