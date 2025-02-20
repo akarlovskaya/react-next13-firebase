@@ -36,9 +36,9 @@ function WorkoutPageContent({ workout }) {
     return "";
   }
 
-  if (!currentUser) {
-    return <Spinner />;
-  }
+  // if (!currentUser) {
+  //   return <Spinner />;
+  // }
 
   return (
     <>

@@ -10,6 +10,7 @@ import {
 import { notFound } from "next/navigation";
 import UserProfile from "../components/UserProfile";
 import ClassListing from "../components/ClassListing";
+import AuthCheck from "../components/AuthCheck";
 
 // Metatags
 export async function generateMetadata({ params }) {
@@ -53,26 +54,28 @@ export default async function UserProfilePage({ params }) {
       return (
         <section className="bg-indigo-50">
           <div className="container mx-auto py-8">
-            <UserProfile user={user} />
-            {workouts?.length > 0 && (
-              <section className="bg-blue-50 px-4 py-10">
-                <div className="container-xl lg:container m-auto">
-                  <h2 className="text-3xl font-bold text-navy mb-6 text-center">
-                    My Classes
-                  </h2>
-                  <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {workouts.map((workout) => (
-                      <ClassListing
-                        key={workout.slug}
-                        classId={workout.slug}
-                        workout={workout}
-                        admin={true}
-                      />
-                    ))}
-                  </ul>
-                </div>
-              </section>
-            )}
+            <AuthCheck>
+              <UserProfile user={user} />
+              {workouts?.length > 0 && (
+                <section className="bg-blue-50 px-4 py-10">
+                  <div className="container-xl lg:container m-auto">
+                    <h2 className="text-3xl font-bold text-navy mb-6 text-center">
+                      My Classes
+                    </h2>
+                    <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {workouts.map((workout) => (
+                        <ClassListing
+                          key={workout.slug}
+                          classId={workout.slug}
+                          workout={workout}
+                          admin={true}
+                        />
+                      ))}
+                    </ul>
+                  </div>
+                </section>
+              )}
+            </AuthCheck>
           </div>
         </section>
       );
@@ -81,10 +84,12 @@ export default async function UserProfilePage({ params }) {
       return (
         <section className="bg-indigo-50">
           <div className="container mx-auto py-8">
-            <UserProfile user={user} />
-            <div className="text-center p-4 bg-red-50 text-red-600 rounded-md">
-              <p>Unable to load classes. Please try again later.</p>
-            </div>
+            <AuthCheck>
+              <UserProfile user={user} />
+              <div className="text-center p-4 bg-red-50 text-red-600 rounded-md">
+                <p>Unable to load classes. Please try again later.</p>
+              </div>
+            </AuthCheck>
           </div>
         </section>
       );
