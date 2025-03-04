@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import Spinner from "../components/Loader.js";
 import SocialLinks from "./SocialLinks";
 import Message from "./Message";
+import Link from "next/link";
 
-function InstructorInfo({ workout }) {
+function InstructorInfo({ workout, currentUser }) {
   const db = getFirestore();
   // Destructure the instructor info from workout and set it as the initial state for instructorData
   const [instructorData, setInstructorData] = useState({
@@ -60,7 +61,12 @@ function InstructorInfo({ workout }) {
             <h2 className="text-xl font-bold mb-6">Instructor Info</h2>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-2xl">{instructorData.displayName}</h3>
+              <Link
+                href={`/${instructorData.username}`}
+                className="text-navy-light font-semibold hover:underline text-2xl"
+              >
+                {instructorData.displayName}
+              </Link>
 
               {instructorData.instructorTitle && (
                 <p className="text-gray-700 mb-3">
@@ -90,27 +96,46 @@ function InstructorInfo({ workout }) {
 
             <hr className="my-4" />
 
-            {instructorData.contactPhone && (
-              <>
-                <h3 className="text-xl mt-4">Phone:</h3>
-                <p className="my-2 mb-6 bg-beige p-2 font-bold">
-                  {instructorData.contactPhone}
+            {!currentUser ? (
+              <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
+                <p className="text-gray-700 mb-2">
+                  Please log in to view contact details.
                 </p>
+                <Link
+                  href="/sign-in"
+                  className="text-navy-light font-semibold hover:underline"
+                >
+                  Sign In
+                </Link>
+              </div>
+            ) : (
+              <>
+                {instructorData.contactPhone && (
+                  <>
+                    <h3 className="text-xl mt-4">Contact Phone:</h3>
+                    <p className="my-2 mb-6 bg-beige p-2 font-semibold text-gray-700">
+                      {instructorData.contactPhone}
+                    </p>
+                  </>
+                )}
+
+                {instructorData.socialLinks && (
+                  <div className="mt-6">
+                    <h3 className="text-xl mb-4">Connect with me:</h3>
+                    <SocialLinks
+                      socialLinks={instructorData.socialLinks}
+                      loading={loading}
+                    />
+                  </div>
+                )}
+
+                <Message
+                  instructorId={workout.uid}
+                  workout={workout}
+                  contactEmail={instructorData.contactEmail}
+                />
               </>
             )}
-
-            {instructorData.socialLinks && (
-              <SocialLinks
-                socialLinks={instructorData.socialLinks}
-                loading={loading}
-              />
-            )}
-
-            <Message
-              instructorId={workout.uid}
-              workout={workout}
-              contactEmail={instructorData.contactEmail}
-            />
           </>
         )
       )}

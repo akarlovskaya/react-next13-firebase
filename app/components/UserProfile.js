@@ -31,6 +31,8 @@ function UserProfile({ usernameParam, userDataFromParam }) {
   ]);
   const isOwner = username === usernameParam;
 
+  console.log("isOwner", isOwner);
+
   const methods = useForm({
     defaultValues: {
       photoURL: photoURL,
@@ -123,7 +125,10 @@ function UserProfile({ usernameParam, userDataFromParam }) {
           </FormProvider>
         </div>
       ) : (
-        <UserDataFromParamView userData={userDataFromParam} />
+        <UserDataFromParamView
+          userData={userDataFromParam}
+          loggedInUser={userId}
+        />
       )}
     </>
   );

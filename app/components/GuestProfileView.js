@@ -1,7 +1,8 @@
 import Image from "next/image";
 import SocialLinks from "./SocialLinks.js";
+import Link from "next/link";
 
-export default function UserDataFromParamView({ userData }) {
+export default function UserDataFromParamView({ userData, loggedInUser }) {
   return (
     <section className="bg-indigo-50">
       <div className="container mx-auto py-8">
@@ -46,23 +47,38 @@ export default function UserDataFromParamView({ userData }) {
             {(userData?.contactEmail || userData?.contactPhone) && (
               <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
             )}
-
-            {userData?.contactEmail && (
-              <div className="mb-6">
-                <div className="flex justify-between flex-wrap gap-2 w-full">
-                  <span className="text-gray-700 font-bold">Email</span>
-                </div>
-                <p className="mt-2">{userData?.contactEmail}</p>
+            {!loggedInUser ? (
+              <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
+                <p className="text-gray-700 mb-2">
+                  Please log in to view contact details.
+                </p>
+                <Link
+                  href="/sign-in"
+                  className="text-navy-light font-semibold hover:underline"
+                >
+                  Sign In
+                </Link>
               </div>
-            )}
+            ) : (
+              <>
+                {userData?.contactEmail && (
+                  <div className="mb-6">
+                    <div className="flex justify-between flex-wrap gap-2 w-full">
+                      <span className="text-gray-700 font-bold">Email</span>
+                    </div>
+                    <p className="mt-2">{userData?.contactEmail}</p>
+                  </div>
+                )}
 
-            {userData?.contactPhone && (
-              <div className="mb-6">
-                <div className="flex justify-between flex-wrap gap-2 w-full">
-                  <span className="text-gray-700 font-bold">Phone</span>
-                </div>
-                <p className="mt-2">{userData?.contactPhone}</p>
-              </div>
+                {userData?.contactPhone && (
+                  <div className="mb-6">
+                    <div className="flex justify-between flex-wrap gap-2 w-full">
+                      <span className="text-gray-700 font-bold">Phone</span>
+                    </div>
+                    <p className="mt-2">{userData?.contactPhone}</p>
+                  </div>
+                )}
+              </>
             )}
           </main>
         </div>

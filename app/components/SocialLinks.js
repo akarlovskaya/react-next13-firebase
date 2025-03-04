@@ -29,7 +29,7 @@ const SocialLinks = ({ socialLinks }) => {
     <>
       {hasNonEmptyLink && (
         <>
-          <h3 className="text-gray-700 font-bold">Find me on socials:</h3>
+          {/* <h3 className="text-gray-700 font-bold">Find me on socials:</h3> */}
           <ul className="flex justify-left items-center gap-3 my-3">
             {socialLinks.map(
               (socialLink) =>
