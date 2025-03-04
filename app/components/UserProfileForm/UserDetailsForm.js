@@ -73,7 +73,7 @@ function UserDetailsForm({
   };
 
   if (loading) {
-    return <Spinner />;
+    return <Spinner show={loading} />;
   }
 
   return (

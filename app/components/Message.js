@@ -31,7 +31,7 @@ const Message = ({ instructorId, workout, contactEmail }) => {
 
   // Handle loading state
   if (isLoading) {
-    return <Spinner />;
+    return <Spinner show={isLoading} />;
   }
 
   // Check if current user is the instructor
@@ -75,7 +75,9 @@ const Message = ({ instructorId, workout, contactEmail }) => {
             </div>
             <div>
               <a
-                href={`mailto:${contactEmail}?Subject=${workout.title} from Vanklass&body=${message}`}
+                href={`mailto:${contactEmail}?Subject=${encodeURIComponent(
+                  workout.title + " from Vanklass"
+                )}&body=${encodeURIComponent(message)}`}
               >
                 <button
                   className="flex justify-center w-40 justify-self-center bg-navy text-white px-7 py-3 mt-5 text-sm font-medium rounded shadow-md hover:bg-gray-900"

@@ -37,7 +37,7 @@ function WorkoutPageContent({ workout }) {
   }
 
   // if (!currentUser) {
-  //   return <Spinner />;
+  //   return <Spinner show={true} />;
   // }
 
   return (
