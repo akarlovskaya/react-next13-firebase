@@ -23,54 +23,50 @@ function WorkoutList({ usernameParam }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchUserWorkouts = async (user) => {
+    const db = getFirestore();
+    const userDoc = await getUserWithUsername(user);
+    if (!userDoc) {
+      setError("User not found");
+      console.error("User not found");
+      setWorkouts([]); // Clear workouts
+      setIsLoading(false); // Stop loading
+      return;
+    }
+
+    return query(
+      collection(db, userDoc.ref.path, "workouts"),
+      isAdminPage ? null : where("published", "==", true), // show all workouts including drafts on admin page or only published
+      orderBy("createdAt", "desc")
+    );
+  };
+
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const db = getFirestore();
-      let workoutsQuery, userDoc;
+      let workoutsQuery;
 
       //Fetch workouts for Guest (signed-in user) and Not signed-in user views someone else's profile (the user specified in `usernameParam`)
       if (usernameParam) {
-        userDoc = await getUserWithUsername(usernameParam);
-        if (!userDoc) {
-          setError("User not found");
-          console.error("User not found");
-          setWorkouts([]); // Clear workouts
-          setIsLoading(false); // Stop loading
-          return;
-        }
-
-        workoutsQuery = query(
-          collection(db, userDoc.ref.path, "workouts"),
-          where("published", "==", true),
-          orderBy("createdAt", "desc")
-        );
+        workoutsQuery = await fetchUserWorkouts(usernameParam);
       } else if (username) {
         //Fetch workouts for the authenticated (owner) user
-        userDoc = await getUserWithUsername(username);
-        if (!userDoc) {
-          console.error("User not found");
-          return;
-        }
-
-        workoutsQuery = query(
-          collection(db, userDoc.ref.path, "workouts"),
-          // where("published", "==", true), - show all workouts in admin
-          orderBy("createdAt", "desc")
-        );
+        workoutsQuery = await fetchUserWorkouts(username);
       } else {
         // No user is signed in, and no `usernameParam` is provided
-        setWorkouts([]);
+        setIsLoading(false);
         return;
       }
 
-      const workoutsSnapshot = await getDocs(workoutsQuery);
-      const workoutsTrial = workoutsSnapshot.docs.map(postToJSON);
-      setWorkouts(workoutsTrial);
+      if (workoutsQuery) {
+        const workoutsSnapshot = await getDocs(workoutsQuery);
+        const workouts = workoutsSnapshot.docs.map(postToJSON);
+        setWorkouts(workouts);
+      }
       setIsLoading(false);
     };
 
     fetchWorkouts();
-  }, [username, usernameParam]);
+  }, [username, usernameParam, isAdminPage]);
 
   return (
     <>
@@ -80,6 +76,8 @@ function WorkoutList({ usernameParam }) {
             <div className="flex justify-center items-center min-h-[50vh]">
               <Loader show={isLoading} />
             </div>
+          ) : error ? (
+            <p className="text-center text-red-500">{error}</p>
           ) : workouts?.length > 0 ? (
             <>
               <h1 className="text-3xl font-bold text-navy mb-6 text-center">
