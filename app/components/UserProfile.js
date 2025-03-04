@@ -11,8 +11,10 @@ import UserDetailsForm from "./UserProfileForm/UserDetailsForm.js";
 import { IoCreateOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import Spinner from "./Loader";
+import { notFound } from "next/navigation";
+import UserDataFromParamView from "./GuestProfileView.js";
 
-function UserProfile() {
+function UserProfile({ usernameParam, userDataFromParam }) {
   const db = getFirestore();
   const auth = getAuth();
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
@@ -27,6 +29,7 @@ function UserProfile() {
     { name: "x_com", link: "" },
     { name: "tiktok", link: "" },
   ]);
+  const isOwner = username === usernameParam;
 
   const methods = useForm({
     defaultValues: {
@@ -72,48 +75,57 @@ function UserProfile() {
   }, [userId, reset]);
 
   return (
-    <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
-      <FormProvider {...methods}>
-        <aside className="col-span-4 sm:col-span-3">
-          <UserProfileAside
-            photoURL={photoURL}
-            socialLinks={socialLinks}
-            isLoading={isLoading}
-          />
-          {/* <!-- Manage --> */}
-          <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md mt-6">
-            {/* Create Class Listing Button*/}
-            <Link
-              href="/admin"
-              className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
-            >
-              <IoCreateOutline className="mr-2 text-xl" /> Create Class
-            </Link>
+    <>
+      {isOwner ? (
+        <div className="grid grid-cols-4 sm:grid-cols-12 gap-6 px-4">
+          <FormProvider {...methods}>
+            <aside className="col-span-4 sm:col-span-3">
+              <UserProfileAside
+                photoURL={photoURL}
+                socialLinks={socialLinks}
+                isLoading={isLoading}
+              />
+              {/* <!-- Manage --> */}
 
-            <button
-              type="button"
-              className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 mt-5 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
-              onClick={(e) => setIsEditing(!isEditing)}
-            >
-              Edit Profile
-            </button>
-          </div>
-        </aside>
+              {isOwner && (
+                <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md mt-6">
+                  {/* Create Class Listing Button*/}
+                  <Link
+                    href="/admin"
+                    className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
+                  >
+                    <IoCreateOutline className="mr-2 text-xl" /> Create Class
+                  </Link>
 
-        <main className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0 col-span-4 sm:col-span-9">
-          {/* Form */}
-          <UserDetailsForm
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            photoURL={photoURL}
-            setPhotoURL={setPhotoURL}
-            socialLinks={socialLinks}
-            setSocialLinks={setSocialLinks}
-            isLoading={isLoading}
-          />
-        </main>
-      </FormProvider>
-    </div>
+                  <button
+                    type="button"
+                    className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 mt-5 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
+                    onClick={(e) => setIsEditing(!isEditing)}
+                  >
+                    Edit Profile
+                  </button>
+                </div>
+              )}
+            </aside>
+
+            <main className="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0 col-span-4 sm:col-span-9">
+              {/* Form */}
+              <UserDetailsForm
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                photoURL={photoURL}
+                setPhotoURL={setPhotoURL}
+                socialLinks={socialLinks}
+                setSocialLinks={setSocialLinks}
+                isLoading={isLoading}
+              />
+            </main>
+          </FormProvider>
+        </div>
+      ) : (
+        <UserDataFromParamView userData={userDataFromParam} />
+      )}
+    </>
   );
 }
 

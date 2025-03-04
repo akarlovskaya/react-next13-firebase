@@ -10,7 +10,7 @@ function AuthCheck(props) {
     ? props.children
     : props.fallback || (
         <Link
-          href="/sign-up"
+          href="/sign-in"
           className="text-navy hover:text-blue-800 underline font-semibold transition duration-200"
         >
           You must be signed in
