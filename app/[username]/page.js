@@ -26,7 +26,13 @@ export default async function UserProfilePage({ params }) {
       return notFound();
     }
     // JSON serializable data
-    const userDataFromParam = userDoc.data(); // user's profile from url param, based on username
+    const userDataFromParam = userDoc.data();
+    if (!userDataFromParam) {
+      console.log(
+        "User document exists but has no data, triggering notFound()"
+      );
+      return notFound();
+    } // user's profile from url param, based on username
 
     return (
       <section className="bg-indigo-50">
@@ -41,19 +47,6 @@ export default async function UserProfilePage({ params }) {
     );
   } catch (error) {
     console.error("Error in UserProfilePage:", error);
-    return (
-      <section className="bg-red-50 min-h-screen">
-        <div className="container mx-auto py-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              {error.message || "Something went wrong"}
-            </h1>
-            <p className="text-gray-600">
-              Please try again later or contact support if the problem persists.
-            </p>
-          </div>
-        </div>
-      </section>
-    );
+    throw error;
   }
 }

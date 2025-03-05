@@ -5,16 +5,17 @@ import { useEffect, useState, useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { UserContext } from "../Provider";
 import Link from "next/link";
-import Image from "next/image";
 import UserProfileAside from "./UserProfileForm/UserProfileAside.js";
 import UserDetailsForm from "./UserProfileForm/UserDetailsForm.js";
 import { IoCreateOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
-import Spinner from "./Loader";
 import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
 
 function UserProfile({ usernameParam, userDataFromParam }) {
+  if (!userDataFromParam) {
+    return notFound();
+  }
   const db = getFirestore();
   const auth = getAuth();
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
@@ -30,8 +31,6 @@ function UserProfile({ usernameParam, userDataFromParam }) {
     { name: "tiktok", link: "" },
   ]);
   const isOwner = username === usernameParam;
-
-  console.log("isOwner", isOwner);
 
   const methods = useForm({
     defaultValues: {
@@ -51,12 +50,18 @@ function UserProfile({ usernameParam, userDataFromParam }) {
   // Fetch user data from Firestore db
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return;
+      if (!userId) {
+        return notFound();
+      }
       setIsLoading(true);
 
       try {
         const userDocRef = doc(db, "users", userId);
         const docSnap = await getDoc(userDocRef);
+
+        if (!docSnap.exists()) {
+          return notFound(); // User does not exist in Firestore
+        }
 
         if (docSnap.exists()) {
           const fetchedUserData = docSnap.data();

@@ -19,6 +19,7 @@ function InstructorInfo({ workout, currentUser }) {
     socialLinks: [],
   });
   const [loading, setLoading] = useState(true);
+  console.log("instructorData.socialLinks", instructorData);
 
   // Fetch additional instructor data from Firestore
   useEffect(() => {
@@ -58,18 +59,13 @@ function InstructorInfo({ workout, currentUser }) {
       ) : (
         instructorData && (
           <>
-            {/* <h2 className="text-xl font-bold mb-6">Instructor Info</h2> */}
-
             <div className="flex flex-col items-center">
-              {instructorData.photoURL && (
-                <img
-                  src={instructorData.photoURL || "/avatar-img.png"}
-                  className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
-                  alt={`${
-                    instructorData.displayName || "Profile Name"
-                  }'s photo`}
-                />
-              )}
+              <img
+                src={instructorData.photoURL || "/avatar-img.png"}
+                className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
+                alt={`${instructorData.displayName || "Profile Name"}'s photo`}
+              />
+
               <Link
                 href={`/${instructorData.username}`}
                 className="text-navy-light font-semibold hover:underline text-2xl"
@@ -118,7 +114,7 @@ function InstructorInfo({ workout, currentUser }) {
                   </>
                 )}
 
-                {instructorData.socialLinks && (
+                {instructorData.socialLinks.length > 0 && (
                   <div className="mt-6">
                     <h3 className="text-xl mb-4">Connect with me:</h3>
                     <SocialLinks
