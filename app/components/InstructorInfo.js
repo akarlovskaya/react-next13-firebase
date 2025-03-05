@@ -58,9 +58,18 @@ function InstructorInfo({ workout, currentUser }) {
       ) : (
         instructorData && (
           <>
-            <h2 className="text-xl font-bold mb-6">Instructor Info</h2>
+            {/* <h2 className="text-xl font-bold mb-6">Instructor Info</h2> */}
 
             <div className="flex flex-col items-center">
+              {instructorData.photoURL && (
+                <img
+                  src={instructorData.photoURL || "/avatar-img.png"}
+                  className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
+                  alt={`${
+                    instructorData.displayName || "Profile Name"
+                  }'s photo`}
+                />
+              )}
               <Link
                 href={`/${instructorData.username}`}
                 className="text-navy-light font-semibold hover:underline text-2xl"
@@ -72,16 +81,6 @@ function InstructorInfo({ workout, currentUser }) {
                 <p className="text-gray-700 mb-3">
                   {instructorData.instructorTitle}
                 </p>
-              )}
-
-              {instructorData.photoURL && (
-                <img
-                  src={instructorData.photoURL || "/avatar-img.png"}
-                  className="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"
-                  alt={`${
-                    instructorData.displayName || "Profile Name"
-                  }'s photo`}
-                />
               )}
             </div>
 

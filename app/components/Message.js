@@ -41,8 +41,8 @@ const Message = ({ instructorId, workout, contactEmail }) => {
     <>
       {/* show message btn if it is not a author of post and btn was not clicked */}
       {!isCreator && !messageInstructor && (
-        <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-          <h3 className="text-xl font-bold">Questions?</h3>
+        <div className="bg-white p-6 text-center mt-6">
+          <h3 className="text-xl mb-4">Questions?</h3>
           <p className="text-md mb-6">Contact Instructor</p>
           <button
             onClick={() => setMessageInstructor(true)}
@@ -55,12 +55,12 @@ const Message = ({ instructorId, workout, contactEmail }) => {
 
       {/* message text area */}
       {messageInstructor && authUserId !== null && (
-        <div className="bg-white p-6 rounded-lg shadow-md mt-6">
-          <h3 className="text-xl font-bold">Questions?</h3>
+        <div className="bg-white p-6 text-center mt-6 ">
+          <h3 className="text-xl mb-4">Questions?</h3>
           <p className="text-md mb-6">Contact Instructor</p>
           <div className="flex flex-col w-full">
             <p>
-              Contact <b>{workout.displayName}</b> about <b>{workout.title}</b>{" "}
+              Message <b>{workout.displayName}</b> about <b>{workout.title}</b>{" "}
               class.
             </p>
             <div className="mt-3 mb-6">
