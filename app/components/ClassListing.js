@@ -67,11 +67,11 @@ function ClassListing({ workout, admin }) {
         </div>
 
         <div className="mb-5 min-h-20">
-          {description}
+          <span>{description}&nbsp;</span>
           {description.length >= 130 ? (
             <button
               onClick={() => setShowFullDescription((prevState) => !prevState)}
-              className="text-navy mb -5 hover:text-indigo-600"
+              className="text-navy mb-5 hover:text-indigo-600"
             >
               {showFullDescription ? "Less" : "Read more"}
             </button>
