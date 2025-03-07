@@ -43,6 +43,35 @@ const ClassInfo = () => {
           </p>
         )}
       </div>
+      {/* Short Description */}
+      <div className="mb-4">
+        <div className="flex items-center">
+          <label
+            htmlFor="shortDescription"
+            className="text-sm font-semibold leading-6 text-gray-900 mb-2"
+          >
+            Short Description
+          </label>
+        </div>
+
+        <textarea
+          id="shortDescription"
+          className="border rounded w-full py-2 px-3 resize"
+          rows="3"
+          placeholder="Short description visible as a preview (max 250 characters)."
+          {...register("shortDescription", {
+            required: { value: true, message: "Short Description is required" },
+            maxLength: { value: 250, message: "Short Description is too long" },
+            minLength: { value: 50, message: "Short Description is too short" },
+          })}
+        ></textarea>
+        {errors?.shortDescription && (
+          <p className="mb-4 text-sm text-red-600" role="alert">
+            {errors.shortDescription.message}
+          </p>
+        )}
+      </div>
+
       {/* Description */}
 
       {preview && (
@@ -109,7 +138,7 @@ const ClassInfo = () => {
             htmlFor="description"
             className="text-sm font-semibold leading-6 text-gray-900 mb-2"
           >
-            Description
+            Class Details
           </label>
           <button
             type="button"
@@ -126,7 +155,7 @@ const ClassInfo = () => {
           rows="5"
           placeholder="Tell what to expect from your classes - e.g. goal of the class, duration, what participants should bring and wear, if any equipment will be used in your class. Note: Make your first sentence as informative and catchy as possible, as only the first 130 characters will be visible on the Home Page. The full description will be visible on the Class Details page."
           {...register("description", {
-            required: { value: true, message: "Description is required" },
+            // required: { value: true, message: "Description is required" },
             maxLength: { value: 20000, message: "Description is too long" },
             minLength: { value: 10, message: "Description is too short" },
           })}
@@ -142,7 +171,7 @@ const ClassInfo = () => {
         className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 text-sm font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
         onClick={() => setPreview(!preview)}
       >
-        {preview ? "Edit" : "Preview"}
+        {preview ? "Edit" : "Preview Details"}
       </button>
 
       {/* Fee */}

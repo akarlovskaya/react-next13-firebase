@@ -1,24 +1,18 @@
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import {
-  serverTimestamp,
-  doc,
-  deleteDoc,
-  updateDoc,
-  getFirestore,
-} from "firebase/firestore";
+import { FormProvider, useForm } from "react-hook-form";
+import { serverTimestamp, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
 import ClassInfo from "./AddClassDetailsForm/ClassInfo.js";
 import ClassLocation from "./AddClassDetailsForm/ClassLocation.js";
 import ClassPayments from "./AddClassDetailsForm/ClassPayments.js";
 import DaysOfWeek from "./AddClassDetailsForm/DaysOfWeek.js";
 
-function WorkoutAddForm({ postRef, defaultValues, preview }) {
+function WorkoutAddForm({ postRef, defaultValues }) {
   const router = useRouter();
   const methods = useForm({
     defaultValues: {
       title: defaultValues?.title ?? "",
+      shortDescription: defaultValues?.shortDescription ?? "",
       description: defaultValues?.description ?? "",
       time: defaultValues?.time ?? "",
       daysOfWeek: defaultValues?.daysOfWeek,
@@ -40,9 +34,8 @@ function WorkoutAddForm({ postRef, defaultValues, preview }) {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     reset,
-    watch,
   } = methods;
 
   const addWorkout = async (formData) => {

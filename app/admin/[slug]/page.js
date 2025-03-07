@@ -7,7 +7,6 @@ const AdminWorkoutEditPage = async ({ params }) => {
 
   return (
     <div className={styles.container}>
-      AdminWorkoutEditPage
       <AuthCheck>
         <WorkoutPostManager slug={slug} />
       </AuthCheck>

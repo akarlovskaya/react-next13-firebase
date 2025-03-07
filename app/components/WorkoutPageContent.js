@@ -10,8 +10,16 @@ import Spinner from "./Loader";
 
 function WorkoutPageContent({ workout }) {
   const { user: currentUser } = useContext(UserContext);
-  const { title, address, description, fee, time, daysOfWeek, paymentOptions } =
-    workout;
+  const {
+    title,
+    address,
+    shortDescription,
+    description,
+    fee,
+    time,
+    daysOfWeek,
+    paymentOptions,
+  } = workout;
 
   // Convert time to AM / PM for ClassPage.jsx
   const changeTimeFormat = (time) => {
@@ -72,60 +80,63 @@ function WorkoutPageContent({ workout }) {
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-10">
+                <div></div>
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                  Class Description
+                  Description
                 </h3>
+                <p className="mb-4">{shortDescription}</p>
+
                 {description !== "" && (
                   <>
+                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
+                      Class Details
+                    </h3>
                     <div className="mb-4 markdown-editor">
                       <ReactMarkdown>{description}</ReactMarkdown>
                     </div>
-
-                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                      Fee
-                    </h3>
-                    <p className="mb-4">${fee} CAD</p>
-
-                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                      Schedule
-                    </h3>
-
-                    <p className="mb-4">
-                      {changeTimeFormat(time)} on {formatDaysArray(daysOfWeek)}{" "}
-                    </p>
-
-                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                      Location
-                    </h3>
-                    <b className="mb-4">{address?.place} </b>
-                    <address className="mb-4">
-                      {address?.street}
-                      <br />
-                      {`${address?.city}, ${address?.region}`}
-                      <br />
-                      {address?.zipcode}
-                    </address>
-
-                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
-                      Payment Options
-                    </h3>
-                    <ul>
-                      {paymentOptions?.map((payment) => {
-                        return (
-                          <li key={payment}>
-                            {payment.charAt(0).toUpperCase() + payment.slice(1)}
-                          </li>
-                        );
-                      })}
-                    </ul>
                   </>
                 )}
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">Fee</h3>
+                <p className="mb-4">${fee} CAD</p>
+
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">
+                  Schedule
+                </h3>
+
+                <p className="mb-4">
+                  {changeTimeFormat(time)} on {formatDaysArray(daysOfWeek)}{" "}
+                </p>
+
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">
+                  Location
+                </h3>
+                <b className="mb-4">{address?.place} </b>
+                <address className="mb-4">
+                  {address?.street}
+                  <br />
+                  {`${address?.city}, ${address?.region}`}
+                  <br />
+                  {address?.zipcode}
+                </address>
+
+                <h3 className="text-indigo-800 text-lg font-bold mb-2">
+                  Payment Options
+                </h3>
+                <ul>
+                  {paymentOptions?.map((payment) => {
+                    return (
+                      <li key={payment}>
+                        {payment.charAt(0).toUpperCase() + payment.slice(1)}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
 
               {currentUser?.uid === workout.uid && (
                 <Link href={`/admin/${workout.slug}`}>
                   <button className="w-40 justify-self-center bg-navy text-white px-7 py-3 mt-5 text-sm font-medium rounded shadow-md hover:bg-gray-900">
-                    Edit Post
+                    Edit
                   </button>
                 </Link>
               )}

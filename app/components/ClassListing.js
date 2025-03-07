@@ -12,14 +12,14 @@ import toast from "react-hot-toast";
 
 function ClassListing({ workout, admin }) {
   const { title, address, slug, fee, username, createdAt, published } = workout;
-  let { description } = workout;
+  let { shortDescription } = workout;
   const router = useRouter();
   const { user: currentUser } = useContext(UserContext);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   // show short version of description
-  if (!showFullDescription && description.length >= 130) {
-    description = description.substring(0, 130) + "...";
+  if (!showFullDescription && shortDescription?.length >= 130) {
+    shortDescription = shortDescription.substring(0, 130) + "...";
   }
 
   const handleDelete = async (classId) => {
@@ -67,8 +67,8 @@ function ClassListing({ workout, admin }) {
         </div>
 
         <div className="mb-5 min-h-20">
-          <span>{description}&nbsp;</span>
-          {description.length >= 130 ? (
+          <span>{shortDescription}&nbsp;</span>
+          {shortDescription?.length >= 130 ? (
             <button
               onClick={() => setShowFullDescription((prevState) => !prevState)}
               className="text-navy mb-5 hover:text-indigo-600"
