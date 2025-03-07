@@ -6,10 +6,25 @@ import ShareLink from "./ShareLink";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import InstructorInfo from "./InstructorInfo.js";
 import ReactMarkdown from "react-markdown";
-import Spinner from "./Loader";
 
 function WorkoutPageContent({ workout }) {
   const { user: currentUser } = useContext(UserContext);
+  if (!workout) {
+    return (
+      <section className="bg-indigo-50">
+        <div className="container m-auto py-10 px-6">
+          <div className="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6"></div>
+          <p>No workout data available.</p>
+          <Link
+            href="/"
+            className="text-indigo-500 hover:text-indigo-600 flex items-center"
+          >
+            <FaArrowLeft className="mr-2" /> Back to All Classes
+          </Link>
+        </div>
+      </section>
+    );
+  }
   const {
     title,
     address,
@@ -44,10 +59,6 @@ function WorkoutPageContent({ workout }) {
     return "";
   }
 
-  // if (!currentUser) {
-  //   return <Spinner show={true} />;
-  // }
-
   return (
     <>
       <section>
@@ -70,7 +81,9 @@ function WorkoutPageContent({ workout }) {
                   <ShareLink />
                 </div>
 
-                <h1 className="text-3xl font-bold mb-4">{title}</h1>
+                <h1 className="text-3xl font-bold mb-4">
+                  {title || "No Title Available"}
+                </h1>
                 {address?.city && (
                   <div className="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">
                     <FaMapMarker className="inline text-lg mb-1 mr-1 mt-1 text-orange-dark" />
@@ -80,31 +93,34 @@ function WorkoutPageContent({ workout }) {
               </div>
 
               <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-10">
-                <div></div>
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Description
                 </h3>
-                <p className="mb-4">{shortDescription}</p>
+                <p className="mb-4">
+                  {shortDescription || "No Short Description Available"}
+                </p>
 
-                {description !== "" && (
+                {description && (
                   <>
                     <h3 className="text-indigo-800 text-lg font-bold mb-2">
                       Class Details
                     </h3>
                     <div className="mb-4 markdown-editor">
-                      <ReactMarkdown>{description}</ReactMarkdown>
+                      <ReactMarkdown>
+                        {description || "No Description Available"}
+                      </ReactMarkdown>
                     </div>
                   </>
                 )}
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Fee</h3>
-                <p className="mb-4">${fee} CAD</p>
+                <p className="mb-4">${fee || "No Fee Available"} CAD</p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Schedule
                 </h3>
 
                 <p className="mb-4">
-                  {changeTimeFormat(time)} on {formatDaysArray(daysOfWeek)}{" "}
+                  {changeTimeFormat(time)} on {formatDaysArray(daysOfWeek)}
                 </p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
@@ -133,8 +149,8 @@ function WorkoutPageContent({ workout }) {
                 </ul>
               </div>
 
-              {currentUser?.uid === workout.uid && (
-                <Link href={`/admin/${workout.slug}`}>
+              {currentUser?.uid === workout?.uid && (
+                <Link href={`/admin/${workout?.slug}`}>
                   <button className="w-40 justify-self-center bg-navy text-white px-7 py-3 mt-5 text-sm font-medium rounded shadow-md hover:bg-gray-900">
                     Edit
                   </button>
@@ -145,24 +161,6 @@ function WorkoutPageContent({ workout }) {
             {/* <!-- Sidebar --> */}
             <aside>
               <InstructorInfo workout={workout} currentUser={currentUser} />
-
-              {/* <!-- Manage --> */}
-              {/* {currentUser?.uid === workout.uid && (
-                <>
-                  <Link
-                    to={`/edit-class/${workout.id}`}
-                    className="bg-navy hover:gray-700 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                  >
-                    Edit Class
-                  </Link>
-                  <button
-                    onClick={() => deleteWorkout(workout.id)}
-                    className="bg-orange-dark hover:bg-dark-light text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
-                  >
-                    Delete Class
-                  </button>
-                </>
-              )} */}
             </aside>
           </div>
         </div>
