@@ -39,33 +39,39 @@ function WorkoutAddForm({ postRef, defaultValues }) {
   } = methods;
 
   const addWorkout = async (formData) => {
-    console.log("formData", formData);
-    // Merge existing data with the new form data
-    const updatedData = {
-      ...defaultValues, // Retain all existing keys
-      ...formData,
-      // Handle daysOfWeek to always produce an array of strings
-      daysOfWeek: Array.isArray(formData.daysOfWeek)
-        ? formData.daysOfWeek.map((day) => day.name || day) // If 'day' is an object, get its 'name'
-        : formData.daysOfWeek?.name || [], // Handle the case where formData.daysOfWeek might not be an array
+    try {
+      // Merge existing data with the new form data
+      const updatedData = {
+        ...defaultValues, // Retain all existing keys
+        ...formData,
+        // Handle daysOfWeek to always produce an array of strings
+        daysOfWeek: Array.isArray(formData.daysOfWeek)
+          ? formData.daysOfWeek.map((day) => day.name || day) // If 'day' is an object, get its 'name'
+          : formData.daysOfWeek?.name || [], // Handle the case where formData.daysOfWeek might not be an array
 
-      // Handle paymentOptions to always produce an array of strings
-      paymentOptions: Array.isArray(formData.paymentOptions)
-        ? formData.paymentOptions.map((payment) => payment.name || payment) // If 'payment' is an object, get its 'name'
-        : formData.paymentOptions?.name || [],
-    };
+        // Handle paymentOptions to always produce an array of strings
+        paymentOptions: Array.isArray(formData.paymentOptions)
+          ? formData.paymentOptions.map((payment) => payment.name || payment) // If 'payment' is an object, get its 'name'
+          : formData.paymentOptions?.name || [],
+      };
 
-    console.log("updatedData", updatedData);
+      console.log("updatedData", updatedData);
 
-    await updateDoc(postRef, {
-      ...updatedData,
-      updatedAt: serverTimestamp(),
-    });
+      await updateDoc(postRef, {
+        ...updatedData,
+        updatedAt: serverTimestamp(),
+      });
 
-    reset(formData);
+      reset(formData);
 
-    toast.success("Workout added successfully!");
-    router.push(`/${defaultValues.username}/${defaultValues.slug}`);
+      toast.success("Workout added successfully!");
+      router.push(`/${defaultValues.username}/${defaultValues.slug}`);
+    } catch (error) {
+      console.error("Full error:", error);
+      // specific messages in the error
+      console.error("Error code:", error.code);
+      console.error("Error message:", error.message);
+    }
   };
 
   const onError = async (err) => {
@@ -164,13 +170,17 @@ export default WorkoutAddForm;
 
 // schema
 // title: string, required
-// description: string, required
+// shortDescription: string, required
+// description: string
 // time: time, required
-// days of the week: checkbox, required
+// daysOfWeek: checkbox, required
 // fee: number, required
-// location name: string, required
-// street: string, required
-// city: string, required
-// state: string, required
-// zip: string, required
-// payment options: checkbox
+// address: {
+//   place: string, required
+//   street: string, required
+//   city: string, required
+//   region: string, required
+//   zipcode: string, required
+// },
+// paymentOptions: checkbox
+// published: checkbox

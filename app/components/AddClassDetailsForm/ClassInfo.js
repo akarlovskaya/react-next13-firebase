@@ -24,7 +24,7 @@ const ClassInfo = () => {
           htmlFor="title"
           className="block text-sm font-semibold leading-6 text-gray-900 mb-2"
         >
-          Name
+          Name*
         </label>
         <input
           type="text"
@@ -50,7 +50,7 @@ const ClassInfo = () => {
             htmlFor="shortDescription"
             className="text-sm font-semibold leading-6 text-gray-900 mb-2"
           >
-            Short Description
+            Short Description*
           </label>
         </div>
 
@@ -180,7 +180,7 @@ const ClassInfo = () => {
           htmlFor="fee"
           className="block text-sm font-semibold leading-6 text-gray-900 mb-2"
         >
-          Fee
+          Fee*
         </label>
         <input
           type="number"
@@ -203,7 +203,7 @@ const ClassInfo = () => {
           htmlFor="time"
           className="block text-sm font-semibold leading-6 text-gray-900 mb-2"
         >
-          Time
+          Time*
         </label>
         <input
           type="time"
@@ -212,11 +212,19 @@ const ClassInfo = () => {
           {...register("time", {
             required: { value: true, message: "Time is required" },
             validate: {
-              validTime: (value) => !!value || "Invalid time format",
-              notTooLate: (value) =>
-                new Date(`1970-01-01T${value}`) <
-                  new Date("1970-01-01T23:00") ||
-                "Time must be before 11:00 PM",
+              validTimeFormat: (value) =>
+                /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(value) ||
+                "Invalid time format",
+              allowedTimeRange: (value) => {
+                const timeDate = new Date(`1970-01-01T${value}`);
+                const lowerLimit = new Date("1970-01-01T04:00");
+                const upperLimit = new Date("1970-01-01T23:00");
+
+                return (
+                  (timeDate >= lowerLimit && timeDate < upperLimit) ||
+                  "Time must be between 4:00 AM and 11:00 PM"
+                );
+              },
             },
           })}
         />

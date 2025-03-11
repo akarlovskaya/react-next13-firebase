@@ -2,6 +2,7 @@ import { getUserWithUsername } from "../lib/firebase";
 import { notFound } from "next/navigation";
 import UserProfile from "../components/UserProfile";
 import WorkoutList from "../components/WorkoutList";
+import { collection, getDocs } from "firebase/firestore";
 
 // Metatags
 export async function generateMetadata({ params }) {
@@ -26,7 +27,7 @@ export default async function UserProfilePage({ params }) {
       return notFound();
     }
     // JSON serializable data
-    const userDataFromParam = userDoc.data();
+    const userDataFromParam = userDoc;
     if (!userDataFromParam) {
       console.log(
         "User document exists but has no data, triggering notFound()"

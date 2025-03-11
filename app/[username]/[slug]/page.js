@@ -52,12 +52,14 @@ async function getWorkoutData(username, slug) {
   try {
     // Fetch workout data from firebase
     const userDoc = await getUserWithUsername(username);
+    // getUserWithUsername returns a plain object (no ref there), we need to recreate the path
+    const userPath = `users/${userDoc.uid}`;
 
     if (!userDoc) {
       return null;
     }
 
-    const postRef = doc(getFirestore(), userDoc.ref.path, "workouts", slug);
+    const postRef = doc(getFirestore(), userPath, "workouts", slug);
     const postSnapshot = await getDoc(postRef);
 
     if (!postSnapshot.exists()) {

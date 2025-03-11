@@ -23,9 +23,10 @@ function WorkoutList({ usernameParam }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchUserWorkouts = async (user) => {
+  const fetchUserWorkouts = async (username) => {
     const db = getFirestore();
-    const userDoc = await getUserWithUsername(user);
+    const userDoc = await getUserWithUsername(username);
+
     if (!userDoc) {
       setError("User not found");
       console.error("User not found");
@@ -34,8 +35,11 @@ function WorkoutList({ usernameParam }) {
       return;
     }
 
+    // getUserWithUsername returns a plain object (no ref there), we need to recreate the path
+    const userPath = `users/${userDoc.uid}`;
+
     return query(
-      collection(db, userDoc.ref.path, "workouts"),
+      collection(db, userPath, "workouts"),
       isAdminPage ? null : where("published", "==", true), // show all workouts including drafts on admin page or only published
       orderBy("createdAt", "desc")
     );

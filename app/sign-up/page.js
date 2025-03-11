@@ -6,7 +6,13 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, setDoc, getFirestore, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getFirestore,
+  serverTimestamp,
+  runTransaction,
+} from "firebase/firestore";
 import { UserContext } from "../Provider";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
@@ -18,8 +24,6 @@ import UsernameForm from "../components/UsernameForm.js";
 
 const SignUpPage = () => {
   const { user, username } = useContext(UserContext);
-  console.log("user from user context", user);
-  console.log("username from user context", username);
 
   // 1. user signed out <SignUpForm />
   // 2. user signed in, but missing username <UsernameForm />
@@ -41,19 +45,25 @@ function SignUpForm() {
     const { fullName, contactEmail, password } = data;
 
     try {
+      // console.log("Creating user with email and password...");
       // Create a user with email and password
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         contactEmail,
         password
       );
-      console.log("userCredential", userCredential);
+      // console.log("User created successfully:", userCredential.user.uid);
 
+      // console.log("Updating user profile...");
       // Update the user profile with displayName
       const user = userCredential.user; // The current user is in userCredential.user
-      updateProfile(user, {
+      // console.log("Authenticated user UID:", user.uid);
+      await updateProfile(user, {
         displayName: fullName,
       });
+      // console.log("User profile updated successfully");
+
+      // console.log("Preparing Firestore data...");
 
       // Prepare data for Firestore
       const forDataCopy = {
@@ -62,11 +72,19 @@ function SignUpForm() {
         createdAt: serverTimestamp(),
       };
 
+      // console.log(
+      //   "Saving user details to Firestore...forDataCopy",
+      //   forDataCopy
+      // );
+
       // Save the user details to Firestore (without password)
       await setDoc(doc(getFirestore(), "users", user.uid), forDataCopy);
+      // console.log("Firestore document created successfully");
+
       toast.success("Sign up was successful!");
     } catch (error) {
       console.error("Error during registration:", error);
+      console.error("Error details:", error.code, error.message);
       toast.error("Something went wrong with user registration.");
     }
   };

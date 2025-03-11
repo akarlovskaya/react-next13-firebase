@@ -24,11 +24,20 @@ function UsernameForm() {
     try {
       // Commit both docs together as a batch write.
       const batch = writeBatch(getFirestore());
-      batch.set(userDoc, {
-        username: formValue,
-        photoURL: user.photoURL,
-        displayName: user.displayName,
-      });
+      // batch.set(userDoc, {
+      //   username: formValue,
+      //   photoURL: user.photoURL,
+      //   displayName: user.displayName,
+      // });
+      batch.set(
+        userDoc,
+        {
+          username: formValue,
+          photoURL: user.photoURL || null,
+          displayName: user.displayName || null,
+        },
+        { merge: true }
+      );
       batch.set(usernameDoc, { uid: user.uid });
 
       await batch.commit();
@@ -67,7 +76,7 @@ function UsernameForm() {
   // useCallback is required for debounce to work
   const checkUsername = useCallback(
     debounce(async (username) => {
-      if (username.length >= 3) {
+      if (username.length >= 3 && username.length <= 15) {
         const ref = doc(getFirestore(), "usernames", username);
         const snap = await getDoc(ref);
         console.log("Firestore read executed!", snap.exists());

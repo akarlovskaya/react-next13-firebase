@@ -1,0 +1,152 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /{document=**} {
+      // allow read, write: if true;
+      // allow read, write: if false;
+      // Required for collection group querie
+      match /workouts/{workoutId} {
+      	allow read;
+      }
+      
+      match /users/{userId} {
+        allow read;
+        allow create, update: if request.auth.uid == userId;
+        // allow read, write: if true; 
+      }
+
+      match /usernames/{username} {
+        allow read;
+        // Allow creation of username documents if the user claims ownership
+  			allow create: if request.auth.uid == request.resource.data.uid;
+      }
+      
+      match /users/{userId}/workouts/{workoutId} {
+      	allow read;
+        allow create: if canCreateWorkout(userId); 
+        allow update: if canUpdateWorkout(userId);
+        allow delete: if request.auth.uid == userId; 
+      }
+
+      
+      // Workouts
+      
+      function canCreateWorkout(userId) {
+        let isOwner = request.auth.uid == userId;
+        let isNow = request.time == request.resource.data.createdAt;
+        let username = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
+        let usernameMatches = username == request.resource.data.username;
+
+        // return isOwner && isNow && isValidWorkout(request.resource.data) && usernameMatches;
+        return isOwner && isNow && usernameMatches;
+      }
+      
+      function canUpdateWorkout(userId) {
+        let isOwner = request.auth.uid == userId;
+      	let isNow = request.time == request.resource.data.updatedAt;
+      	let doesNotUpdateForbidden = !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'username']);
+        // return isOwner && isNow && doesNotUpdateForbidden;
+        
+        return isOwner && isNow && isValidWorkout(request.resource.data) && doesNotUpdateForbidden;
+      }
+      
+       function isValidWorkout(workout) {
+          return hasRequiredFields(workout) && isValidBasicFields(workout);
+          //    isValidAddress(workout.address);
+      }
+      
+      function hasRequiredFields(workout) {
+        // Check required fields exist
+        return workout.keys().hasAll([
+          'title', 'shortDescription', 'description', 'time', 
+          'daysOfWeek', 'fee', 'address', 'paymentOptions', 'published'
+        ]);
+      }
+      
+      function isValidBasicFields(workout) {
+        // Title validation
+        let isValidTitle = workout.title is string &&
+                           workout.title.size() >= 3 &&
+                           workout.title.size() <= 70;
+
+        // Short description validation
+        let isValidShortDesc = workout.shortDescription is string &&
+                             workout.shortDescription.size() >= 50 &&
+                             workout.shortDescription.size() <= 250;
+
+        // Description validation - Allow empty string (desc is optional)
+        let isValidDesc = workout.description == "" || (workout.description is string &&
+                        workout.description.size() >= 10 &&
+                        workout.description.size() <= 20000);
+
+        // Fee validation - Ensure fee is a string, fee contains only digits, fee is a non-negative number
+        let isValidFee = workout.fee is string && workout.fee.matches('^[0-9]+$') && int(workout.fee) >= 0; 
+
+        // Published status validation - should be boolean
+        let isValidPublished = workout.published is bool;
+
+        return isValidTitle && isValidShortDesc && isValidDesc && isValidFee && isValidPublished &&
+               isValidDaysOfWeek(workout.daysOfWeek) && isValidPaymentOptions(workout.paymentOptions) &&
+               isValidTime(workout.time);
+      }
+      
+      function isValidAddress(address) {
+        // Address validation
+        let hasRequiredAddressFields = address.keys().hasAll([
+          'place', 'street', 'city', 'region', 'zipcode'
+        ]);
+
+        let isValidPlace = address.place is string &&
+                          address.place.size() >= 3 &&
+                          address.place.size() <= 70;
+
+        let isValidStreet = address.street is string &&
+                           address.street.size() >= 3 &&
+                           address.street.size() <= 70;
+
+        let isValidCity = address.city is string &&
+                         address.city.size() >= 3 &&
+                         address.city.size() <= 70;
+
+        let isValidRegion = address.region is string &&
+                           address.region.size() <= 70;
+
+        let isValidZipcode = address.zipcode is string &&
+                            address.zipcode.size() <= 70;
+
+        return hasRequiredAddressFields &&
+               isValidPlace && isValidStreet && isValidCity &&
+               isValidRegion && isValidZipcode;
+      }
+
+      // Time validation - check if it's a string in time format and before 23:00
+      function isValidTime(time) {
+        return time is string && // Ensure the time is a string
+              time.size() == 5 && // Ensure the string is exactly 5 characters long (e.g., "16:59")
+              time.matches('^[0-9:]+$') && // Ensure the string contains only digits and a colon
+              time.split(':').size() == 2 && // Ensure there are exactly two parts (hours and minutes)
+              int(time.split(':')[0]) >= 0 && int(time.split(':')[0]) < 24 && // Validate hours (0-23)
+              int(time.split(':')[1]) >= 0 && int(time.split(':')[1]) < 60 && // Validate minutes (0-59)
+              (time >= '04:00' && time < '23:00'); // Ensure the time is between 04:00 and 23:00
+      }
+
+      // Days of week validation - should be an array 
+      function isValidDaysOfWeek(daysOfWeek) {
+        // Ensure daysOfWeek is a list
+        return daysOfWeek is list &&
+              // Ensure the list is not empty
+              daysOfWeek.size() > 0 &&
+              // Ensure all elements in the list are valid days of the week
+              daysOfWeek.hasOnly(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
+      }
+
+       // Payment options validation - should be an array
+    function isValidPaymentOptions(paymentOptions) {
+      // Ensure paymentOptions is optional and a list with ensure valid options
+      return paymentOptions == [] || (paymentOptions is list && paymentOptions.hasOnly(['etransfer', 'cash', 'card', 'cheque']));
+    }
+    }
+  }
+}

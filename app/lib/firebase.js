@@ -8,6 +8,7 @@ import {
   query,
   limit,
   Timestamp,
+  connectFirestoreEmulator,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
@@ -42,28 +43,73 @@ export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
-/// Helper functions
+// Turn on emulator
+connectFirestoreEmulator(firestore, "localhost", 8080);
+console.log("Firestore instance:", firestore._databaseId.projectId);
+if (firestore._settings.host?.includes("localhost")) {
+  console.log("Using Firestore Emulator!");
+} else {
+  console.log("Using Production Firestore!");
+}
 
-/**
- * Gets a users/{uid} document with username
- * @param  {string} username
- */
+// GetUserWithUsername function gets user data and returns a plain object
 export async function getUserWithUsername(username) {
   try {
+    // console.log(
+    //   `${
+    //     typeof window === "undefined" ? "Server" : "Client"
+    //   } Searching for username:`,
+    //   username
+    // );
+
     const q = query(
       collection(firestore, "users"),
       where("username", "==", username),
       limit(1)
     );
+
     const querySnapshot = await getDocs(q);
+    // console.log(
+    //   `${
+    //     typeof window === "undefined" ? "Server" : "Client"
+    //   } Query for username:`,
+    //   username,
+    //   "returned size:",
+    //   querySnapshot.size
+    // );
 
     if (querySnapshot.empty) {
+      console.log(
+        `${
+          typeof window === "undefined" ? "Server" : "Client"
+        } No matching user found for username:`,
+        username
+      );
       return null;
     }
 
-    return querySnapshot.docs[0];
+    const userDoc = querySnapshot.docs[0];
+    // console.log(
+    //   `${typeof window === "undefined" ? "Server" : "Client"} Found user:`,
+    //   userDoc.id
+    // );
+
+    // Convert to plain object for Server Components
+    return userToJSON(userDoc);
+    // If later I decide to have ref from fb in object - use this:
+    // return {
+    //     ...userToJSON(userDoc),
+    //     // Include the reference path
+    //     userDocPath: userDoc.ref.path
+    //   };
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error(
+      `${
+        typeof window === "undefined" ? "Server" : "Client"
+      } Error fetching user:`,
+      error
+    );
+
     // For Firebase-specific errors
     if (error.code === "permission-denied") {
       throw new Error("You do not have permission to view this profile");
@@ -82,21 +128,32 @@ export async function getUserWithUsername(username) {
 
 /**
  * Converts a firestore document to JSON
+ * Firestore document objects contain methods and non-serializable properties (like Timestamps with their internal representation).
+ * When data is passed from a Server Component to a Client Component in Next.js,
+ * it needs to be serialized (typically to JSON) to cross the server/client boundary.
  * @param  {DocumentSnapshot} doc
  */
 export function postToJSON(doc) {
   const data = doc.data();
-  // console.log("data from firebase", data);
   return {
     ...data,
-    // Gotcha! firestore timestamp NOT serializable to JSON. Must convert to milliseconds
-    // createdAt: data?.createdAt.toMillis() || 0,
-    // updatedAt: data?.updatedAt.toMillis() || 0,
-
     // Safely check and convert Firestore timestamps if they exist
     createdAt:
       data?.createdAt instanceof Timestamp ? data.createdAt.toMillis() : 0,
     updatedAt:
       data?.updatedAt instanceof Timestamp ? data.updatedAt.toMillis() : 0,
+  };
+}
+
+export function userToJSON(userDoc) {
+  const data = userDoc.data();
+  const userId = userDoc.id;
+
+  return {
+    uid: userId,
+    ...data,
+    // Convert Firestore Timestamp to milliseconds
+    createdAt:
+      data?.createdAt instanceof Timestamp ? data.createdAt.toMillis() : 0,
   };
 }
