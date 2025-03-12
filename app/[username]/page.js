@@ -41,8 +41,9 @@ export default async function UserProfilePage({ params }) {
           <UserProfile
             usernameParam={username}
             userDataFromParam={userDataFromParam}
+            role={userDataFromParam.role}
           />
-          <WorkoutList usernameParam={username} />
+          <WorkoutList usernameParam={username} role={userDataFromParam.role} />
         </div>
       </section>
     );

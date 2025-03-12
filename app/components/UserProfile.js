@@ -12,10 +12,11 @@ import toast from "react-hot-toast";
 import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
 
-function UserProfile({ usernameParam, userDataFromParam }) {
+function UserProfile({ usernameParam, userDataFromParam, role }) {
   if (!userDataFromParam) {
     return notFound();
   }
+  console.log("userDataFromParam", userDataFromParam);
   const db = getFirestore();
   const auth = getAuth();
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
@@ -96,13 +97,15 @@ function UserProfile({ usernameParam, userDataFromParam }) {
 
               {isOwner && (
                 <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md mt-6">
-                  {/* Create Class Listing Button*/}
-                  <Link
-                    href="/admin"
-                    className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
-                  >
-                    <IoCreateOutline className="mr-2 text-xl" /> Create Class
-                  </Link>
+                  {/* Create Class for instructors */}
+                  {role === "instructor" ? (
+                    <Link
+                      href="/admin"
+                      className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
+                    >
+                      <IoCreateOutline className="mr-2 text-xl" /> Create Class
+                    </Link>
+                  ) : null}
 
                   <button
                     type="button"
@@ -125,6 +128,7 @@ function UserProfile({ usernameParam, userDataFromParam }) {
                 socialLinks={socialLinks}
                 setSocialLinks={setSocialLinks}
                 isLoading={isLoading}
+                role={role}
               />
             </main>
           </FormProvider>

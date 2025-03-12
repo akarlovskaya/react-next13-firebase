@@ -21,14 +21,27 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UsernameForm from "../components/UsernameForm.js";
+import RoleSelectionForm from "../components/RoleSelectionForm.js";
 
 const SignUpPage = () => {
   const { user, username } = useContext(UserContext);
+  const [userRole, setUserRole] = useState(null);
 
   // 1. user signed out <SignUpForm />
   // 2. user signed in, but missing username <UsernameForm />
   return (
-    <main>{user ? !username ? <UsernameForm /> : null : <SignUpForm />}</main>
+    // <main>{user ? !username ? <UsernameForm /> : null : <SignUpForm />}</main>
+    <main>
+      {user ? (
+        !userRole ? (
+          <RoleSelectionForm user={user} setUserRole={setUserRole} />
+        ) : !username ? (
+          <UsernameForm />
+        ) : null
+      ) : (
+        <SignUpForm />
+      )}
+    </main>
   );
 };
 
@@ -72,10 +85,10 @@ function SignUpForm() {
         createdAt: serverTimestamp(),
       };
 
-      // console.log(
-      //   "Saving user details to Firestore...forDataCopy",
-      //   forDataCopy
-      // );
+      console.log(
+        "Saving user details to Firestore...forDataCopy",
+        forDataCopy
+      );
 
       // Save the user details to Firestore (without password)
       await setDoc(doc(getFirestore(), "users", user.uid), forDataCopy);
@@ -85,7 +98,7 @@ function SignUpForm() {
     } catch (error) {
       console.error("Error during registration:", error);
       console.error("Error details:", error.code, error.message);
-      toast.error("Something went wrong with user registration.");
+      toast.error(`Something went wrong with user registration. ${error.code}`);
     }
   };
 

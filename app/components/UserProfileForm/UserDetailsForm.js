@@ -15,6 +15,7 @@ function UserDetailsForm({
   setPhotoURL,
   socialLinks,
   setSocialLinks,
+  role,
 }) {
   const {
     getValues,
@@ -86,7 +87,7 @@ function UserDetailsForm({
               htmlFor="displayName"
               className="block text-gray-700 font-bold mb-2"
             >
-              Name
+              Name*
             </label>
             <input
               type="text"
@@ -104,29 +105,31 @@ function UserDetailsForm({
             )}
           </div>
 
-          <div className="mb-4">
-            <label
-              htmlFor="instructorTitle"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              id="instructorTitle"
-              name="instructorTitle"
-              className="border rounded w-full py-2 px-3"
-              placeholder="Ex. Group Fitness Instructor"
-              {...register("instructorTitle", {
-                required: { value: true, message: "Title is required" },
-              })}
-            />
-            {errors?.instructorTitle && (
-              <p className="mb-4 text-sm text-red-600" role="alert">
-                {errors.instructorTitle.message}
-              </p>
-            )}
-          </div>
+          {role === "instructor" ? (
+            <div className="mb-4">
+              <label
+                htmlFor="instructorTitle"
+                className="block text-gray-700 font-bold mb-2"
+              >
+                Title*
+              </label>
+              <input
+                type="text"
+                id="instructorTitle"
+                name="instructorTitle"
+                className="border rounded w-full py-2 px-3"
+                placeholder="Ex. Group Fitness Instructor"
+                {...register("instructorTitle", {
+                  required: { value: true, message: "Title is required" },
+                })}
+              />
+              {errors?.instructorTitle && (
+                <p className="mb-4 text-sm text-red-600" role="alert">
+                  {errors.instructorTitle.message}
+                </p>
+              )}
+            </div>
+          ) : null}
 
           {/* About */}
           <div className="mb-4">
@@ -134,7 +137,7 @@ function UserDetailsForm({
               htmlFor="instructorDescription"
               className="block text-gray-700 font-bold mb-2"
             >
-              About You
+              About You*
             </label>
             <textarea
               id="instructorDescription"
@@ -158,7 +161,7 @@ function UserDetailsForm({
               htmlFor="contactEmail"
               className="block text-gray-700 font-bold mb-2"
             >
-              Contact Email
+              Contact Email*
             </label>
             <input
               type="email"
@@ -241,9 +244,12 @@ function UserDetailsForm({
           <h2 className="text-xl font-bold mb-4 text-center">
             {getValues("displayName") || "Your Name"}
           </h2>
-          <h3 className="text-gray-700 font-bold text-center">
-            {getValues("instructorTitle") || "Title"}
-          </h3>
+          {role === "instructor" ? (
+            <h3 className="text-gray-700 font-bold text-center">
+              {getValues("instructorTitle") || "Title"}
+            </h3>
+          ) : null}
+
           <h2 className="font-semibold uppercase mb-2 mt-8">About Me</h2>
           <p className="text-gray-700">
             {getValues("instructorDescription") || "Tell people about yourself"}
