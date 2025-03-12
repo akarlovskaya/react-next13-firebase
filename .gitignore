@@ -43,3 +43,6 @@ next-env.d.ts
 database-debug.log
 firestore-debug.log
 ui-debug.log
+
+# Ignore environment files
+.env.local

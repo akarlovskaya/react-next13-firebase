@@ -13,14 +13,15 @@ import {
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBhvWMXucX-rlkpw3dwhw8-OOTJbzqUhX8",
-  authDomain: "react-next13-firebase.firebaseapp.com",
-  projectId: "react-next13-firebase",
-  storageBucket: "react-next13-firebase.firebasestorage.app",
-  messagingSenderId: "262133091227",
-  appId: "1:262133091227:web:7992df182f66ba84db2f3e",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 // Initialize Firebase
 function createFirebaseApp(config) {
   try {
