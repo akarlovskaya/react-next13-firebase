@@ -50,27 +50,35 @@ function HomePageClassListings({ workouts, limit }) {
 
   return (
     <>
-      <ClassListings
-        workouts={currentWorkouts}
-        isHomepage={true}
-        admin={false}
-      />
-      <section className="m-auto max-w-lg my-10 px-6">
-        <div className="flex justify-center">
-          {!loading && !workoutsEnd && (
-            <button
-              onClick={getMoreWorkouts}
-              className="w-40 bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"
-            >
-              Load more
-            </button>
-          )}
-          <Loader show={loading} />
-          {workoutsEnd && (
-            <p className="font-bold mt-8">You&#39;ve reached the end!</p>
-          )}
-        </div>
-      </section>
+      {currentWorkouts.length > 0 ? (
+        <>
+          {" "}
+          <h2 className="text-3xl font-bold text-navy mb-6 text-center">
+            Recent Fitness Classes
+          </h2>
+          <ClassListings
+            workouts={currentWorkouts}
+            isHomepage={true}
+            admin={false}
+          />
+          <section className="m-auto max-w-lg my-10 px-6">
+            <div className="flex justify-center">
+              {!loading && !workoutsEnd && workouts && (
+                <button
+                  onClick={getMoreWorkouts}
+                  className="w-40 bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"
+                >
+                  Load more
+                </button>
+              )}
+              <Loader show={loading} />
+              {workoutsEnd && (
+                <p className="font-bold mt-8">You&#39;ve reached the end!</p>
+              )}
+            </div>
+          </section>{" "}
+        </>
+      ) : null}
     </>
   );
 }

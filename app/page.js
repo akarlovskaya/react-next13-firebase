@@ -39,9 +39,6 @@ export default async function Home() {
     <main>
       <HeroBanner />
       {/* <HomePageCardsWrapper /> */}
-      <h2 className="text-3xl font-bold text-navy mb-6 text-center">
-        Recent Fitness Classes
-      </h2>
       <HomePageClassListings
         workouts={initialWorkouts.props.workouts}
         limit={LIMIT}

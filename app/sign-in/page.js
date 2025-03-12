@@ -30,6 +30,7 @@ function SignInPage() {
         email,
         password
       );
+      console.log("userCredentials.user", userCredentials.user);
 
       if (userCredentials.user) {
         toast.success("Sign in was successful!");
@@ -37,7 +38,52 @@ function SignInPage() {
       }
     } catch (error) {
       console.error("Error during registration:", error);
-      toast.error("Something went wrong with user registration.");
+
+      switch (error.code) {
+        // Authentication errors
+        case "auth/invalid-credential":
+          toast.error("Invalid email or password.");
+          break;
+        case "auth/user-disabled":
+          toast.error("This account has been disabled.");
+          break;
+        case "auth/user-not-found":
+          toast.error("No account found with this email.");
+          break;
+        case "auth/wrong-password":
+          toast.error("Incorrect password.");
+          break;
+        case "auth/invalid-email":
+          toast.error("Invalid email format.");
+          break;
+        case "auth/email-already-in-use":
+          toast.error("This email is already registered.");
+          break;
+        case "auth/weak-password":
+          toast.error("Password is too weak. Choose a stronger password.");
+          break;
+        case "auth/too-many-requests":
+          toast.error("Too many attempts. Please try again later.");
+          break;
+        case "auth/network-request-failed":
+          toast.error("Network error. Check your connection and try again.");
+          break;
+
+        // Firestore errors
+        case "permission-denied":
+          toast.error("You don't have permission to perform this action.");
+          break;
+        case "unavailable":
+          toast.error(
+            "The service is currently unavailable. Please try again later."
+          );
+          break;
+
+        // Default case for unhandled errors
+        default:
+          toast.error("Something went wrong. Please try again.");
+          console.log("Unhandled error code:", error.code);
+      }
     }
   };
 
