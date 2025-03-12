@@ -2,10 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { auth, googleAuthProvider } from "../lib/firebase";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
