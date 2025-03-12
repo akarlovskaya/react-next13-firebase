@@ -63,7 +63,7 @@ function HomePageClassListings({ workouts, limit }) {
           />
           <section className="m-auto max-w-lg my-10 px-6">
             <div className="flex justify-center">
-              {!loading && !workoutsEnd && workouts && (
+              {!loading && !workoutsEnd && currentWorkouts.length > 5 && (
                 <button
                   onClick={getMoreWorkouts}
                   className="w-40 bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"

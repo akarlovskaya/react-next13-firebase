@@ -55,8 +55,6 @@ function WorkoutAddForm({ postRef, defaultValues }) {
           : formData.paymentOptions?.name || [],
       };
 
-      console.log("updatedData", updatedData);
-
       await updateDoc(postRef, {
         ...updatedData,
         updatedAt: serverTimestamp(),
@@ -64,7 +62,7 @@ function WorkoutAddForm({ postRef, defaultValues }) {
 
       reset(formData);
 
-      toast.success("Workout added successfully!");
+      toast.success("Workout updated successfully!");
       router.push(`/${defaultValues.username}/${defaultValues.slug}`);
     } catch (error) {
       console.error("Full error:", error);

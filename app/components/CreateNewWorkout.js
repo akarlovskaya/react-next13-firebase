@@ -3,7 +3,13 @@ import { useContext, useState } from "react";
 import { UserContext } from "../Provider";
 import { useRouter } from "next/navigation";
 import { auth } from "../lib/firebase";
-import { serverTimestamp, getFirestore, setDoc, doc } from "firebase/firestore";
+import {
+  serverTimestamp,
+  getFirestore,
+  setDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import kebabCase from "lodash.kebabcase";
 import toast from "react-hot-toast";
 
@@ -21,27 +27,43 @@ function CreateNewWorkout() {
   const createWorkout = async (e) => {
     e.preventDefault();
     const uid = auth.currentUser.uid;
-    const ref = doc(getFirestore(), "users", uid, "workouts", slug);
 
-    const data = {
-      title: title || "Untitled",
-      slug: slug || "default-slug",
-      uid: uid || "default-uid",
-      username: username || "default-username",
-      shortDescription: "",
-      description: "",
-      time: "", // To-do validate!
-      fee: "",
-      published: false,
-      createdAt: serverTimestamp(),
-    };
+    try {
+      // Checks if a document with this slug already exists
+      const workoutRef = doc(getFirestore(), "users", uid, "workouts", slug);
+      const workoutSnap = await getDoc(workoutRef);
 
-    await setDoc(ref, data);
+      if (workoutSnap.exists()) {
+        // Document already exists, show error message to user
+        toast.error(
+          "A workout with this name already exists. Please choose a different name."
+        );
+        return;
+      }
 
-    // toast.success('Post created!');
+      const data = {
+        title: title || "Untitled",
+        slug: slug || "default-slug",
+        uid: uid || "default-uid",
+        username: username || "default-username",
+        shortDescription: "",
+        description: "",
+        time: "", // To-do validate!
+        fee: "",
+        published: false,
+        createdAt: serverTimestamp(),
+      };
 
-    // Imperative navigation after doc is set
-    router.push(`/admin/${slug}`);
+      await setDoc(workoutRef, data);
+
+      toast.success("Workout created!");
+
+      // Imperative navigation after doc is set
+      router.push(`/admin/${slug}`);
+    } catch (error) {
+      console.error("Error creating workout:", error);
+      toast.error("Failed to create workout: " + error.message);
+    }
   };
 
   return (
