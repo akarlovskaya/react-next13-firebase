@@ -28,6 +28,7 @@ function CreateNewWorkout() {
       slug: slug || "default-slug",
       uid: uid || "default-uid",
       username: username || "default-username",
+      shortDescription: "",
       description: "",
       time: "", // To-do validate!
       fee: "",

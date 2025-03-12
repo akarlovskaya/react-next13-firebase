@@ -16,9 +16,9 @@ import { usePathname } from "next/navigation";
 
 function WorkoutList({ usernameParam }) {
   const { username } = useContext(UserContext);
-  const isOwner = username === usernameParam;
   const pathname = usePathname();
   const isAdminPage = pathname.includes("/admin");
+  const isOwner = username === usernameParam || isAdminPage;
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);

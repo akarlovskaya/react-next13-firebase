@@ -12,7 +12,7 @@ function ClassLocation() {
       <legend className="font-semibold uppercase mb-2 mt-10">Location</legend>
       <div className="mb-4">
         <label htmlFor="place" className="block text-gray-700 font-bold mb-2">
-          Place
+          Place*
         </label>
         <input
           type="text"
@@ -34,7 +34,7 @@ function ClassLocation() {
       {/* Street Address */}
       <div className="mb-4">
         <label htmlFor="street" className="block text-gray-700 font-bold mb-2">
-          Street Address
+          Street Address*
         </label>
         <input
           type="text"
@@ -56,7 +56,7 @@ function ClassLocation() {
       {/* City */}
       <div className="mb-4">
         <label htmlFor="city" className="block text-gray-700 font-bold mb-2">
-          City
+          City*
         </label>
         <input
           type="text"
@@ -77,7 +77,7 @@ function ClassLocation() {
       {/* State / Province */}
       <div className="mb-4">
         <label htmlFor="region" className="block text-gray-700 font-bold mb-2">
-          State / Province
+          State / Province*
         </label>
         <input
           type="text"
@@ -97,7 +97,7 @@ function ClassLocation() {
       {/* ZIP / Postal code */}
       <div className="mb-4">
         <label htmlFor="zipcode" className="block text-gray-700 font-bold mb-2">
-          ZIP / Postal code
+          ZIP / Postal code*
         </label>
         <input
           type="text"
