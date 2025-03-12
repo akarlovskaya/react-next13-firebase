@@ -4,8 +4,6 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     match /{document=**} {
-      // allow read, write: if true;
-      // allow read, write: if false;
       // Required for collection group querie
       match /workouts/{workoutId} {
       	allow read;
@@ -14,7 +12,6 @@ service cloud.firestore {
       match /users/{userId} {
         allow read;
         allow create, update: if request.auth.uid == userId;
-        // allow read, write: if true; 
       }
 
       match /usernames/{username} {
@@ -32,14 +29,12 @@ service cloud.firestore {
 
       
       // Workouts
-      
       function canCreateWorkout(userId) {
         let isOwner = request.auth.uid == userId;
         let isNow = request.time == request.resource.data.createdAt;
         let username = get(/databases/$(database)/documents/users/$(request.auth.uid)).data.username;
         let usernameMatches = username == request.resource.data.username;
 
-        // return isOwner && isNow && isValidWorkout(request.resource.data) && usernameMatches;
         return isOwner && isNow && usernameMatches;
       }
       
@@ -47,14 +42,12 @@ service cloud.firestore {
         let isOwner = request.auth.uid == userId;
       	let isNow = request.time == request.resource.data.updatedAt;
       	let doesNotUpdateForbidden = !request.resource.data.diff(resource.data).affectedKeys().hasAny(['uid', 'username']);
-        // return isOwner && isNow && doesNotUpdateForbidden;
         
         return isOwner && isNow && isValidWorkout(request.resource.data) && doesNotUpdateForbidden;
       }
       
        function isValidWorkout(workout) {
-          return hasRequiredFields(workout) && isValidBasicFields(workout);
-          //    isValidAddress(workout.address);
+          return hasRequiredFields(workout) && isValidBasicFields(workout) && isValidAddress(workout.address);
       }
       
       function hasRequiredFields(workout) {
