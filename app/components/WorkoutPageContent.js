@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 
 function WorkoutPageContent({ workout }) {
   const { user: currentUser } = useContext(UserContext);
+
   if (!workout) {
     return (
       <section className="bg-indigo-50">
@@ -91,62 +92,104 @@ function WorkoutPageContent({ workout }) {
                   </div>
                 )}
               </div>
-
               <div className="bg-white p-6 rounded-lg shadow-md mt-6 mb-10">
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Description
                 </h3>
                 <p className="mb-4">
-                  {shortDescription || "No Short Description Available"}
+                  {shortDescription ? (
+                    shortDescription
+                  ) : (
+                    <span className="text-gray-500">
+                      No description available
+                    </span>
+                  )}
                 </p>
 
-                {description && (
+                {description ? (
                   <>
                     <h3 className="text-indigo-800 text-lg font-bold mb-2">
                       Class Details
                     </h3>
                     <div className="mb-4 markdown-editor">
-                      <ReactMarkdown>
-                        {description || "No Description Available"}
-                      </ReactMarkdown>
+                      <ReactMarkdown>{description}</ReactMarkdown>
                     </div>
                   </>
+                ) : (
+                  <>
+                    <h3 className="text-indigo-800 text-lg font-bold mb-2">
+                      Class Details
+                    </h3>
+                    <p className="text-gray-500 mb-4">
+                      No class details available
+                    </p>
+                  </>
                 )}
+
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">Fee</h3>
-                <p className="mb-4">${fee || "No Fee Available"} CAD</p>
+                <p className="mb-4">
+                  {fee ? (
+                    `$${fee} CAD`
+                  ) : (
+                    <span className="text-gray-500">No fee available</span>
+                  )}
+                </p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Schedule
                 </h3>
-
                 <p className="mb-4">
-                  {changeTimeFormat(time)} on {formatDaysArray(daysOfWeek)}
+                  {time && daysOfWeek && daysOfWeek.length > 0 ? (
+                    `${changeTimeFormat(time)} on ${formatDaysArray(
+                      daysOfWeek
+                    )}`
+                  ) : (
+                    <span className="text-gray-500">No schedule available</span>
+                  )}
                 </p>
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Location
                 </h3>
-                <b className="mb-4">{address?.place} </b>
-                <address className="mb-4">
-                  {address?.street}
-                  <br />
-                  {`${address?.city}, ${address?.region}`}
-                  <br />
-                  {address?.zipcode}
-                </address>
+                {address?.place || address?.street || address?.city ? (
+                  <>
+                    <b className="mb-4">{address?.place || ""} </b>
+                    <address className="mb-4">
+                      {address?.street && (
+                        <>
+                          {address.street}
+                          <br />
+                        </>
+                      )}
+                      {address?.city && address?.region && (
+                        <>
+                          {`${address.city}, ${address.region}`}
+                          <br />
+                        </>
+                      )}
+                      {address?.zipcode && address.zipcode}
+                    </address>
+                  </>
+                ) : (
+                  <p className="text-gray-500 mb-4">No location available</p>
+                )}
 
                 <h3 className="text-indigo-800 text-lg font-bold mb-2">
                   Payment Options
                 </h3>
-                <ul>
-                  {paymentOptions?.map((payment) => {
-                    return (
+                {paymentOptions && paymentOptions.length > 0 ? (
+                  <ul>
+                    {paymentOptions.map((payment) => (
                       <li key={payment}>
                         {payment.charAt(0).toUpperCase() + payment.slice(1)}
                       </li>
-                    );
-                  })}
-                </ul>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-gray-500 mb-4">
+                    No payment options available
+                  </p>
+                )}
               </div>
 
               {currentUser?.uid === workout?.uid && (
