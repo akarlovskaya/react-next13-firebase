@@ -12,7 +12,7 @@ function ClassListings({ workouts, admin }) {
                 ? workouts.map((workout) => (
                     <ClassListing
                       workout={workout}
-                      key={workout.slug}
+                      key={`${workout.slug}-${workout.uid}`}
                       admin={admin}
                     />
                   ))

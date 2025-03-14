@@ -1,14 +1,11 @@
-// utils/user-management.js
 import {
   getAuth,
   deleteUser,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
 } from "firebase/auth";
 import {
   doc,
-  getDoc,
   writeBatch,
   collection,
   query,
@@ -16,12 +13,11 @@ import {
   getDocs,
   getFirestore,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase/config";
 
 /**
  * Completely delete a user's account and all associated data
  */
-export const deleteUserAccount = async () => {
+const DeleteUserAccount = async (password) => {
   const auth = getAuth();
   const user = auth.currentUser;
   const db = getFirestore();
@@ -29,27 +25,46 @@ export const deleteUserAccount = async () => {
   if (!user) {
     throw new Error("No authenticated user found");
   }
+  if (!password) {
+    throw new Error("Password is required for account deletion");
+  }
 
   try {
-    // 1. Delete user data from Firestore
+    // Re-authenticate the user first
+    const email = user.email;
+    // Create credential with email and provided password
+    const credential = EmailAuthProvider.credential(email, password);
+    // Reauthenticate
+    await reauthenticateWithCredential(user, credential);
+
+    // Get all user's workouts
+    const workoutsRef = collection(db, "users", user.uid, "workouts");
+    const workoutsQuery = query(workoutsRef, where("uid", "==", user.uid));
+    const workoutsSnapshot = await getDocs(workoutsQuery);
+
+    // Get user's username
+    const usernameRef = collection(db, "usernames");
+    const usernameQuery = query(usernameRef, where("uid", "==", user.uid));
+    const usernameSnapshot = await getDocs(usernameQuery);
+
+    // Create a new batch object
     const batch = writeBatch(db);
+
+    // Add workout deletions to batch
+    workoutsSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+
+    // Add username deletion to batch
+    usernameSnapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
 
     // Delete user document
     const userRef = doc(db, "users", user.uid);
     batch.delete(userRef);
 
-    // Delete workouts (if they're an instructor)
-    const workoutsQuery = query(
-      collection(db, "workouts"),
-      where("uid", "==", user.uid)
-    );
-    const workoutsSnapshot = await getDocs(workoutsQuery);
-
-    workoutsSnapshot.forEach((doc) => {
-      batch.delete(doc.ref);
-    });
-
-    // Delete reservations (if they're a participant)
+    // To DO: Delete reservations (if they're a participant)
     // const reservationsQuery = query(
     //   collection(db, "reservations"),
     //   where("participantId", "==", user.uid)
@@ -72,55 +87,31 @@ export const deleteUserAccount = async () => {
     return { success: true };
   } catch (error) {
     console.error("Error deleting account:", error);
+
+    if (error.code === "auth/wrong-password") {
+      return {
+        success: false,
+        error: "Incorrect password. Please try again.",
+      };
+    }
+
+    if (error.code === "auth/missing-password") {
+      return {
+        success: false,
+        error: "Password is required to delete your account.",
+      };
+    }
+
+    if (error.code === "auth/requires-recent-login") {
+      return {
+        success: false,
+        error:
+          "For security reasons, please re-enter your password to delete your account.",
+        requiresReauthentication: true,
+      };
+    }
     return { success: false, error: error.message };
   }
 };
 
-/**
- * Sign in with verification of user profile existence
- */
-export const signInWithVerification = async (email, password) => {
-  const auth = getAuth();
-
-  try {
-    // 1. Authenticate with Firebase
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-
-    // 2. Verify the user has data in Firestore
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-
-    if (!userDoc.exists() || !userDoc.data().username) {
-      // User exists in Auth but not in Firestore
-      await signOut(auth);
-      throw new Error("account-incomplete");
-    }
-
-    return {
-      success: true,
-      user: {
-        ...user,
-        ...userDoc.data(),
-      },
-    };
-  } catch (error) {
-    console.error("Login error:", error);
-
-    // Custom handling of our profile verification error
-    if (error.message === "account-incomplete") {
-      return {
-        success: false,
-        error: "Your account is incomplete. Please sign up again.",
-      };
-    }
-
-    return {
-      success: false,
-      error: error.code,
-    };
-  }
-};
+export default DeleteUserAccount;

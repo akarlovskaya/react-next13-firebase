@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 function ClassListing({ workout, admin }) {
-  const { title, address, slug, fee, username, createdAt, published } = workout;
+  const { title, address, slug, fee, username, createdAt, published, uid } =
+    workout;
   let { shortDescription } = workout;
   const router = useRouter();
   const { user: currentUser } = useContext(UserContext);
@@ -49,7 +50,7 @@ function ClassListing({ workout, admin }) {
 
   return (
     <li
-      key={slug}
+      key={`${slug}-${uid}`}
       className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-150 relative"
     >
       <Moment
