@@ -60,7 +60,8 @@ const ContactUsPage = () => {
           </a>
         </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md mt-8">
+      {/* Contact FORM */}
+      {/* <div className="bg-white p-6 rounded-lg shadow-md mt-8">
         <h2 className="text-2xl font-semibold mb-4 flex items-center">
           <span className="mr-2">✍️</span> Send Us a Message
         </h2>
@@ -104,41 +105,8 @@ const ContactUsPage = () => {
             Send Message
           </button>
         </form>
-      </div>
+      </div> */}
     </main>
-    // <main className="max-w-4xl mx-auto p-6 text-gray-800 min-h-screen">
-    //   <h1 className="text-3xl font-bold text-center mb-6 text-navy">
-    //     Contact Us
-    //   </h1>
-    //   <h2 className="text-2xl font-semibold mt-6 mb-4">Support email</h2>
-    //   <a
-    //     href={`mailto:${supportEmail}?Subject=${encodeURIComponent(
-    //       "Support Inquiry"
-    //     )}`}
-    //     className="text-navy"
-    //   >
-    //     {supportEmail}
-    //   </a>
-
-    //   <h2 className="text-2xl font-semibold mt-6 mb-4">Sales enquiries</h2>
-    //   <a
-    //     href={`mailto:${supportEmail}?Subject=${encodeURIComponent(
-    //       "Support Inquiry"
-    //     )}`}
-    //     className="text-navy"
-    //   >
-    //     {salesEmail}
-    //   </a>
-    //   <h2 className="text-2xl font-semibold mt-6 mb-4">All other enquiries</h2>
-    //   <a
-    //     href={`mailto:${supportEmail}?Subject=${encodeURIComponent(
-    //       "Support Inquiry"
-    //     )}`}
-    //     className="text-navy"
-    //   >
-    //     {helloEmail}
-    //   </a>
-    // </main>
   );
 };
 

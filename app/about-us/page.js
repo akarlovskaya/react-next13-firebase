@@ -116,7 +116,7 @@ const AboutUsPage = () => {
             </blockquote>
             <blockquote className="italic text-gray-600">
               "Finally I have one place to list all my classes and share my
-              schedule with my loyal participants."
+              schedule with my regular participants."
               <p className="text-sm text-gray-500 mt-2">
                 - Sofia K., Instructor
               </p>
