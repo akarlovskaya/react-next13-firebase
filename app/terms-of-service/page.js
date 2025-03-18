@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function TermsPage() {
   return (
-    <main className="max-w-4xl mx-auto p-6 text-gray-800 min-h-screen">
+    <main className="max-w-3xl mx-auto p-6 bg-white">
       <h1 className="text-4xl font-bold text-center mt-8 mb-8 text-navy">
         Terms and Conditions
       </h1>
