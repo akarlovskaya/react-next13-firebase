@@ -25,7 +25,9 @@ function TermsPage() {
           <li>Section 4: Terms for use of vanklas.com</li>
         </a>
 
-        <li>Section 5: Vanklas Code of Conduct</li>
+        <a href="#code-of-conduct" className="text-navy">
+          <li>Section 5: Vanklas Code of Conduct</li>
+        </a>
       </ul>
 
       <section id="general-terms" className="space-y-8 mt-8">
@@ -799,6 +801,151 @@ function TermsPage() {
           Vanklas or licensed to Vanklas by the respective rights owners for use
           on this website.
         </p>
+        <p>
+          You may: Access any part of the website. Print one copy of any or all
+          pages for your personal reference.
+        </p>
+        <p>
+          You may not: Copy (by printing, storing on disk, downloading, or any
+          other method), distribute, broadcast, alter, tamper with, or otherwise
+          use any material from the website, except as explicitly allowed under
+          "You may." Remove any copyright, trademark, or other intellectual
+          property notices from any material copied or printed from the website.
+          Link to this website without our express written consent. If you wish
+          to create a hyperlink or other link to this website, you must obtain
+          our prior written consent.
+        </p>
+        <h4>3. Changes to Terms and Conditions</h4>
+        <p>
+          Vanklas may update the terms and conditions and disclaimer from time
+          to time. By browsing this website, you agree to be bound by the
+          current terms and conditions and disclaimer. We recommend checking
+          these each time you revisit the site.
+        </p>
+        <h4>4. Changes to and Operation of the Website</h4>
+        <p>
+          Vanklas may modify the format and content of this website at any time.
+          Vanklas may suspend the operation of this website for support,
+          maintenance, content updates, or any other reason. Vanklas reserves
+          the right to terminate access to this website at any time and without
+          notice.
+        </p>
+        <h4>5. Data Protection</h4>
+        <p>
+          Personal details provided to Vanklas through this website will be used
+          solely in accordance with our Privacy Policy. Please read the Privacy
+          Policy carefully before proceeding. By submitting your personal
+          details, you consent to their use as outlined in the Privacy Policy.
+        </p>
+        <h4>6. Jurisdiction</h4>
+        <p>
+          These terms and conditions are governed by and interpreted in
+          accordance with Canadian law. In the event of any dispute arising in
+          relation to these terms and conditions or the website—whether in
+          contract, tort, or otherwise—the Canadian courts will have
+          non-exclusive jurisdiction over such disputes.
+        </p>
+      </section>
+
+      <section id="code-of-conduct" className="space-y-8 mt-8">
+        <h3 className="text-lg font-bold">Section 5: Code of Conduct</h3>
+        <p>
+          This Code of Conduct outlines acceptable forms of expression and
+          identifies content that may be reported and removed. Vanklas reserves
+          the right to remove any individual or organization from the Vanklas
+          community if we determine that you have violated this Code of Conduct.
+        </p>
+        <h4>1. Violence and Threats</h4>
+        <p>
+          Safety is Vanklas’s highest priority. We will remove content and may
+          report to law enforcement if we detect a real risk of physical harm or
+          a direct threat to public safety. You must not make credible threats
+          against others or organize acts of real-world violence. Individuals or
+          organizations with a history of terrorist, violent, or sexual criminal
+          activities are not allowed to use Vanklas. You are also prohibited
+          from promoting, planning, or celebrating any actions that cause—or
+          could cause—financial harm to others, including theft or vandalism.
+        </p>
+        <h4>2. Self-harm and drug abuse</h4>
+        <p>
+          Vanklas takes threats of self-harm extremely seriously. We do not
+          allow any content that promotes or encourages self-mutilation, eating
+          disorders, or the abuse of hard drugs. Additionally, Vanklas prohibits
+          the promotion or encouragement of performance-enhancing drugs unless
+          supported by appropriate medical, health, and safety licensing,
+          advice, and guidance.
+        </p>
+        <h4>3. Bullying and Harassment</h4>
+        <p>
+          Vanklas has a zero-tolerance policy for bullying or harassment. While
+          we encourage open expression, we thoroughly review all reports of
+          abusive behavior directed at private individuals. Repeatedly targeting
+          other users with unwanted messages or network requests is considered
+          harassment and is not permitted.
+        </p>
+        <h4>4. Hate speech</h4>
+        <p>
+          Vanklas prohibits hate speech but distinguishes between serious and
+          humorous expression. We do not allow individuals or groups to attack
+          others based on race, ethnicity, national origin, religion, sex,
+          gender, sexual orientation, disability, or medical condition.
+        </p>
+        <h4>5. Responsible Content Sharing</h4>
+        <p>
+          When sharing content, we expect users to act responsibly. Graphic
+          images shared for sadistic purposes or to celebrate or glorify
+          violence are not allowed on our platform.
+        </p>
+        <h4>6. Explicit Content (Nudity and Pornography)</h4>
+        <p>
+          Vanklas enforces a strict policy against sharing pornographic or
+          explicitly sexual content. We also restrict the display of nudity on
+          our platform.
+        </p>
+        <h4>7. Authentic Identity and Privacy</h4>
+        <p>
+          On Vanklas, users connect using their real names and identities. You
+          must not share others’ personal information without their consent.
+          Pretending to be someone else, creating a false presence for an
+          organization, or maintaining multiple accounts harms the community and
+          violates Vanklas’s terms.
+        </p>
+        <h4>8. Respect for Intellectual Property</h4>
+        <p>
+          Before sharing content on Vanklas, ensure you have the right to do so.
+          We expect you to respect copyrights, trademarks, and other legal
+          rights.
+        </p>
+        <h4>9. Regulated Goods</h4>
+        <p>
+          Transactions involving regulated goods are not allowed on our
+          platform. If you post an offer related to firearms, alcohol, tobacco,
+          or adult products, you must ensure compliance with all applicable laws
+          and carefully consider the audience for such content.
+        </p>
+        <h4>10. Phishing and Spam</h4>
+        <p>
+          We prioritize the safety of our members and work to prevent any
+          attempts to compromise their privacy or security. We also ask that you
+          respect our members by not contacting them for commercial purposes
+          without their consent.
+        </p>
+        <h4>11. Reporting Violations</h4>
+        <p>
+          Your safety and enjoyment of Vanklas are our top priorities. If you
+          encounter content that you believe violates our Code of Conduct or
+          Terms of Use, please report it to us. While reporting content does not
+          guarantee its removal, every report is reviewed by a member of our
+          team—a real person. All reports are handled anonymously, meaning the
+          user you report will not be notified that you reported them. To report
+          a user, you must specify which part of our Terms of Use or Code of
+          Conduct they have violated. Please review the list and the relevant
+          sections in our Terms of Use to fully understand how we define and
+          interpret these breaches.
+        </p>
+      </section>
+      <section className="space-y-8 mt-8">
+        <p>These terms were updated on 17th March 2025.</p>
       </section>
     </main>
   );
