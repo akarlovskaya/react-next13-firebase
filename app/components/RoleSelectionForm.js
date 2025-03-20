@@ -37,7 +37,7 @@ export default function RoleSelectionForm({ user, setUserRole }) {
               className="h-5 w-5 bg-navy"
             />
             <span className="ml-3 text-gray-700">
-              I'm looking to join workout classes
+              I&#39;m looking to join workout classes
             </span>
           </label>
         </div>
@@ -53,7 +53,7 @@ export default function RoleSelectionForm({ user, setUserRole }) {
               className="h-5 w-5 bg-navy"
             />
             <span className="ml-3 text-gray-700">
-              I'm an instructor offering classes
+              I&#39;m an instructor offering classes
             </span>
           </label>
         </div>

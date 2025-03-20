@@ -101,10 +101,10 @@ function TermsPage() {
         <h4>5. Services – Third Party Materials</h4>
         <p>
           The Licensed Application may provide access to Vanklas and third-party
-          services (referred to collectively and individually as "Services").
-          Using the Licensed Application may require internet access, and you
-          agree to comply with any additional terms of service that apply to
-          these Services.
+          services (referred to collectively and individually as
+          &#34;Services&#34;). Using the Licensed Application may require
+          internet access, and you agree to comply with any additional terms of
+          service that apply to these Services.
         </p>
         <p>
           By using the Licensed Application, You acknowledge that you may
@@ -117,8 +117,8 @@ function TermsPage() {
         </p>
         <p>
           The Services may display, include, or provide access to content, data,
-          information, applications, or materials from third parties ("Third
-          Party Materials") or links to third-party websites. Vanklas is not
+          information, applications, or materials from third parties (&#34;Third
+          Party Materials&#34;) or links to third-party websites. Vanklas is not
           responsible for evaluating or ensuring the accuracy, completeness,
           timeliness, validity, legality, decency, quality, or copyright
           compliance of such Third Party Materials or websites. Vanklas does not
@@ -142,7 +142,7 @@ function TermsPage() {
           the Licensed Application is prohibited. You also agree not to use the
           Licensed Application in any unauthorized manner, including for
           harassment, abuse, stalking, threats, defamation, or infringement of
-          others' rights. Vanklas is not responsible for any such misuse by you
+          others rights. Vanklas is not responsible for any such misuse by you
           or for any offensive, threatening, or illegal messages or
           transmissions you may receive while using the Licensed Application.
         </p>
@@ -163,13 +163,14 @@ function TermsPage() {
           Application is entirely at your own risk. The responsibility for the
           quality, performance, accuracy, and effort required to use the
           application lies solely with you. To the fullest extent permitted by
-          law, the Licensed Application and any related services (“Services”)
-          are provided “as is” and “as available,” with all faults and without
-          any warranties of any kind. Vanklas disclaims all warranties and
-          conditions, whether express, implied, or statutory, including but not
-          limited to implied warranties of merchantability, satisfactory
-          quality, fitness for a particular purpose, accuracy, quiet enjoyment,
-          and non-infringement of third-party rights.
+          law, the Licensed Application and any related services
+          (&#34;Services&#34;) are provided &#34;as is&#34; and &#34;as
+          available,&#34; with all faults and without any warranties of any
+          kind. Vanklas disclaims all warranties and conditions, whether
+          express, implied, or statutory, including but not limited to implied
+          warranties of merchantability, satisfactory quality, fitness for a
+          particular purpose, accuracy, quiet enjoyment, and non-infringement of
+          third-party rights.
         </p>
         <p>
           Vanklas does not guarantee that the Licensed Application will be free
@@ -211,8 +212,9 @@ function TermsPage() {
           You retain ownership of all content and information you post on the
           Licensed Application. For content protected by intellectual property
           rights—such as photos, videos, your profile, comments, messages, and
-          events you host, attend, or share (referred to as "IP Content")—you
-          grant us specific permissions, subject to your privacy settings:
+          events you host, attend, or share (referred to as &#34;IP
+          Content&#34;)—you grant us specific permissions, subject to your
+          privacy settings:
         </p>
         <div>
           <h5>1. IP License</h5>
@@ -220,7 +222,8 @@ function TermsPage() {
             <li>
               You grant us a non-exclusive, transferable, sub-licensable,
               royalty-free, worldwide license to use any IP Content you post on
-              or in connection with the Licensed Application (the "IP License").
+              or in connection with the Licensed Application (the &#34;IP
+              License&#34;).
             </li>
             <li>
               This IP License remains valid until you delete the IP Content or
@@ -289,9 +292,9 @@ function TermsPage() {
           </li>
           <li>
             <strong>No Automated Data Collection:</strong> You will not collect
-            users’ content or information, or access the Licensed Application,
-            using automated tools (such as bots, robots, spiders, or scrapers)
-            without our prior permission.
+            users&#39; content or information, or access the Licensed
+            Application, using automated tools (such as bots, robots, spiders,
+            or scrapers) without our prior permission.
           </li>
           <li>
             <strong>No Malicious Code:</strong> You will not upload viruses or
@@ -299,7 +302,7 @@ function TermsPage() {
           </li>
           <li>
             <strong>No Unauthorized Account Access:</strong> You will not
-            solicit login information or access someone else’s account.
+            solicit login information or access someone else&#39;s account.
           </li>
           <li>
             <strong>No Harassment:</strong> You will not threaten, bully,
@@ -428,8 +431,8 @@ function TermsPage() {
         <h4>15. Promotions</h4>
         <p>
           Promotions is a feature when Vanklas can post sponsored promotions
-          from brands (referred to as "Sponsors"). These promotions showcase
-          products, services, or deals that may be relevant to users.
+          from brands (referred to as &#34;Sponsors&#34;). These promotions
+          showcase products, services, or deals that may be relevant to users.
         </p>
         <p>
           Sponsor Responsibility: It is the sole responsibility of the Sponsor
@@ -451,10 +454,11 @@ function TermsPage() {
           and incorporate into the Licensed Application (without any
           attribution) any feedback, suggestions, enhancement requests,
           recommendations, proposals, corrections, or other information you
-          provide related to the Licensed Application or Vanklas’s business. (b)
-          To use your business name(s), trademarks, service marks, or logos
+          provide related to the Licensed Application or Vanklas&#39;s business.
+          (b) To use your business name(s), trademarks, service marks, or logos
           (collectively, “Your Marks”) for the purpose of providing the Licensed
-          Application and for Vanklas’s marketing and promotional activities.
+          Application and for Vanklas&#39;s marketing and promotional
+          activities.
         </p>
         <p>
           Vanklas agrees that any use of Your Marks will solely benefit and
@@ -515,7 +519,7 @@ function TermsPage() {
           on a service provider before engaging their services. Vanklas makes no
           warranties or representations regarding the quality, safety,
           credentials, reliability, suitability, reputation, or any other aspect
-          of a service provider’s business.
+          of a service provider&#39;s business.
         </p>
         <h4>3. Professional Service Provider Information</h4>
         <p>
@@ -539,7 +543,7 @@ function TermsPage() {
           Service Provider, you acknowledge and agree that your contractual
           relationship is solely with the Professional Service Provider, not
           Vanklas. You also acknowledge and agree: Terms and Conditions: You
-          will be subject to the Professional Service Provider’s terms and
+          will be subject to the Professional Service Provider&#39;s terms and
           conditions, even if those terms are not accessible through the
           Licensed Application. It is your responsibility to review and
           understand these terms. Disputes and Complaints: If you are
@@ -564,11 +568,11 @@ function TermsPage() {
           their refund policy. If you are unsure about the cancellation terms,
           you should clarify them with the service provider before completing
           your booking or reservation. If a refund is applicable under the
-          service provider’s cancellation policy, it must be processed by the
-          service provider through their Stripe account. You acknowledge and
+          service provider&#39;s cancellation policy, it must be processed by
+          the service provider through their Stripe account. You acknowledge and
           agree that Vanklas has no responsibility or liability for any refunds
           owed and cannot compel a refund or take any action related to refunds.
-          All payments are processed through the service provider’s payment
+          All payments are processed through the service provider&#39;s payment
           system, not Vanklas.
         </p>
         <h4>7. Cancellation and refunds</h4>
@@ -594,10 +598,10 @@ function TermsPage() {
           If you are agreeing to these Terms on behalf of a company or other
           legal entity, you represent that you have the authority to bind that
           entity and its affiliates to these Terms. In such cases, the terms
-          “You,” “Your,” or related capitalized terms will refer to the entity
-          and its affiliates. If you do not have this authority, or if you do
-          not agree to these Terms, you must not accept them and are not
-          permitted to use the Licensed Application.
+          &#34;You,&#34; &#34;Your,&#34; or related capitalized terms will refer
+          to the entity and its affiliates. If you do not have this authority,
+          or if you do not agree to these Terms, you must not accept them and
+          are not permitted to use the Licensed Application.
         </p>
         <h4>2. Eligibility and warranty</h4>
         <p>
@@ -637,17 +641,17 @@ function TermsPage() {
           is solely with the Consumer, not Vanklas. You also acknowledge and
           agree: No Guarantee of Attendance or Payment: Vanklas cannot guarantee
           that a Consumer will attend or pay for a booked session. Vanklas has
-          no liability to you for a Consumer’s non-payment or non-attendance.
-          Terms and Conditions: It is your responsibility to provide the
-          Consumer with valid terms, conditions, and cancellation policies.
-          Disputes and Complaints: If a booking, purchase, or interaction leads
-          to dissatisfaction or a dispute, the Consumer must direct their
-          complaint or dispute to you, not Vanklas. You agree to hold Vanklas
-          harmless in the event of any dispute arising from the delivery of your
-          services, even if a Consumer directs a claim at Vanklas. Good Faith
-          and Compliance: When booking or interacting with a Consumer, you agree
-          to act in good faith and comply with all applicable regulations, laws,
-          and best practices.
+          no liability to you for a Consumer&#39;s non-payment or
+          non-attendance. Terms and Conditions: It is your responsibility to
+          provide the Consumer with valid terms, conditions, and cancellation
+          policies. Disputes and Complaints: If a booking, purchase, or
+          interaction leads to dissatisfaction or a dispute, the Consumer must
+          direct their complaint or dispute to you, not Vanklas. You agree to
+          hold Vanklas harmless in the event of any dispute arising from the
+          delivery of your services, even if a Consumer directs a claim at
+          Vanklas. Good Faith and Compliance: When booking or interacting with a
+          Consumer, you agree to act in good faith and comply with all
+          applicable regulations, laws, and best practices.
         </p>
         <h4>5. Cancellation and refunds</h4>
         <p>
@@ -658,12 +662,12 @@ function TermsPage() {
           solely responsible for establishing their refund policy. If you are
           unsure about the cancellation terms, you should clarify them with the
           service provider before completing your booking. If a refund is
-          applicable under the service provider’s cancellation policy, it must
-          be processed by the service provider through their payment account.
-          You acknowledge and agree that Vanklas has no responsibility or
-          liability for any refunds owed and cannot compel a refund or take any
-          action related to refunds. All payments are processed through the
-          service provider’s payment system, not Vanklas.
+          applicable under the service provider&#39;s cancellation policy, it
+          must be processed by the service provider through their payment
+          account. You acknowledge and agree that Vanklas has no responsibility
+          or liability for any refunds owed and cannot compel a refund or take
+          any action related to refunds. All payments are processed through the
+          service provider&#39;s payment system, not Vanklas.
         </p>
         <h4>6. Cancellation and refunds</h4>
         <p>
@@ -716,24 +720,24 @@ function TermsPage() {
           your account information and settings are removed, you will not be
           able to recover this data and will lose access to all your content
           (except for content stored or published on third-party websites, which
-          will remain subject to those websites’ terms and conditions). Effect
-          of Cancellation: If you cancel the Licensed Application before the end
-          of your current paid subscription period, the cancellation will take
-          effect immediately, and you will not be charged again. Modification or
-          Discontinuation of Service: Vanklas reserves the right to modify or
-          discontinue, temporarily or permanently, the Licensed Application (or
-          any part of it). Vanklas may refuse any or all current and future use
-          of the Licensed Application, suspend or terminate your account (or
-          your use of the Licensed Application), and remove or discard any of
-          your content within the Licensed Application if it believes you have
-          violated these Terms. Notice of Suspension or Termination: Vanklas
-          will make reasonable efforts to contact you via email to warn you
-          before suspending or terminating your account. However, any suspected
-          fraudulent, abusive, or illegal activity may result in immediate
-          termination of your account and may be reported to law enforcement
-          authorities. No Liability: Vanklas shall not be liable to you or any
-          third party for any modification, suspension, or discontinuation of
-          the Licensed Application.
+          will remain subject to those websites&#39; terms and conditions).
+          Effect of Cancellation: If you cancel the Licensed Application before
+          the end of your current paid subscription period, the cancellation
+          will take effect immediately, and you will not be charged again.
+          Modification or Discontinuation of Service: Vanklas reserves the right
+          to modify or discontinue, temporarily or permanently, the Licensed
+          Application (or any part of it). Vanklas may refuse any or all current
+          and future use of the Licensed Application, suspend or terminate your
+          account (or your use of the Licensed Application), and remove or
+          discard any of your content within the Licensed Application if it
+          believes you have violated these Terms. Notice of Suspension or
+          Termination: Vanklas will make reasonable efforts to contact you via
+          email to warn you before suspending or terminating your account.
+          However, any suspected fraudulent, abusive, or illegal activity may
+          result in immediate termination of your account and may be reported to
+          law enforcement authorities. No Liability: Vanklas shall not be liable
+          to you or any third party for any modification, suspension, or
+          discontinuation of the Licensed Application.
         </p>
         <h4>10. Disclaimer</h4>
         <p>
@@ -778,8 +782,8 @@ function TermsPage() {
         <p>
           Visitors to this website are required to adhere to the following terms
           and conditions. Please read them carefully before proceeding. For the
-          purposes of these terms and conditions, "this website" refers to the
-          vanklas.com website.
+          purposes of these terms and conditions, &#34;this website&#34; refers
+          to the vanklas.com website.
         </p>
         <h4>1. Disclaimer</h4>
         <p>
@@ -809,11 +813,11 @@ function TermsPage() {
           You may not: Copy (by printing, storing on disk, downloading, or any
           other method), distribute, broadcast, alter, tamper with, or otherwise
           use any material from the website, except as explicitly allowed under
-          "You may." Remove any copyright, trademark, or other intellectual
-          property notices from any material copied or printed from the website.
-          Link to this website without our express written consent. If you wish
-          to create a hyperlink or other link to this website, you must obtain
-          our prior written consent.
+          &#34;You may.&#34; Remove any copyright, trademark, or other
+          intellectual property notices from any material copied or printed from
+          the website. Link to this website without our express written consent.
+          If you wish to create a hyperlink or other link to this website, you
+          must obtain our prior written consent.
         </p>
         <h4>3. Changes to Terms and Conditions</h4>
         <p>
@@ -857,14 +861,15 @@ function TermsPage() {
         </p>
         <h4>1. Violence and Threats</h4>
         <p>
-          Safety is Vanklas’s highest priority. We will remove content and may
-          report to law enforcement if we detect a real risk of physical harm or
-          a direct threat to public safety. You must not make credible threats
-          against others or organize acts of real-world violence. Individuals or
-          organizations with a history of terrorist, violent, or sexual criminal
-          activities are not allowed to use Vanklas. You are also prohibited
-          from promoting, planning, or celebrating any actions that cause—or
-          could cause—financial harm to others, including theft or vandalism.
+          Safety is Vanklas&#39;s highest priority. We will remove content and
+          may report to law enforcement if we detect a real risk of physical
+          harm or a direct threat to public safety. You must not make credible
+          threats against others or organize acts of real-world violence.
+          Individuals or organizations with a history of terrorist, violent, or
+          sexual criminal activities are not allowed to use Vanklas. You are
+          also prohibited from promoting, planning, or celebrating any actions
+          that cause—or could cause—financial harm to others, including theft or
+          vandalism.
         </p>
         <h4>2. Self-harm and drug abuse</h4>
         <p>
@@ -905,10 +910,10 @@ function TermsPage() {
         <h4>7. Authentic Identity and Privacy</h4>
         <p>
           On Vanklas, users connect using their real names and identities. You
-          must not share others’ personal information without their consent.
+          must not share others&#39; personal information without their consent.
           Pretending to be someone else, creating a false presence for an
           organization, or maintaining multiple accounts harms the community and
-          violates Vanklas’s terms.
+          violates Vanklas&#39;s terms.
         </p>
         <h4>8. Respect for Intellectual Property</h4>
         <p>

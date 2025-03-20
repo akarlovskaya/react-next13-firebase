@@ -12,7 +12,7 @@ const ContactUsPage = () => {
         Contact Us
       </h1>
       <p className="text-lg mb-8">
-        We'd love to hear from you! <br />
+        We&#39;d love to hear from you! <br />
         Whether you have a question, feedback, or just want to say hello, feel
         free to reach out.
       </p>

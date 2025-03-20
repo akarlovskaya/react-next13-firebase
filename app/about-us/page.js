@@ -34,7 +34,7 @@ const AboutUsPage = () => {
       <ul className="list-disc pl-6 mb-6">
         <li className="mb-2">
           <span className="font-semibold">Participants</span> &mdash; Whether
-          you're a beginner or a fitness enthusiast, you can explore group
+          you&#39;re a beginner or a fitness enthusiast, you can explore group
           fitness classes in Port Coquitlam, find a dance workout in North
           Vancouver, or join a boot camp in Burnaby &mdash; all while connecting
           with the right instructor for your style.
@@ -74,78 +74,78 @@ const AboutUsPage = () => {
         <span className="font-semibold">Vanklas</span> helps you connect with
         the right participants and build a loyal following.
       </p>
-      <section>
+      {/* <section>
         <div className="bg-white p-6 rounded-lg shadow-md mt-20">
           <h2 className="text-2xl font-semibold mb-6 flex items-center">
             <span className="mr-2">🌟</span> What Our Members Say
           </h2>
           <div className="space-y-6">
             <blockquote className="italic text-gray-600">
-              "I was looking for a way to find fitness classes in Burnaby that
-              suit my schedule. This website made it easy. I love that I have a
-              list of classes in my area to choose from and I can even see the
-              class details like price and what to expect before making a
-              decision."
+              &#34;I was looking for a way to find fitness classes in Burnaby
+              that suit my schedule. This website made it easy. I love that I
+              have a list of classes in my area to choose from and I can even
+              see the class details like price and what to expect before making
+              a decision.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 – Olga M., Participant
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "Definitely recommend it if you’re looking for a new classes to
-              try."
+              &#34;Definitely recommend it if you&#39;re looking for a new
+              classes to try.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 – Svetlana K., Participant
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "I like that I can easily contact the instructor if I have any
+              &#34;I like that I can easily contact the instructor if I have any
               questions. This website is great for anyone who wants to try new
-              drop-in classes!"
+              drop-in classes!&#34;
               <p className="text-sm text-gray-500 mt-2">
                 – Sarah J., Participant
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "I have been attending a few classes in community centers in
-              Coquitlam and Port Coquitlam, and I’ve got a few favorite classes.
-              It was really nice to discover other locations where Zumba classes
-              are happening in Coquitlam and area."
+              &#34;I have been attending a few classes in community centers in
+              Coquitlam and Port Coquitlam, and I&#39;ve got a few favorite
+              classes. It was really nice to discover other locations where
+              Zumba classes are happening in Coquitlam and area.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 - Natalia S., Participant
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "Finally I have one place to list all my classes and share my
-              schedule with my regular participants."
+              &#34;Finally I have one place to list all my classes and share my
+              schedule with my regular participants.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 - Sofia K., Instructor
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "Makes it easy for new students to find me and schedule sessions
-              with me."
+              &#34;Makes it easy for new students to find me and schedule
+              sessions with me.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 - Jess M., Personal Trainer
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "The platform makes me feel more connected to my students and has
-              really grown my community!"
+              &#34;The platform makes me feel more connected to my students and
+              has really grown my community!&#34;
               <p className="text-sm text-gray-500 mt-2">
                 - Marie N., Yoga Teacher
               </p>
             </blockquote>
             <blockquote className="italic text-gray-600">
-              "The profile feature is simple to use, and the class creation
-              process was smooth. It's a great way to get noticed and attract
-              more participants."
+              &#34;The profile feature is simple to use, and the class creation
+              process was smooth. It&#39;s a great way to get noticed and
+              attract more participants.&#34;
               <p className="text-sm text-gray-500 mt-2">
                 - Tom P., Group Instructor
               </p>
             </blockquote>
           </div>
         </div>
-      </section>
+      </section> */}
       <div>
         <p className="font-semibold text-lg text-center mt-20 mb-10">
           Because at the end of the day,{" "}

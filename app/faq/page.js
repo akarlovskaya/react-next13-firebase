@@ -14,9 +14,9 @@ function TermsPage() {
         </h2>
         <p className="text-gray-700">
           If you are a signed-in user (with an existing account), you will have
-          access to the Instructor's contact information. You can reach out to
-          them directly to inquire whether a reservation for a class is needed
-          or there is a Drop-in option.
+          access to the Instructor&#39;s contact information. You can reach out
+          to them directly to inquire whether a reservation for a class is
+          needed or there is a Drop-in option.
         </p>
       </div>
 

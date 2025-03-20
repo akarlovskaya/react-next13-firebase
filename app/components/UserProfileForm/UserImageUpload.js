@@ -2,6 +2,7 @@ import { useState } from "react";
 import { auth, storage, STATE_CHANGED } from "../../lib/firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Loader from "../Loader.js";
+import Image from "next/image";
 
 const UserImageUpload = ({ setPhotoURL }) => {
   const [uploading, setUploading] = useState(false);
@@ -58,7 +59,7 @@ const UserImageUpload = ({ setPhotoURL }) => {
             className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all"
           >
             {preview ? (
-              <img
+              <Image
                 src={preview}
                 alt="Avatar Preview"
                 className="w-full h-full object-cover rounded-full"

@@ -13,9 +13,9 @@ import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
 
 function UserProfile({ usernameParam, userDataFromParam, role }) {
-  if (!userDataFromParam) {
-    return notFound();
-  }
+  // if (!userDataFromParam) {
+  //   return notFound();
+  // }
   console.log("userDataFromParam", userDataFromParam);
   const db = getFirestore();
   const auth = getAuth();
@@ -81,6 +81,10 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
     };
     fetchUserData();
   }, [userId, reset]);
+
+  if (!userDataFromParam) {
+    return notFound();
+  }
 
   return (
     <>

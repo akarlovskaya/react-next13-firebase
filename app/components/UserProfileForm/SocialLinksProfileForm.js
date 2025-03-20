@@ -3,6 +3,7 @@ import {
   FaFacebookSquare,
   FaInstagram,
   FaLinkedin,
+  FaLink,
   FaTiktok,
 } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";

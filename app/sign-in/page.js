@@ -115,7 +115,7 @@ function SignInPage() {
   };
 
   return (
-    <section className="bg-blue-50 px-4 py-10 h-screen">
+    <section className="bg-blue-50 px-4 py-10">
       <div className="container-xl lg:container m-auto">
         <h1 className="text-3xl font-bold text-navy mb-6 text-center">
           Sign In
@@ -175,7 +175,7 @@ function SignInPage() {
           </div>
           <div className="flex justify-between text-sm sm:text-base mb-10">
             <p>
-              Don't have account?
+              Don&#39;t have account?
               <Link
                 href="/sign-up"
                 className="text-orange-dark hover:text-orange-light ml-1"

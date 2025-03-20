@@ -69,7 +69,7 @@ const ForgotPasswordPage = () => {
 
           <div className="flex justify-between text-sm sm:text-base mb-10">
             <p>
-              Don't have account?
+              Don&#39;t have account?
               <Link
                 href="/sign-up"
                 className="text-orange-dark hover:text-orange-light ml-1"
