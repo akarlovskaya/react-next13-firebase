@@ -4,9 +4,9 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="bg-navy text-white py-8">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 lg:max-w-screen-lg">
         {/* Footer Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-8">
           {/* Column 1 */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
@@ -43,11 +43,11 @@ const Footer = () => {
                   Terms of Service
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/cookie-policy" className="hover:text-gray-400">
                   Cookie Policy
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -56,7 +56,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/sitemap" className="hover:text-gray-400">
+                <Link href="/site-map" className="hover:text-gray-400">
                   Sitemap
                 </Link>
               </li>
@@ -69,16 +69,24 @@ const Footer = () => {
           </div>
 
           {/* Column 4 */}
-          <div>
+          {/* <div>
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <p className="text-sm">© {new Date().getFullYear()} Vanklas</p>
             <p className="text-sm">All rights reserved</p>
-          </div>
+          </div> */}
         </div>
 
         {/* Divider */}
         <div className="border-t border-gray-700 pt-8 text-center">
-          <p className="text-sm text-gray-400">Made with ❤️ by Vanklas Team</p>
+          <p className="text-sm text-gray-400">Vanklas Beta 1.0</p>
+          <a
+            href={`mailto:support@vanklas.com?Subject=${encodeURIComponent(
+              "Bug Report"
+            )}`}
+            className="text-sm text-gray-400 hover:underline"
+          >
+            Report a bug
+          </a>
         </div>
       </div>
     </footer>
