@@ -161,11 +161,11 @@ function PrivacyPolicyPage() {
           an account on Vanklas, that Business is in ultimate control of the
           personal information listed in this section. If information exists
           after a Business has terminated its Vanklas account, the information
-          is retained for Consumers’ own records (e.g. what they have paid for
-          and booked etc.) and Vanklas will assume control of it on behalf of
-          the Consumer. Vanklas may use personal information generated in this
-          section in order to provide customer support, maintenance, security
-          and for operational purposes.
+          is retained for Consumers&#39; own records (e.g. what they have paid
+          for and booked etc.) and Vanklas will assume control of it on behalf
+          of the Consumer. Vanklas may use personal information generated in
+          this section in order to provide customer support, maintenance,
+          security and for operational purposes.
         </p>
 
         <section>
@@ -191,7 +191,7 @@ function PrivacyPolicyPage() {
             regulations, and in order to comply with their responsibilities to
             operate safely and to meet external requirements such as maintaining
             insurance policies and professional licenses. Vanklas processes this
-            information on the Business’s behalf but does not use this
+            information on the Business&#39;s behalf but does not use this
             information in any way.
           </p>
         </section>
@@ -201,10 +201,10 @@ function PrivacyPolicyPage() {
           <p>
             Logged-in users (Customers) can contact instructors (Businesses)
             directly via email. This feature uses an email link (mailto:) to
-            open the user’s default email client, enabling them to send a
-            message to the instructor’s email address. The content of the email
-            messages sent through this feature is not stored, processed, or
-            accessible within Vanklas. Once the email client is opened, all
+            open the user&#39;s default email client, enabling them to send a
+            message to the instructor&#39;s email address. The content of the
+            email messages sent through this feature is not stored, processed,
+            or accessible within Vanklas. Once the email client is opened, all
             communication occurs directly between the Customer and the Business
             via their email services. Since the messages are sent outside of our
             platform, we do not have control over or responsibility for the
@@ -223,15 +223,16 @@ function PrivacyPolicyPage() {
           data protection and privacy laws. The permissions granted by Consumers
           for Businesses to collect and retain their information are strictly
           limited to purposes necessary for the responsible operation of a
-          fitness or wellness business, enabling Consumers to use the Business’s
-          services effectively. Businesses should not retain Consumer
-          information longer than necessary and must not share it outside their
-          organization without obtaining prior consent. If Businesses wish to
-          collect Consumer data for purposes not covered in this agreement, they
-          must obtain separate opt-in consent from the Consumer and provide an
-          opt-out option, independent of Vanklas. Businesses may only share
-          Consumer data collected through Vanklas with the explicit consent of
-          the Consumer or as required by applicable laws.
+          fitness or wellness business, enabling Consumers to use the
+          Business&#39;s services effectively. Businesses should not retain
+          Consumer information longer than necessary and must not share it
+          outside their organization without obtaining prior consent. If
+          Businesses wish to collect Consumer data for purposes not covered in
+          this agreement, they must obtain separate opt-in consent from the
+          Consumer and provide an opt-out option, independent of Vanklas.
+          Businesses may only share Consumer data collected through Vanklas with
+          the explicit consent of the Consumer or as required by applicable
+          laws.
         </p>
       </section>
 
@@ -270,7 +271,7 @@ function PrivacyPolicyPage() {
             href="https://firebase.google.com/support/privacy"
             className="text-navy"
           >
-            Firebase’s Privacy Policy
+            Firebase&#39;s Privacy Policy
           </Link>
           .
         </p>
@@ -279,16 +280,16 @@ function PrivacyPolicyPage() {
           Purpose: We use Vercel for app deployment and hosting. Data Processed:
           Vercel may collect technical data such as IP addresses, browser type,
           and usage logs to ensure the app functions properly.
-          <p>
-            Vercel Privacy Policy: For more information about how Vercel handles
-            data, please review{" "}
-            <Link
-              href="http://vercel.com/legal/privacy-policy"
-              className="text-navy"
-            >
-              Vercel’s Privacy Policy
-            </Link>
-          </p>
+        </p>
+        <p>
+          Vercel Privacy Policy: For more information about how Vercel handles
+          data, please review{" "}
+          <Link
+            href="http://vercel.com/legal/privacy-policy"
+            className="text-navy"
+          >
+            Vercel&#39;s Privacy Policy
+          </Link>
         </p>
       </section>
 
@@ -312,16 +313,16 @@ function PrivacyPolicyPage() {
           generic information from our systems.
         </p>
         <p>
-          A Consumer’s booking, attendance, transaction history, participation
-          details, and message records with any Business they have interacted
-          with will be retained in accordance with the Business’s policies. If a
-          Consumer wishes to have their booking, attendance, transaction
-          history, participation information, or message records removed, they
-          must submit this request directly to the relevant Business. The
-          Business will determine whether and when they can comply with such a
-          request. Please note that Businesses may need to retain some or all of
-          this information for a period of time for legitimate reasons, as
-          outlined in their policies.
+          A Consumer&#39;s booking, attendance, transaction history,
+          participation details, and message records with any Business they have
+          interacted with will be retained in accordance with the Business&#39;s
+          policies. If a Consumer wishes to have their booking, attendance,
+          transaction history, participation information, or message records
+          removed, they must submit this request directly to the relevant
+          Business. The Business will determine whether and when they can comply
+          with such a request. Please note that Businesses may need to retain
+          some or all of this information for a period of time for legitimate
+          reasons, as outlined in their policies.
         </p>
       </section>
       <section className="space-y-8 mt-8">
