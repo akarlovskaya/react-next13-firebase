@@ -58,7 +58,7 @@ function DeleteAccountButton({ disabled }) {
           <button
             onClick={handleDeleteRequest}
             disabled={disabled}
-            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
+            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             Delete Account
           </button>

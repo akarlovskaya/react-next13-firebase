@@ -6,19 +6,12 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import {
-  doc,
-  setDoc,
-  getFirestore,
-  serverTimestamp,
-  runTransaction,
-} from "firebase/firestore";
+import { doc, setDoc, getFirestore, serverTimestamp } from "firebase/firestore";
 import { UserContext } from "../Provider";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import UsernameForm from "../components/UsernameForm.js";
 import RoleSelectionForm from "../components/RoleSelectionForm.js";
@@ -46,8 +39,8 @@ const SignUpPage = () => {
 };
 
 function SignUpForm() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
   const {
     register,
     handleSubmit,
@@ -55,7 +48,8 @@ function SignUpForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { fullName, contactEmail, password } = data;
+    const { fullName, contactEmail, password, agreement } = data;
+    console.log("data from sign up", data);
 
     try {
       // console.log("Creating user with email and password...");
@@ -115,7 +109,7 @@ function SignUpForm() {
   };
 
   return (
-    <section className="bg-blue-50 px-4 py-10 h-screen">
+    <section className="bg-blue-50 px-4 py-10">
       <div className="container-xl lg:container m-auto">
         <h1 className="text-3xl font-bold text-navy mb-6 text-center">
           Sign Up
@@ -175,7 +169,7 @@ function SignUpForm() {
               id="password"
               name="password"
               className="border rounded w-full py-2 px-3"
-              {...register("password", { register: true })}
+              {...register("password", { required: true })}
             />
             {errors.password && (
               <span className="mb-4 text-sm text-red-600" role="alert">
@@ -213,29 +207,64 @@ function SignUpForm() {
               </Link>
             </p>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900"
-          >
-            Sign Up
-          </button>
-          <div
-            className="flex items-center my-4 
+
+          {/* Agreement  */}
+
+          <div className="mb-4">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                checked={isAgreed}
+                onChange={(e) => setIsAgreed(e.target.checked)}
+              />
+              <span className="ml-2 text-gray-700 text-sm">
+                By checking this box you agree to Vanklas’s
+                <Link
+                  href="/privacy-policy"
+                  className="text-navy hover:text-navy-light ml-1"
+                  target="_blank"
+                >
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="/terms-of-service"
+                  className="text-navy hover:text-navy-light ml-1"
+                  target="_blank"
+                >
+                  Terms and Conditions
+                </Link>
+              </span>
+            </label>
+          </div>
+
+          <div className="mt-10">
+            <button
+              type="submit"
+              className="w-full bg-navy text-white px-7 py-3 text-sm font-medium rounded shadow-md hover:bg-gray-900 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              disabled={!isAgreed}
+            >
+              Sign Up
+            </button>
+            <div
+              className="flex items-center my-4 
                               before:border-t before:flex-1 before:border-gray-300
                               after:border-t after:flex-1 after:border-gray-300"
-          >
-            <p className="text-center font-semibold mx-4">OR</p>
+            >
+              <p className="text-center font-semibold mx-4">OR</p>
+            </div>
+            {/* Sign Up with Google */}
+            <button
+              type="button"
+              className="flex items-center justify-center w-full bg-orange-dark text-white mb-10 px-7 py-3 text-sm font-medium 
+                          rounded shadow-md hover:bg-orange-light disabled:bg-gray-400 disabled:cursor-not-allowed"
+              onClick={signInWithGoogle}
+              disabled={!isAgreed}
+            >
+              <FcGoogle className="mr-4 text-2xl bg-white rounded-full" /> Sign
+              Up with Google
+            </button>
           </div>
-          {/* Sign Up with Google */}
-          <button
-            type="button"
-            className="flex items-center justify-center w-full bg-orange-dark text-white px-7 py-3 text-sm font-medium 
-                          rounded shadow-md hover:bg-orange-light"
-            onClick={signInWithGoogle}
-          >
-            <FcGoogle className="mr-4 text-2xl bg-white rounded-full" /> Sign Up
-            with Google
-          </button>
         </form>
       </div>
     </section>
