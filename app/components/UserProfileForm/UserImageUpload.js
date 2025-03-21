@@ -63,6 +63,8 @@ const UserImageUpload = ({ setPhotoURL }) => {
                 src={preview}
                 alt="Avatar Preview"
                 className="w-full h-full object-cover rounded-full"
+                width={500}
+                height={500}
               />
             ) : (
               <div className="flex flex-col items-center text-gray-500">

@@ -45,13 +45,13 @@ export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
 // Turn on emulator
-connectFirestoreEmulator(firestore, "localhost", 8080);
-console.log("Firestore instance:", firestore._databaseId.projectId);
-if (firestore._settings.host?.includes("localhost")) {
-  console.log("Using Firestore Emulator!");
-} else {
-  console.log("Using Production Firestore!");
-}
+// connectFirestoreEmulator(firestore, "localhost", 8080);
+// console.log("Firestore instance:", firestore._databaseId.projectId);
+// if (firestore._settings.host?.includes("localhost")) {
+//   console.log("Using Firestore Emulator!");
+// } else {
+//   console.log("Using Production Firestore!");
+// }
 
 // GetUserWithUsername function gets user data and returns a plain object
 export async function getUserWithUsername(username) {

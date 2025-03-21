@@ -261,12 +261,14 @@ function UserDetailsForm({
             </div>
             <p className="mt-2">{getValues("contactEmail") || "N/A"}</p>
           </div>
-          <div className="mb-6">
-            <div className="flex justify-between flex-wrap gap-2 w-full">
-              <span className="text-gray-700 font-bold">Phone</span>
+          {getValues("contactPhone") && (
+            <div className="mb-6">
+              <div className="flex justify-between flex-wrap gap-2 w-full">
+                <span className="text-gray-700 font-bold">Phone</span>
+              </div>
+              <p className="mt-2">{getValues("contactPhone") || "N/A"}</p>
             </div>
-            <p className="mt-2">{getValues("contactPhone") || "N/A"}</p>
-          </div>
+          )}
         </div>
       )}
     </>

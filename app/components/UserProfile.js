@@ -1,5 +1,5 @@
 "use client";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, Timestamp } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState, useContext } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -13,10 +13,6 @@ import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
 
 function UserProfile({ usernameParam, userDataFromParam, role }) {
-  // if (!userDataFromParam) {
-  //   return notFound();
-  // }
-  console.log("userDataFromParam", userDataFromParam);
   const db = getFirestore();
   const auth = getAuth();
   const userId = auth.currentUser?.uid; // Get UID from Firebase Auth
@@ -35,14 +31,14 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
 
   const methods = useForm({
     defaultValues: {
-      photoURL: photoURL,
-      displayName: user?.displayName ?? "",
+      photoURL: "",
+      displayName: "",
       instructorTitle: "",
       instructorDescription: "",
-      contactEmail: user?.email ?? "",
-      contactPhone: user?.phoneNumber ?? "",
-      username: username ?? "",
-      socialLinks: socialLinks,
+      contactEmail: "",
+      contactPhone: "",
+      username: "",
+      socialLinks: [],
     },
   });
 
@@ -66,7 +62,20 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
 
         if (docSnap.exists()) {
           const fetchedUserData = docSnap.data();
-          reset(fetchedUserData);
+          console.log("fetchedUserData", fetchedUserData);
+          const formData = {
+            photoURL: fetchedUserData.photoURL || "",
+            displayName: fetchedUserData.displayName || "",
+            instructorTitle: fetchedUserData.instructorTitle || "",
+            instructorDescription: fetchedUserData.instructorDescription || "",
+            contactEmail: fetchedUserData.email || "",
+            contactPhone: fetchedUserData.contactPhone || "",
+            username: fetchedUserData.username || "",
+            socialLinks: fetchedUserData.socialLinks || "",
+          };
+
+          // Reset the form with the transformed data
+          methods.reset(formData);
           setPhotoURL(fetchedUserData?.photoURL); // Set the avatar URL in state
 
           if (fetchedUserData?.socialLinks) {
@@ -84,6 +93,10 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
 
   if (!userDataFromParam) {
     return notFound();
+  }
+
+  if (!user) {
+    return <div>Loading...</div>;
   }
 
   return (

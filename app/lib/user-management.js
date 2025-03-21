@@ -110,6 +110,21 @@ const DeleteUserAccount = async (password) => {
         requiresReauthentication: true,
       };
     }
+
+    if (error.code === "auth/too-many-requests") {
+      return {
+        success: false,
+        error: "Too many requests. Please try again in 5-15 minutes.",
+        requiresReauthentication: true,
+      };
+    }
+    if (error.code === "auth/invalid-credential") {
+      return {
+        success: false,
+        error: "Invalid Credential",
+        requiresReauthentication: true,
+      };
+    }
     return { success: false, error: error.message };
   }
 };
