@@ -1,11 +1,17 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DeleteUserAccount from "../lib/user-management.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Spinner from "../components/Loader.js";
+import {
+  GoogleAuthProvider,
+  reauthenticateWithPopup,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+} from "firebase/auth";
 
-function DeleteAccountButton({ disabled }) {
+function DeleteAccountButton({ disabled, user }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [password, setPassword] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
@@ -13,8 +19,35 @@ function DeleteAccountButton({ disabled }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleDeleteRequest = () => {
-    setShowConfirmDialog(true);
+  // to do (auth/popup-closed-by-user).
+
+  const handleDeleteRequest = async (user) => {
+    const isGoogleUser = user.providerData.some(
+      (provider) => provider.providerId === "google.com"
+    );
+
+    try {
+      if (isGoogleUser) {
+        // Re-authenticate with Google
+        const provider = new GoogleAuthProvider();
+        setLoading(true);
+        await reauthenticateWithPopup(user, provider);
+        // Now delete the user
+        await user.delete();
+
+        toast.success("Your account has been deleted successfully.");
+        console.log("Now user deleted");
+        setLoading(false);
+        // Redirect to home page or login
+        router.push("/");
+      } else {
+        setShowConfirmDialog(true);
+      }
+    } catch (error) {
+      toast.error("Failed to delete account");
+      setError(`An unexpected error occurred ${error.message}`);
+      console.error("Error deleting user:", error);
+    }
   };
 
   const handleCancelDelete = () => {
@@ -30,7 +63,6 @@ function DeleteAccountButton({ disabled }) {
     try {
       const result = await DeleteUserAccount(password);
       setLoading(true);
-
       if (result.success) {
         toast.success("Your account has been deleted successfully.");
         // Redirect to home page or login
@@ -56,9 +88,9 @@ function DeleteAccountButton({ disabled }) {
       ) : (
         <>
           <button
-            onClick={handleDeleteRequest}
+            onClick={() => handleDeleteRequest(user)}
             disabled={disabled}
-            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 mt-8 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             Delete Account
           </button>
@@ -104,6 +136,9 @@ function DeleteAccountButton({ disabled }) {
                     </button>
                   </div>
                 </form>
+                <div className="text-sm text-gray-700 mt-8 text-center">
+                  Troubles deleting account? Contact support@vanklas.com{" "}
+                </div>
               </div>
             </div>
           )}

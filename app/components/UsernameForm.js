@@ -2,7 +2,6 @@
 import { useEffect, useState, useCallback, useContext } from "react";
 import { doc, writeBatch, getDoc, getFirestore } from "firebase/firestore";
 import { UserContext } from "../Provider";
-import { useRouter } from "next/navigation";
 import debounce from "lodash.debounce";
 
 // Username form
@@ -12,7 +11,6 @@ function UsernameForm() {
   const [loading, setLoading] = useState(false);
 
   const { user, username } = useContext(UserContext);
-  const router = useRouter();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -42,8 +40,6 @@ function UsernameForm() {
 
       await batch.commit();
       console.log("Batch commit successful. Redirecting...");
-      // Redirect to Profile Page
-      router.push(`/${formValue}`);
     } catch (error) {
       console.log("Error commit username to Firestore", error);
     }

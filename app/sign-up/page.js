@@ -20,16 +20,16 @@ const SignUpPage = () => {
   const { user, username } = useContext(UserContext);
   const [userRole, setUserRole] = useState(null);
 
-  // 1. user signed out <SignUpForm />
-  // 2. user signed in, but missing username <UsernameForm />
+  // User signs up (SignUpForm)
+  // User creates a username (UsernameForm)
+  // User selects a role (RoleSelectionForm)
   return (
-    // <main>{user ? !username ? <UsernameForm /> : null : <SignUpForm />}</main>
     <main>
       {user ? (
-        !userRole ? (
-          <RoleSelectionForm user={user} setUserRole={setUserRole} />
-        ) : !username ? (
+        !username ? (
           <UsernameForm />
+        ) : !userRole ? (
+          <RoleSelectionForm user={user} setUserRole={setUserRole} />
         ) : null
       ) : (
         <SignUpForm />
@@ -48,7 +48,7 @@ function SignUpForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    const { fullName, contactEmail, password, agreement } = data;
+    const { fullName, contactEmail, password } = data;
     console.log("data from sign up", data);
 
     try {

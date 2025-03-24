@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DeleteAccountButton from "../components/DeleteAccountButton.js";
 import AuthCheck from "../components/AuthCheck";
+import { UserContext } from "../Provider";
 
 const DeleteAccountPage = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const { user } = useContext(UserContext);
 
   return (
     <>
@@ -15,7 +17,7 @@ const DeleteAccountPage = () => {
             Warning: This action is irreversible. All your profile and classes
             data will be permanently deleted.
           </p>
-          <div className="space-y-4">
+          <div className=" mb-10">
             <label className="flex items-center">
               <input
                 type="checkbox"
@@ -25,7 +27,7 @@ const DeleteAccountPage = () => {
               />
               <span>I understand and want to delete my account.</span>
             </label>
-            <DeleteAccountButton disabled={!isConfirmed} />
+            <DeleteAccountButton disabled={!isConfirmed} user={user} />
           </div>
         </AuthCheck>
       </main>
