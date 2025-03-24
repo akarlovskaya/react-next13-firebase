@@ -1,15 +1,9 @@
 "use client";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import DeleteUserAccount from "../lib/user-management.js";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Spinner from "../components/Loader.js";
-import {
-  GoogleAuthProvider,
-  reauthenticateWithPopup,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
-} from "firebase/auth";
 
 function DeleteAccountButton({ disabled, user }) {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -19,8 +13,6 @@ function DeleteAccountButton({ disabled, user }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // to do (auth/popup-closed-by-user).
-
   const handleDeleteRequest = async (user) => {
     const isGoogleUser = user.providerData.some(
       (provider) => provider.providerId === "google.com"
@@ -28,25 +20,26 @@ function DeleteAccountButton({ disabled, user }) {
 
     try {
       if (isGoogleUser) {
-        // Re-authenticate with Google
-        const provider = new GoogleAuthProvider();
         setLoading(true);
-        await reauthenticateWithPopup(user, provider);
-        // Now delete the user
-        await user.delete();
+        // For Google users, no password needed
+        const result = await DeleteUserAccount();
 
-        toast.success("Your account has been deleted successfully.");
-        console.log("Now user deleted");
+        if (result.success) {
+          toast.success("Your account has been deleted successfully.");
+          router.push("/");
+        } else {
+          setError(result.error || "Failed to delete account");
+        }
         setLoading(false);
-        // Redirect to home page or login
-        router.push("/");
       } else {
+        // For email/password users, show password confirmation dialog
         setShowConfirmDialog(true);
       }
     } catch (error) {
       toast.error("Failed to delete account");
       setError(`An unexpected error occurred ${error.message}`);
       console.error("Error deleting user:", error);
+      setLoading(false);
     }
   };
 
@@ -61,11 +54,11 @@ function DeleteAccountButton({ disabled, user }) {
     setError("");
 
     try {
-      const result = await DeleteUserAccount(password);
       setLoading(true);
+      const result = await DeleteUserAccount(password);
+
       if (result.success) {
         toast.success("Your account has been deleted successfully.");
-        // Redirect to home page or login
         router.push("/");
       } else {
         setError(result.error || "Failed to delete account");
