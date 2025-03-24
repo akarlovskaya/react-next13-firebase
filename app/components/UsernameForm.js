@@ -146,7 +146,7 @@ function UsernameMessage({ username, isValid, loading }) {
     return (
       <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
         <p className="mb-10 text-base text-green-600">
-          ${username} is available!
+          @{username} is available!
         </p>
       </div>
     );

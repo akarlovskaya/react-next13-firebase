@@ -144,7 +144,7 @@ function UserDetailsForm({
               name="instructorDescription"
               className="border rounded w-full py-2 px-3"
               rows="4"
-              placeholder="Tell a bit about yourself - experience, what moves you?"
+              placeholder="What drives you? Share a glimpse of your experience and what activities inspire you."
               {...register("instructorDescription", {
                 required: { value: true, message: "About section is required" },
               })}
@@ -168,7 +168,7 @@ function UserDetailsForm({
               id="contactEmail"
               name="contactEmail"
               className="border rounded w-full py-2 px-3"
-              placeholder="You email address"
+              placeholder="Your email address"
               {...register("contactEmail", {
                 required: { value: true, message: "Email is required" },
               })}

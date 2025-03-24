@@ -149,7 +149,7 @@ function WorkoutAddForm({ postRef, defaultValues }) {
             </span>
           )}
           <span className="text-center">
-            {isSubmitting ? "Adding..." : "Add Class"}
+            {isSubmitting ? "Saving..." : "Save"}
           </span>
         </button>
 

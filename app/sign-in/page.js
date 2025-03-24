@@ -98,10 +98,12 @@ function SignInPage() {
       const userRef = doc(getFirestore(), "users", user.uid);
       const userSnap = await getDoc(userRef);
 
-      if (!userSnap.exists() || !userSnap.data().username) {
-        // User is new or missing a username → redirect them to set a username
-        await setDoc(userRef, { email: user.email }, { merge: true }); // Ensure at least an empty record exists
-        router.push("/set-username");
+      // User is new
+      if (!userSnap.exists()) {
+        toast.success("Account not found. Please sign up to continue.");
+        // Sign out the user
+        await auth.signOut();
+        router.push("/sign-up");
       } else {
         // User has a username → proceed to home page
         toast.success("Sign in was successful!");
