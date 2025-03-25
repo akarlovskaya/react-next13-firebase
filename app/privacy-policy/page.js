@@ -90,9 +90,7 @@ function PrivacyPolicyPage() {
           <h3 className="text-lg font-bold">Generic information</h3>
           <p>This information can be added by a user:</p>
           <ul>
-            <li>
-              Email address (automatically pre-populate from account email)
-            </li>
+            <li>Email address</li>
             <li>Photo</li>
             <li>Title and certifications (for Instructors)</li>
             <li>About You section</li>

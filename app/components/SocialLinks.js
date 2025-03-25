@@ -29,27 +29,29 @@ const SocialLinks = ({ socialLinks }) => {
     <>
       {hasNonEmptyLink && (
         <>
-          {/* <h3 className="text-gray-700 font-bold">Find me on socials:</h3> */}
-          <ul className="flex justify-left items-center gap-3 my-3">
-            {socialLinks.map(
-              (socialLink) =>
-                socialLink.link !== "" && (
-                  <li
-                    key={socialLink.name}
-                    className="text-xl content-center mr-2 hover:text-orange-dark"
-                  >
-                    <a
-                      href={normalizeLink(socialLink.link)}
-                      target="_blank"
-                      rel="noopener noreferrer"
+          <div className="mt-6">
+            <h3 className="text-xl mb-4">Connect with me:</h3>
+            <ul className="flex justify-left items-center gap-3 my-3">
+              {socialLinks.map(
+                (socialLink) =>
+                  socialLink.link !== "" && (
+                    <li
+                      key={socialLink.name}
+                      className="text-xl content-center mr-2 hover:text-orange-dark"
                     >
-                      {renderSocialIconSwitch(socialLink.name)}{" "}
-                      {/* Render the icon */}
-                    </a>
-                  </li>
-                )
-            )}
-          </ul>
+                      <a
+                        href={normalizeLink(socialLink.link)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {renderSocialIconSwitch(socialLink.name)}{" "}
+                        {/* Render the icon */}
+                      </a>
+                    </li>
+                  )
+              )}
+            </ul>
+          </div>
         </>
       )}
     </>

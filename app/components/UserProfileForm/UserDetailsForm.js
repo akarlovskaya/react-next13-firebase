@@ -246,7 +246,7 @@ function UserDetailsForm({
           </h2>
           {role === "instructor" ? (
             <h3 className="text-gray-700 font-bold text-center">
-              {getValues("instructorTitle") || "Title"}
+              {getValues("instructorTitle") || "Your Title is Here"}
             </h3>
           ) : null}
 
@@ -254,21 +254,27 @@ function UserDetailsForm({
           <p className="text-gray-700">
             {getValues("instructorDescription") || "Tell people about yourself"}
           </p>
+
           <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
+
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Email</span>
             </div>
-            <p className="mt-2">{getValues("contactEmail") || "N/A"}</p>
+            <p className="mt-2">
+              {getValues("contactEmail") || "Add your preferred contact email"}
+            </p>
           </div>
-          {getValues("contactPhone") && (
-            <div className="mb-6">
-              <div className="flex justify-between flex-wrap gap-2 w-full">
-                <span className="text-gray-700 font-bold">Phone</span>
-              </div>
-              <p className="mt-2">{getValues("contactPhone") || "N/A"}</p>
+
+          <div className="mb-6">
+            <div className="flex justify-between flex-wrap gap-2 w-full">
+              <span className="text-gray-700 font-bold">Phone</span>
             </div>
-          )}
+            <p className="mt-2">
+              {getValues("contactPhone") ||
+                "Add your preferred contact phone number"}
+            </p>
+          </div>
         </div>
       )}
     </>

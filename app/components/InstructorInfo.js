@@ -19,7 +19,6 @@ function InstructorInfo({ workout, currentUser }) {
     socialLinks: [],
   });
   const [loading, setLoading] = useState(true);
-  console.log("instructorData.socialLinks", instructorData);
 
   // Fetch additional instructor data from Firestore
   useEffect(() => {
@@ -114,15 +113,10 @@ function InstructorInfo({ workout, currentUser }) {
                   </>
                 )}
 
-                {instructorData.socialLinks.length > 0 && (
-                  <div className="mt-6">
-                    <h3 className="text-xl mb-4">Connect with me:</h3>
-                    <SocialLinks
-                      socialLinks={instructorData.socialLinks}
-                      loading={loading}
-                    />
-                  </div>
-                )}
+                <SocialLinks
+                  socialLinks={instructorData.socialLinks}
+                  loading={loading}
+                />
 
                 <Message
                   instructorId={workout.uid}

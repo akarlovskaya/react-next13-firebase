@@ -28,8 +28,25 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
                 </div>
               </div>
               <hr className="my-6 border-t border-gray-300" />
-              {userData?.socialLinks && (
-                <SocialLinks socialLinks={userData?.socialLinks} />
+
+              {!loggedInUser ? (
+                <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
+                  <p className="text-gray-700 mb-2">
+                    Please log in to view details.
+                  </p>
+                  <Link
+                    href="/sign-in"
+                    className="text-navy-light font-semibold hover:underline"
+                  >
+                    Sign In
+                  </Link>
+                </div>
+              ) : (
+                <>
+                  {userData?.socialLinks && (
+                    <SocialLinks socialLinks={userData?.socialLinks} />
+                  )}
+                </>
               )}
             </div>
           </aside>
@@ -42,7 +59,9 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
               {userData?.instructorTitle}
             </h3>
             <h2 className="font-semibold uppercase mb-2 mt-8">About Me</h2>
-            <p className="text-gray-700">{userData?.instructorDescription}</p>
+            <p className="text-gray-700">
+              {userData?.instructorDescription || "No information added yet."}
+            </p>
 
             {(userData?.contactEmail || userData?.contactPhone) && (
               <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
@@ -50,7 +69,7 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
             {!loggedInUser ? (
               <div className="p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
                 <p className="text-gray-700 mb-2">
-                  Please log in to view contact details.
+                  Please log in to view details.
                 </p>
                 <Link
                   href="/sign-in"

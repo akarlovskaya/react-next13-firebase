@@ -95,10 +95,6 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
     return notFound();
   }
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       {isOwner ? (

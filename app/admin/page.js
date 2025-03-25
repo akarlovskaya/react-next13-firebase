@@ -6,7 +6,7 @@ async function AdminPage({ params }) {
   const usernameParam = await params?.username; // Get `usernameParam` from the URL
 
   return (
-    <main>
+    <main className="h-full">
       <AuthCheck>
         <CreateNewWorkout />
         <WorkoutList usernameParam={usernameParam} />
