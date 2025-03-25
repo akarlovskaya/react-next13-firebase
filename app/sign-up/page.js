@@ -201,7 +201,7 @@ function SignUpForm() {
             <p>
               <Link
                 href="/forgot-password"
-                className="text-navy hover:text-indigo-600"
+                className="text-navy hover:text-navy-light"
               >
                 Forgot Password?
               </Link>

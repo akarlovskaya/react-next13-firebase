@@ -72,7 +72,7 @@ function ClassListing({ workout, admin }) {
           {shortDescription?.length >= 130 ? (
             <button
               onClick={() => setShowFullDescription((prevState) => !prevState)}
-              className="text-navy mb-5 hover:text-indigo-600"
+              className="text-navy mb-5 hover:text-navy-light"
             >
               {showFullDescription ? "Less" : "Read more"}
             </button>

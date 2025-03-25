@@ -78,7 +78,7 @@ const ForgotPasswordPage = () => {
               </Link>
             </p>
             <p>
-              <Link href="/sign-in" className="text-navy hover:text-indigo-600">
+              <Link href="/sign-in" className="text-navy hover:text-navy-light">
                 Sign In
               </Link>
             </p>

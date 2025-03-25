@@ -18,7 +18,7 @@ function WorkoutPageContent({ workout }) {
           <p>No workout data available.</p>
           <Link
             href="/"
-            className="text-indigo-500 hover:text-indigo-600 flex items-center"
+            className="text-navy hover:text-navy-light flex items-center"
           >
             <FaArrowLeft className="mr-2" /> Back to All Classes
           </Link>
@@ -66,7 +66,7 @@ function WorkoutPageContent({ workout }) {
         <div className="container m-auto py-6 px-6">
           <Link
             href="/"
-            className="text-indigo-500 hover:text-indigo-600 flex items-center"
+            className="text-navy hover:text-navy-light flex items-center"
           >
             <FaArrowLeft className="mr-2" /> Back to All Classes
           </Link>
