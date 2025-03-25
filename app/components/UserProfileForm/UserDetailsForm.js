@@ -171,6 +171,10 @@ function UserDetailsForm({
               placeholder="Your email address"
               {...register("contactEmail", {
                 required: { value: true, message: "Email is required" },
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
               })}
             />
             {errors?.contactEmail && (
@@ -194,8 +198,31 @@ function UserDetailsForm({
               //   disabled={!editInfo}
               className="border rounded w-full py-2 px-3"
               placeholder="Add phone number. Optional"
-              {...register("contactPhone")}
+              {...register("contactPhone", {
+                pattern: {
+                  value:
+                    /^(\+?1[-.\s]?)?(\(?)[0-9]{3}(\)?)[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}$/,
+                  message: "Invalid phone number",
+                },
+              })}
             />
+            {errors?.contactPhone && (
+              <p className="mb-4 text-sm text-red-600" role="alert">
+                {errors.contactPhone.message}.
+                <br />
+                The phone number must:
+                <ul className="list-disc pl-4">
+                  <li>Contain exactly 10 digits</li>
+                  <li>May optionally include the +1 country code</li>
+                  <li>
+                    May use a hyphen (-), period (.), or space ( ) as a
+                    separator
+                  </li>
+                  <li>May include optional parentheses around the area code</li>
+                  <li>No other special characters are allowed</li>
+                </ul>
+              </p>
+            )}
           </div>
           <SocialLinksProfileForm socialLinks={socialLinks} />
 
@@ -251,9 +278,13 @@ function UserDetailsForm({
           ) : null}
 
           <h2 className="font-semibold uppercase mb-2 mt-8">About Me</h2>
-          <p className="text-gray-700">
-            {getValues("instructorDescription") || "Tell people about yourself"}
-          </p>
+          {getValues("instructorDescription") ? (
+            <p className="text-gray-700">
+              {getValues("instructorDescription")}
+            </p>
+          ) : (
+            <p className="text-gray-500">Tell people about yourself</p>
+          )}
 
           <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
 
@@ -261,19 +292,28 @@ function UserDetailsForm({
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Email</span>
             </div>
-            <p className="mt-2">
-              {getValues("contactEmail") || "Add your preferred contact email"}
-            </p>
+
+            {getValues("contactEmail") ? (
+              <p className="mt-2">{getValues("contactEmail")}</p>
+            ) : (
+              <p className="mt-2 text-gray-500">
+                Add your preferred contact email
+              </p>
+            )}
           </div>
 
           <div className="mb-6">
             <div className="flex justify-between flex-wrap gap-2 w-full">
               <span className="text-gray-700 font-bold">Phone</span>
             </div>
-            <p className="mt-2">
-              {getValues("contactPhone") ||
-                "Add your preferred contact phone number"}
-            </p>
+
+            {getValues("contactPhone") ? (
+              <p className="mt-2">{getValues("contactPhone")}</p>
+            ) : (
+              <p className="mt-2 text-gray-500">
+                Add your preferred contact phone number
+              </p>
+            )}
           </div>
         </div>
       )}
