@@ -8,7 +8,7 @@ import SignOutButton from "./SignOutButton";
 
 // Top navbar
 export default function Navbar() {
-  const { user, username } = useContext(UserContext);
+  const { user, username, role } = useContext(UserContext);
   const pathname = usePathname(); // Get the current path
 
   const LinkClass = (href) =>
@@ -33,11 +33,14 @@ export default function Navbar() {
         {/* user is signed-in and has username */}
         {username && (
           <ul className="flex md:ml-auto space-x-2">
-            <li className="content-center">
-              <Link href="/admin" className={LinkClass("/admin")}>
-                Add Class
-              </Link>
-            </li>
+            {role !== "participant" && (
+              <li className="content-center">
+                <Link href="/admin" className={LinkClass("/admin")}>
+                  Add Class
+                </Link>
+              </li>
+            )}
+
             <li className="content-center capitalize">
               <Link href={`/${username}`} className={LinkClass(`/${username}`)}>
                 {`${username}`}

@@ -13,14 +13,16 @@ import { UserContext } from "../Provider";
 import { usePathname } from "next/navigation";
 import InstructorViewWorkoutList from "../components/UserProfileForm/InstructorViewWorkoutList";
 
-function WorkoutList({ usernameParam, role }) {
-  const { username } = useContext(UserContext);
+function WorkoutList({ usernameParam }) {
+  const { username, role } = useContext(UserContext);
   const pathname = usePathname();
   const isAdminPage = pathname.includes("/admin");
   const isOwner = username === usernameParam || isAdminPage;
   const [workouts, setWorkouts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  console.log("role from workoutlist", role);
 
   const fetchUserWorkouts = async (username) => {
     const db = getFirestore();
@@ -70,6 +72,10 @@ function WorkoutList({ usernameParam, role }) {
 
     fetchWorkouts();
   }, [username, usernameParam, isAdminPage]);
+
+  if (role === "participant") {
+    return;
+  }
 
   return (
     <>

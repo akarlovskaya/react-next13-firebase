@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 
 function CreateNewWorkout() {
   const router = useRouter();
-  const { username } = useContext(UserContext);
+  const { username, role } = useContext(UserContext);
   const [title, setTitle] = useState("");
 
   // Ensure slug is URL safe
@@ -65,6 +65,17 @@ function CreateNewWorkout() {
       toast.error("Failed to create workout: " + error.message);
     }
   };
+
+  if (role === "participant") {
+    return (
+      <main className="p-8 min-h-screen">
+        <p>Oops! It looks like you don't have permission to view this page.</p>
+        <p>
+          Please contact support@vanklas.com if you believe this is an error.
+        </p>
+      </main>
+    );
+  }
 
   return (
     <section className="bg-indigo-50">
