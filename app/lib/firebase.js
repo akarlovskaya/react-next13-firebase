@@ -21,7 +21,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
+// console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 // Initialize Firebase
 function createFirebaseApp(config) {
   try {

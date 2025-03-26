@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export default function RoleSelectionForm({ user, setUserRole }) {
   const [role, setRole] = useState("participant");
   const db = getFirestore();
-  console.log("user from Role Comp", user);
   const router = useRouter();
 
   const handleSubmit = async (e) => {

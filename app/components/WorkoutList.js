@@ -22,8 +22,6 @@ function WorkoutList({ usernameParam }) {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log("role from workoutlist", role);
-
   const fetchUserWorkouts = async (username) => {
     const db = getFirestore();
     const userDoc = await getUserWithUsername(username);

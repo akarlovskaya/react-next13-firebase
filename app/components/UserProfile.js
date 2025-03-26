@@ -62,7 +62,7 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
 
         if (docSnap.exists()) {
           const fetchedUserData = docSnap.data();
-          console.log("fetchedUserData", fetchedUserData);
+
           const formData = {
             photoURL: fetchedUserData.photoURL || "",
             displayName: fetchedUserData.displayName || "",

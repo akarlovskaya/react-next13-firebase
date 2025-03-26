@@ -49,28 +49,21 @@ function SignUpForm() {
 
   const onSubmit = async (data) => {
     const { fullName, contactEmail, password } = data;
-    console.log("data from sign up", data);
 
     try {
-      // console.log("Creating user with email and password...");
       // Create a user with email and password
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         contactEmail,
         password
       );
-      // console.log("User created successfully:", userCredential.user.uid);
 
-      // console.log("Updating user profile...");
       // Update the user profile with displayName
       const user = userCredential.user; // The current user is in userCredential.user
-      // console.log("Authenticated user UID:", user.uid);
+
       await updateProfile(user, {
         displayName: fullName,
       });
-      // console.log("User profile updated successfully");
-
-      // console.log("Preparing Firestore data...");
 
       // Prepare data for Firestore
       const forDataCopy = {
@@ -86,7 +79,6 @@ function SignUpForm() {
 
       // Save the user details to Firestore (without password)
       await setDoc(doc(getFirestore(), "users", user.uid), forDataCopy);
-      // console.log("Firestore document created successfully");
 
       toast.success("Sign up was successful!");
     } catch (error) {

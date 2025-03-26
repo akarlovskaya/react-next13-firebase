@@ -30,7 +30,6 @@ function SignInPage() {
         email,
         password
       );
-      console.log("userCredentials.user", userCredentials.user);
 
       if (userCredentials.user) {
         toast.success("Sign in was successful!");

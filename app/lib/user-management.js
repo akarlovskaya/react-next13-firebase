@@ -58,8 +58,6 @@ const DeleteUserAccount = async (password = null) => {
 
 // Helper function to reauthenticate user based on auth provider
 const reauthenticateUser = async (user, password, isGoogleUser) => {
-  console.log("user prop from reauthenticateUser", user);
-
   if (isGoogleUser) {
     try {
       await reauthenticateWithPopup(user, googleAuthProvider);

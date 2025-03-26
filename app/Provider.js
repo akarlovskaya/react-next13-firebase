@@ -10,7 +10,6 @@ export const UserContext = createContext({
 
 function Provider({ children }) {
   const userData = useUserData();
-  console.log("userData from Provider", userData);
 
   return (
     <UserContext.Provider value={userData}>{children}</UserContext.Provider>

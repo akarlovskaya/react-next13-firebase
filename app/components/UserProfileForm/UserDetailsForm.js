@@ -57,7 +57,6 @@ function UserDetailsForm({
       const userRef = doc(getFirestore(), "users", auth.currentUser.uid);
       await updateDoc(userRef, updatedUserData);
       setPhotoURL(updatedUserData.photoURL);
-      console.log("updatedUserData", updatedUserData);
       setLoading(false);
       toast.success("Profile updated successfully!");
       setIsEditing(false);

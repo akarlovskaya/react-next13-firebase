@@ -6,7 +6,6 @@ function ClassLocation() {
     formState: { errors },
   } = useFormContext();
 
-  console.log("errors", errors);
   return (
     <fieldset>
       <legend className="font-semibold uppercase mb-2 mt-10">Location</legend>
