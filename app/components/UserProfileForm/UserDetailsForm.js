@@ -266,7 +266,7 @@ function UserDetailsForm({
           </div>
         </form>
       ) : (
-        <div className="">
+        <div className="mb-40">
           <h2 className="text-xl font-bold mb-4 text-center">
             {getValues("displayName") || "Your Name"}
           </h2>
