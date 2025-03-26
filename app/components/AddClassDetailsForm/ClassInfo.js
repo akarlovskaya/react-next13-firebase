@@ -189,6 +189,10 @@ const ClassInfo = () => {
           placeholder="Price per class"
           {...register("fee", {
             required: { value: true, message: "Class fee is required" },
+            pattern: {
+              value: /^[0-9]+(\.[0-9]+)?$/,
+              message: "Invalid fee format",
+            },
           })}
         />
         {errors?.fee && (
