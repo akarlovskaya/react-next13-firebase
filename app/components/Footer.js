@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="bg-navy text-white py-8">
       <div className="container mx-auto px-4 lg:max-w-screen-lg">
         {/* Footer Links */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-8 justify-items-center">
           {/* Column 1 */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>

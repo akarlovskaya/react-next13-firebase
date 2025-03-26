@@ -24,7 +24,7 @@ export default function Navbar() {
           <Image
             src={"/vanKlas-logo-narrow.png"}
             alt="Vanklas Logo, Discover Fitness in Metro Vancouver"
-            className="h-20 w-auto"
+            className="h-10 md:h-20 w-auto"
             width={500}
             height={500}
           />
