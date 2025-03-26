@@ -1,7 +1,19 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import { useState, useContext } from "react";
+import { UserContext } from "../Provider";
 
 const AboutUsPage = () => {
+  const { user } = useContext(UserContext);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user.auth.currentUser);
+    }
+  }, [user]);
+
   return (
     <main className="max-w-3xl mx-auto p-6 bg-white">
       <h1 className="text-3xl font-bold text-center mb-6">About Us</h1>
@@ -154,15 +166,17 @@ const AboutUsPage = () => {
         </p>
       </div>
 
-      <div className="text-center mt-20 mb-10">
-        <p className="mb-10">Join the community!</p>
-        <Link
-          href="/sign-up"
-          className="w-60 bg-orange-dark text-white px-7 py-3 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-orange-light"
-        >
-          Sign Up
-        </Link>
-      </div>
+      {!currentUser ? (
+        <div className="text-center mt-20 mb-10">
+          <p className="mb-10">Join the community!</p>
+          <Link
+            href="/sign-up"
+            className="w-60 bg-orange-dark text-white px-7 py-3 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-orange-light"
+          >
+            Sign Up
+          </Link>
+        </div>
+      ) : null}
     </main>
   );
 };
