@@ -5,7 +5,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../Provider";
 
 const AboutUsPage = () => {
-  const { user } = useContext(UserContext);
+  const { user, role } = useContext(UserContext);
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
@@ -13,6 +13,7 @@ const AboutUsPage = () => {
       setCurrentUser(user.auth.currentUser);
     }
   }, [user]);
+  console.log("currentUser", currentUser);
 
   return (
     <main className="max-w-3xl mx-auto p-6 bg-white">
@@ -165,6 +166,30 @@ const AboutUsPage = () => {
           the right instructor makes all the difference.
         </p>
       </div>
+
+      {currentUser && role === "participant" ? (
+        <div className="text-center mt-20 mb-10">
+          <p className="mb-10">Find your next class!</p>
+          <Link
+            href="/"
+            className="w-60 bg-orange-dark text-white px-7 py-3 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-orange-light"
+          >
+            Explore
+          </Link>
+        </div>
+      ) : null}
+
+      {currentUser && role === "instructor" ? (
+        <div className="text-center mt-20 mb-10">
+          <p className="mb-10">Expand your audience!</p>
+          <Link
+            href="/admin"
+            className="w-60 bg-orange-dark text-white px-7 py-3 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-orange-light"
+          >
+            Add Class
+          </Link>
+        </div>
+      ) : null}
 
       {!currentUser ? (
         <div className="text-center mt-20 mb-10">
