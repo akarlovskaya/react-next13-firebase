@@ -6,13 +6,20 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, setDoc, getFirestore, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  getFirestore,
+  serverTimestamp,
+} from "firebase/firestore";
 import { UserContext } from "../Provider";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import UsernameForm from "../components/UsernameForm.js";
 import RoleSelectionForm from "../components/RoleSelectionForm.js";
 
@@ -41,6 +48,7 @@ const SignUpPage = () => {
 function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -90,12 +98,24 @@ function SignUpForm() {
 
   const signInWithGoogle = async () => {
     try {
-      await signInWithPopup(auth, googleAuthProvider);
-      // show success message
-      toast.success("Sign up was successful!");
+      const result = await signInWithPopup(auth, googleAuthProvider);
+      const user = result.user;
+
+      if (!user) return;
+
+      // Reference to Firestore document
+      const userRef = doc(getFirestore(), "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      // User exists -> redirect to sign in
+      if (userSnap.exists()) {
+        toast.error("This account already exists. Please sign in to continue.");
+        // Sign out the user
+        await auth.signOut();
+        router.push("/sign-in");
+      }
     } catch (error) {
       console.log("Error with signing in: ", error);
-      // show toast error message
       toast.error("Failed to sign in with Google. Please try again.");
     }
   };

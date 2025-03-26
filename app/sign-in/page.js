@@ -99,7 +99,7 @@ function SignInPage() {
 
       // User is new
       if (!userSnap.exists()) {
-        toast.success("Account not found. Please sign up to continue.");
+        toast.error("Account not found. Please sign up to continue.");
         // Sign out the user
         await auth.signOut();
         router.push("/sign-up");
