@@ -89,16 +89,16 @@ const ForgotPasswordPage = () => {
           >
             Sent Reset Password
           </button>
-          <div
+          {/* <div
             className="flex items-center my-4 
                              before:border-t before:flex-1 before:border-gray-300
                              after:border-t after:flex-1 after:border-gray-300"
           >
             <p className="text-center font-semibold mx-4">OR</p>
-          </div>
+          </div> */}
 
           {/* Sign Up with Google */}
-          <button
+          {/* <button
             type="button"
             className="flex items-center justify-center w-full bg-orange-dark text-white px-7 py-3 text-sm font-medium 
                         rounded shadow-md hover:bg-orange-light"
@@ -106,7 +106,7 @@ const ForgotPasswordPage = () => {
           >
             <FcGoogle className="mr-4 text-2xl bg-white rounded-full" /> Sign in
             with Google
-          </button>
+          </button> */}
         </form>
       </div>
     </section>
