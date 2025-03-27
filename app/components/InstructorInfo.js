@@ -4,6 +4,7 @@ import Spinner from "../components/Loader.js";
 import SocialLinks from "./SocialLinks";
 import Message from "./Message";
 import Link from "next/link";
+import Image from "next/image";
 
 function InstructorInfo({ workout, currentUser }) {
   const db = getFirestore();
@@ -37,17 +38,16 @@ function InstructorInfo({ workout, currentUser }) {
           }));
         } else {
           console.log("Instructor document not found.");
-          setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching instructor data: ", error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchInstructorInfo();
-    setLoading(false);
-  }, [workout.id]);
+  }, [workout.uid]);
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
@@ -59,10 +59,12 @@ function InstructorInfo({ workout, currentUser }) {
         instructorData && (
           <>
             <div className="flex flex-col items-center">
-              <img
+              <Image
                 src={instructorData.photoURL || "/avatar-img.png"}
-                className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
                 alt={`${instructorData.displayName || "Profile Name"}'s photo`}
+                className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
+                width={500}
+                height={500}
               />
 
               <Link

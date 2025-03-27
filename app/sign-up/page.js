@@ -90,9 +90,20 @@ function SignUpForm() {
 
       toast.success("Sign up was successful!");
     } catch (error) {
-      console.error("Error during registration:", error);
-      console.error("Error details:", error.code, error.message);
-      toast.error(`Something went wrong with user registration. ${error.code}`);
+      if (error.code === "auth/password-does-not-meet-requirements") {
+        toast.error(
+          `Password must contain: 
+          - at least 6 characters,
+          - lower and upper case characters,
+          - special and numeric character.`
+        );
+      } else {
+        console.error("Error during registration:", error);
+        console.error("Error details:", error.code, error.message);
+        toast.error(
+          `Something went wrong with user registration. ${error.code}`
+        );
+      }
     }
   };
 

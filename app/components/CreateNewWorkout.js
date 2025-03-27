@@ -69,7 +69,9 @@ function CreateNewWorkout() {
   if (role === "participant") {
     return (
       <main className="p-8 min-h-screen">
-        <p>Oops! It looks like you don't have permission to view this page.</p>
+        <p>
+          Oops! It looks like you don&apos;t have permission to view this page.
+        </p>
         <p>
           Please contact support@vanklas.com if you believe this is an error.
         </p>
