@@ -80,7 +80,7 @@ const Footer = () => {
         <div className="border-t border-gray-700 pt-8 text-center">
           <p className="text-sm text-gray-400">Vanklas Beta 1.0</p>
           <a
-            href={`mailto:support@vanklas.com?Subject=${encodeURIComponent(
+            href={`mailto:support@vanklas.info?Subject=${encodeURIComponent(
               "Bug Report"
             )}`}
             className="text-sm text-gray-400 hover:underline"

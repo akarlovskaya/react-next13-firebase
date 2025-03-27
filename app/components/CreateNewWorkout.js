@@ -70,10 +70,10 @@ function CreateNewWorkout() {
     return (
       <main className="p-8 min-h-screen">
         <p>
-          Oops! It looks like you don&apos;t have permission to view this page.
+          Oops! It looks like you don&#39;t have permission to view this page.
         </p>
         <p>
-          Please contact support@vanklas.com if you believe this is an error.
+          Please contact support@vanklas.info if you believe this is an error.
         </p>
       </main>
     );

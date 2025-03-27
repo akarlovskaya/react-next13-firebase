@@ -2,9 +2,9 @@ import React from "react";
 import Link from "next/link";
 
 const ContactUsPage = () => {
-  const supportEmail = "support@vanklas.com";
-  const salesEmail = "sales@vanklas.com";
-  const helloEmail = "hello@vanklas.com";
+  const supportEmail = "support@vanklas.info";
+  const salesEmail = "sales@vanklas.info";
+  const helloEmail = "hello@vanklas.info";
 
   return (
     <main className="max-w-4xl mx-auto p-6 text-gray-800 min-h-screen">

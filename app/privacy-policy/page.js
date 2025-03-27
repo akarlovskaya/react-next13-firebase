@@ -306,7 +306,7 @@ function PrivacyPolicyPage() {
         <p className="mb-4">
           If you wish to cancel your account and withdraw your consent for
           Vanklas to process your data, you can do so by contacting us at
-          support@vanklas.com. Upon account cancellation, Vanklas will
+          support@vanklas.info. Upon account cancellation, Vanklas will
           permanently terminate your account and delete your registration and
           generic information from our systems.
         </p>
@@ -386,7 +386,7 @@ function PrivacyPolicyPage() {
         <h2 className="text-2xl font-bold">Contact</h2>
         <p className="mb-4">
           If you need any further information or want to request an account
-          cancellation please contact us at support@vanklas.com.
+          cancellation please contact us at support@vanklas.info.
         </p>
       </section>
       <section className="space-y-8 mt-8">

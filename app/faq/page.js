@@ -98,13 +98,13 @@ function TermsPage() {
           <Link href="/delete-account" className="text-navy">
             Delete Account
           </Link>{" "}
-          link. Please note that any instructors you’ve interacted with may
+          link. Please note that any instructors you&#39;ve interacted with may
           retain records of your payments, attendance history, and contact
-          details for their insurance and tax purposes. If you’d like to review
-          or request removal of this information, you’ll need to contact the
-          instructor directly. If you encounter any issues during this process,
-          please email us at support@vanklas.com from your registered email
-          address, and we’ll be happy to assist.
+          details for their insurance and tax purposes. If you&#39;d like to
+          review or request removal of this information, you&#39;ll need to
+          contact the instructor directly. If you encounter any issues during
+          this process, please email us at support@vanklas.info from your
+          registered email address, and we&#39;ll be happy to assist.
         </p>
       </div>
 

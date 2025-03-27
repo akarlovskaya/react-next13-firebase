@@ -22,7 +22,7 @@ function TermsPage() {
         </a>
 
         <a href="#website-terms" className="text-navy">
-          <li>Section 4: Terms for use of vanklas.com</li>
+          <li>Section 4: Terms for use of vanklas.info</li>
         </a>
 
         <a href="#code-of-conduct" className="text-navy">
@@ -495,7 +495,7 @@ function TermsPage() {
           other circumstances) will remain fully valid and enforceable.
         </p>
         <h4>19. Contact</h4>
-        <p>Please contact us by email at hello@vanklas.com.</p>
+        <p>Please contact us by email at hello@vanklas.info.</p>
       </section>
 
       <section id="consumer-terms" className="space-y-8 mt-8">
@@ -777,13 +777,13 @@ function TermsPage() {
 
       <section id="website-terms" className="space-y-8 mt-8">
         <h3 className="text-lg font-bold">
-          Section 4: Terms for use of vanklas.com
+          Section 4: Terms for use of vanklas.info
         </h3>
         <p>
           Visitors to this website are required to adhere to the following terms
           and conditions. Please read them carefully before proceeding. For the
           purposes of these terms and conditions, &#34;this website&#34; refers
-          to the vanklas.com website.
+          to the vanklas.info website.
         </p>
         <h4>1. Disclaimer</h4>
         <p>

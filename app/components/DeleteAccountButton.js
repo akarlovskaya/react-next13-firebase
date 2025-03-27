@@ -130,7 +130,7 @@ function DeleteAccountButton({ disabled, user }) {
                   </div>
                 </form>
                 <div className="text-sm text-gray-700 mt-8 text-center">
-                  Troubles deleting account? Contact support@vanklas.com{" "}
+                  Troubles deleting account? Contact support@vanklas.info{" "}
                 </div>
               </div>
             </div>
