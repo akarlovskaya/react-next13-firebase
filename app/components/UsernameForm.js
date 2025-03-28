@@ -72,7 +72,7 @@ function UsernameForm() {
   // useCallback is required for debounce to work
   const checkUsername = useCallback(
     debounce(async (username) => {
-      if (username.length >= 3 && username.length <= 15) {
+      if (username.length >= 3 && username.length <= 20) {
         const ref = doc(getFirestore(), "usernames", username);
         const snap = await getDoc(ref);
         console.log("Firestore read executed!", snap.exists());
@@ -99,7 +99,7 @@ function UsernameForm() {
                 id="username"
                 name="username"
                 placeholder="my user name"
-                className="border rounded w-full py-2 px-3 mb-10"
+                className="border rounded w-full py-2 px-3"
                 value={formValue}
                 onChange={onChange}
               />
@@ -138,13 +138,13 @@ export default UsernameForm;
 function UsernameMessage({ username, isValid, loading }) {
   if (loading) {
     return (
-      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
+      <div className="h-24 pt-4 mb-4 text-m bg-white" role="alert">
         <p className="mb-10 text-base">Checking...</p>
       </div>
     );
   } else if (isValid) {
     return (
-      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
+      <div className="h-24 pt-4 mb-4 text-m bg-white" role="alert">
         <p className="mb-10 text-base text-green-600">
           @{username} is available!
         </p>
@@ -152,14 +152,18 @@ function UsernameMessage({ username, isValid, loading }) {
     );
   } else if (username && !isValid) {
     return (
-      <div className="h-24 p-4 mb-4 text-m bg-white" role="alert">
-        <p className="mb-10 text-base text-red-600">That username is taken!</p>
+      <div className="h-24 pt-4 mb-4 text-m bg-white" role="alert">
+        <p className="mb-10 text-base text-red-600">
+          That username is taken or invalid!
+        </p>
       </div>
     );
   } else {
     return (
-      <div className="h-24 p-4 mb-4 text-m bg-white " role="alert">
-        <p className="mb-10 text-base"></p>
+      <div className="h-24 pt-4 mb-4 text-m bg-white " role="alert">
+        <p className="mb-10 text-sm text-gray-700">
+          Must contain only letters and numbers and be 3 to 20 characters long.
+        </p>
       </div>
     );
   }
