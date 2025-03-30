@@ -2,15 +2,23 @@ import { getUserWithUsername } from "../lib/firebase";
 import { notFound } from "next/navigation";
 import UserProfile from "../components/UserProfile";
 import WorkoutList from "../components/WorkoutList";
-import { collection, getDocs } from "firebase/firestore";
 
 // Metatags
 export async function generateMetadata({ params }) {
   const { username } = await params;
 
   return {
-    title: username,
-    description: `${username}'s classes, about and contacts`,
+    title: `${username}'s Profile`,
+    description: `${username}'s classes, about, and contacts`,
+    robots: {
+      index: false, // Blocks indexing (noindex)
+      follow: true, // Allows link-following (optional)
+    },
+    // OpenGraph/Twitter tags for social sharing
+    openGraph: {
+      title: `${username}'s Profile`,
+      description: `${username}'s fitness journey`,
+    },
   };
 }
 

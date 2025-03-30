@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Allow: /vanklas/*/*    # Allows /vanklas/{username}/{slug}/
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /vanklas/*/  # Blocks /vanklas/{username}/
+Disallow: /delete-account
+Disallow: /set-username
+Disallow: /not-found
+Disallow: /under-construction
+Disallow: /forgot-password
+Disallow: /sign-in/
+Disallow: /sign-up/
+
+# Add your sitemap location
+# Sitemap: https://www.vanklas.info/sitemap.xml
