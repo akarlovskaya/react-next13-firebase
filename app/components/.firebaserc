@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "production": "react-next13-firebase",
+    "staging": "react-next13-firebase-staging",
+    "testing": "react-next13-firebase-testing"
+  }
+}
