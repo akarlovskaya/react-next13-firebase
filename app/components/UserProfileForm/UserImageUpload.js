@@ -59,7 +59,7 @@ const UserImageUpload = ({ setPhotoURL }) => {
             className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all"
           >
             {preview ? (
-              <div className="relative aspect-square w-full h-full mb-4">
+              <div className="relative aspect-square w-full h-full">
                 <Image
                   src={preview}
                   alt="Avatar Preview"
