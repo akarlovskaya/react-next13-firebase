@@ -76,7 +76,7 @@ service cloud.firestore {
                         workout.description.size() <= 20000);
 
         // Fee validation - Ensure fee is a string, fee contains only digits, fee is a non-negative number
-        let isValidFee = workout.fee is string && workout.fee.matches('^[0-9]+(\.[0-9]+)?$') && int(workout.fee) >= 0; 
+	      let isValidFee = workout.fee is string && workout.fee.matches('^[0-9]+(\\.[0-9]{1,2})?$') && float(workout.fee) >= 0;
 
         // Published status validation - should be boolean
         let isValidPublished = workout.published is bool;

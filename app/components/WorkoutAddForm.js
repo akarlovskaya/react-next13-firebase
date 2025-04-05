@@ -66,9 +66,19 @@ function WorkoutAddForm({ postRef, defaultValues }) {
       router.push(`/${defaultValues.username}/${defaultValues.slug}`);
     } catch (error) {
       console.error("Full error:", error);
+
+      if (error.code === "permission-denied") {
+        toast.error(
+          "Unable to save class: Permission denied. Please contact support if you believe this is an error."
+        );
+      } else if (error.code === "invalid-argument") {
+        toast.error("Invalid data format. Please check your inputs");
+      } else {
+        toast.error("Failed to submit class. Please try again later");
+      }
       // specific messages in the error
-      console.error("Error code:", error.code);
-      console.error("Error message:", error.message);
+      // console.error("Error code:", error.code);
+      // console.error("Error message:", error.message);
     }
   };
 

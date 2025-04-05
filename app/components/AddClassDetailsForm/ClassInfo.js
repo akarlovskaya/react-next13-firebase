@@ -186,12 +186,13 @@ const ClassInfo = () => {
           type="number"
           min={0}
           className="border rounded w-full py-2 px-3 mb-2"
-          placeholder="Price per class"
+          placeholder="Price per class, taxes not included"
           {...register("fee", {
             required: { value: true, message: "Class fee is required" },
             pattern: {
-              value: /^[0-9]+(\.[0-9]+)?$/,
-              message: "Invalid fee format",
+              value: /^[0-9]+(\.[0-9]{1,2})?$/,
+              message:
+                'Invalid fee format. Please enter a non-negative price with up to 2 decimal places (e.g., "10", "10.5", or "10.50"). Do not include currency symbols or commas.',
             },
           })}
         />
