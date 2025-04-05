@@ -59,13 +59,15 @@ const UserImageUpload = ({ setPhotoURL }) => {
             className="flex flex-col items-center justify-center w-40 h-40 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all"
           >
             {preview ? (
-              <Image
-                src={preview}
-                alt="Avatar Preview"
-                className="w-full h-full object-cover rounded-full"
-                width={500}
-                height={500}
-              />
+              <div className="relative aspect-square w-full h-full mb-4">
+                <Image
+                  src={preview}
+                  alt="Avatar Preview"
+                  fill
+                  className="object-cover rounded-full border-2 border-white shadow-sm"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
             ) : (
               <div className="flex flex-col items-center text-gray-500">
                 <span className="text-2xl">📸</span>

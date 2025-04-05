@@ -11,17 +11,18 @@ const UserProfileAside = ({ photoURL, isLoading, socialLinks }) => {
         <div className="bg-white shadow rounded-lg p-6">
           <div className="flex flex-col items-center">
             <div className="flex flex-col items-center">
-              <Image
-                src={photoURL || "/avatar-img.png"}
-                alt={
-                  `${getValues("displayName")}'s Avatar Picture` ||
-                  "Profile Avatar"
-                }
-                className="w-32 h-32 bg-gray-300 rounded-full mb-4 shrink-0"
-                width={500}
-                height={500}
-              />
-
+              <div className="relative aspect-square w-full h-full mb-4">
+                <Image
+                  src={photoURL || "/avatar-img.png"}
+                  alt={
+                    `${getValues("displayName")}'s Avatar Picture` ||
+                    "Profile Avatar"
+                  }
+                  fill
+                  className="object-cover rounded-full border-2 border-white shadow-sm"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
               {getValues("username") && (
                 <h1 className="text-xl font-bold">@{getValues("username")}</h1>
               )}

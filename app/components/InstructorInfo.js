@@ -59,13 +59,17 @@ function InstructorInfo({ workout, currentUser }) {
         instructorData && (
           <>
             <div className="flex flex-col items-center">
-              <Image
-                src={instructorData.photoURL || "/avatar-img.png"}
-                alt={`${instructorData.displayName || "Profile Name"}'s photo`}
-                className="w-32 h-32 bg-gray-300 rounded-full mb-8 shrink-0"
-                width={500}
-                height={500}
-              />
+              <div className="relative aspect-square w-2/3 h-2/3 mb-4">
+                <Image
+                  src={instructorData.photoURL || "/avatar-img.png"}
+                  alt={`${
+                    instructorData.displayName || "Profile Name"
+                  }'s photo`}
+                  fill
+                  className="object-cover rounded-full border-2 border-white shadow-sm"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
 
               <Link
                 href={`/${instructorData.username}`}
