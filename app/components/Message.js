@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 import Spinner from "./Loader.js";
 import { HiOutlineMail } from "react-icons/hi";
 
-const Message = ({ instructorId, workout, contactEmail }) => {
+const Message = ({ instructorId, workout = false, contactEmail }) => {
   const [authUserId, setAuthUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [messageInstructor, setMessageInstructor] = useState(false);

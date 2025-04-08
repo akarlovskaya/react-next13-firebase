@@ -1,8 +1,10 @@
 import Image from "next/image";
 import SocialLinks from "./SocialLinks.js";
 import Link from "next/link";
+import Message from "./Message";
 
 export default function UserDataFromParamView({ userData, loggedInUser }) {
+  console.log("userData", userData);
   return (
     <section className="bg-indigo-50">
       <div className="container mx-auto py-8">
@@ -48,6 +50,10 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
                   {userData?.socialLinks && (
                     <SocialLinks socialLinks={userData?.socialLinks} />
                   )}
+                  <Message
+                    instructorId={userData.uid}
+                    contactEmail={userData.contactEmail}
+                  />
                 </>
               )}
             </div>
@@ -65,7 +71,7 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
               {userData?.instructorDescription || "No information added yet."}
             </p>
 
-            {(userData?.contactEmail || userData?.contactPhone) && (
+            {/* {(userData?.contactEmail || userData?.contactPhone) && (
               <h2 className="font-semibold uppercase mb-2 mt-8">Contacts</h2>
             )}
             {!loggedInUser ? (
@@ -100,7 +106,7 @@ export default function UserDataFromParamView({ userData, loggedInUser }) {
                   </div>
                 )}
               </>
-            )}
+            )} */}
           </main>
         </div>
       </div>

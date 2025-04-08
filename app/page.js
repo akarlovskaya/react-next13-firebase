@@ -28,7 +28,7 @@ async function fetchInitialWorkouts() {
 
   return {
     props: { workouts }, // Pass initial data to the component
-    revalidate: 60, // Regenerate the page every 60 seconds (ISR)
+    //revalidate: 60, // Regenerate the page every 60 seconds (ISR)
   };
 }
 

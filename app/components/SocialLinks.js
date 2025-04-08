@@ -30,8 +30,8 @@ const SocialLinks = ({ socialLinks }) => {
       {hasNonEmptyLink && (
         <>
           <div className="mt-6">
-            <h3 className="text-xl mb-4">Connect with me:</h3>
-            <ul className="flex justify-left items-center gap-3 my-3">
+            <h3 className="text-xl mb-4 text-center">Connect with me:</h3>
+            <ul className="flex justify-center items-center gap-3 my-3">
               {socialLinks.map(
                 (socialLink) =>
                   socialLink.link !== "" && (
