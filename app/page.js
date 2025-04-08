@@ -12,6 +12,7 @@ import HeroBanner from "./components/HeroBanner";
 import HomePageCardsWrapper from "./components/HomePageCardsWrapper";
 import HomePageClassListings from "./components/HomePageClassListings";
 
+export const dynamic = "force-dynamic";
 // Max workout posts to query per page
 const LIMIT = 6;
 

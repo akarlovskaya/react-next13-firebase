@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
 }
 
 // Export revalidation period (ISR). Pages are revalidated every 100 seconds
-export const revalidate = 100;
+// export const revalidate = 100;
 
 // Fetch workout data during build or ISR
 export async function generateStaticParams() {

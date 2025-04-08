@@ -67,7 +67,7 @@ function InstructorInfo({ workout, currentUser }) {
                   }'s photo`}
                   fill
                   className="object-cover rounded-full border-2 border-white shadow-sm"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  sizes="(max-width: 768px) 33vw, 50vw"
                 />
               </div>
 
