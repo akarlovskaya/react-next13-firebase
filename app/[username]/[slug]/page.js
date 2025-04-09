@@ -35,17 +35,17 @@ export async function generateMetadata({ params }) {
 // export const revalidate = 100;
 
 // Fetch workout data during build or ISR
-export async function generateStaticParams() {
-  const q = query(collectionGroup(getFirestore(), "workouts"), limit(20));
-  const snapshot = await getDocs(q);
+// export async function generateStaticParams() {
+//   const q = query(collectionGroup(getFirestore(), "workouts"), limit(20));
+//   const snapshot = await getDocs(q);
 
-  const paths = snapshot.docs.map((doc) => {
-    const { slug, username } = doc.data();
-    return { username, slug };
-  });
+//   const paths = snapshot.docs.map((doc) => {
+//     const { slug, username } = doc.data();
+//     return { username, slug };
+//   });
 
-  return paths;
-}
+//   return paths;
+// }
 
 // Data fetching
 async function getWorkoutData(username, slug) {
