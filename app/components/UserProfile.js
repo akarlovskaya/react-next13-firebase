@@ -68,7 +68,7 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
             displayName: fetchedUserData.displayName || "",
             instructorTitle: fetchedUserData.instructorTitle || "",
             instructorDescription: fetchedUserData.instructorDescription || "",
-            contactEmail: fetchedUserData.email || "",
+            contactEmail: fetchedUserData.contactEmail || "",
             contactPhone: fetchedUserData.contactPhone || "",
             username: fetchedUserData.username || "",
             socialLinks: fetchedUserData.socialLinks || "",

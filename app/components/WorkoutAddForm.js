@@ -64,14 +64,6 @@ function WorkoutAddForm({ postRef, defaultValues }) {
 
       toast.success("Workout updated successfully!");
       router.push(`/${defaultValues.username}/${defaultValues.slug}`);
-      // router.push(
-      //   `/${defaultValues.username}/${defaultValues.slug}`,
-      //   undefined, // (Optional) pathname override
-      //   {
-      //     onComplete: () => router.refresh(), // for instant data updates from db
-      //     scroll: false, // Optional
-      //   }
-      // );
     } catch (error) {
       console.error("Full error:", error);
 

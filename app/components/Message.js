@@ -39,8 +39,8 @@ const Message = ({ instructorId, workout = false, contactEmail }) => {
 
   return (
     <>
-      {/* show message btn if it is not a author of post and btn was not clicked */}
-      {!isCreator && !messageInstructor && (
+      {/* show message btn if it is not a author of workout, btn was not clicked and contactEmail is present */}
+      {!isCreator && !messageInstructor && contactEmail && (
         <div className="bg-white p-6 text-center mt-6">
           <h3 className="text-xl mb-4">Questions?</h3>
           <p className="text-md mb-6">Contact Instructor</p>
@@ -60,8 +60,8 @@ const Message = ({ instructorId, workout = false, contactEmail }) => {
           <p className="text-md mb-6">Contact Instructor</p>
           <div className="flex flex-col w-full">
             <p>
-              Message <b>{workout.displayName}</b> about <b>{workout.title}</b>{" "}
-              class.
+              Message <b>{workout.displayName}</b> about a{" "}
+              <b>{workout.title}</b> class.
             </p>
             <div className="mt-3 mb-6">
               <textarea
