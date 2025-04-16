@@ -58,6 +58,10 @@ export default function Navbar() {
             <Link href="/sign-in" className={LinkClass("/sign-in")}>
               Sign In
             </Link>
+            <span className="text-white">|</span>
+            <Link href="/sign-up" className={LinkClass("/sign-in")}>
+              Sign Up
+            </Link>
           </ul>
         )}
       </nav>
