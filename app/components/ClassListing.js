@@ -17,6 +17,9 @@ function ClassListing({ workout, admin }) {
   const router = useRouter();
   const { user: currentUser } = useContext(UserContext);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const createdAtDate = new Date(createdAt);
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const isTwoWeeksOld = createdAtDate < twoWeeksAgo;
 
   // show short version of description
   if (!showFullDescription && shortDescription?.length >= 130) {
@@ -53,12 +56,14 @@ function ClassListing({ workout, admin }) {
       key={`${slug}-${uid}`}
       className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-150 relative"
     >
-      <Moment
-        className="absolute top-2 right-2 bg-beige uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg"
-        fromNow
-      >
-        {createdAt}
-      </Moment>
+      {!isTwoWeeksOld && (
+        <div className="absolute top-2 right-2 flex items-center">
+          {/* Hot sign/fire emoji */}
+          <span className="text-red-500 mr-1 bg-beige uppercase text-xs font-semibold rounded-md px-2 py-1 shadow-lg">
+            🔥 New
+          </span>
+        </div>
+      )}
       <div className="p-4">
         <div className="mb-6">
           <Link href={`/${username}/${slug}`}>
