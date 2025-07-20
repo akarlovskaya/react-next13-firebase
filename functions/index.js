@@ -1,46 +1,57 @@
-import { onUpdate } from "firebase-functions/v2/firestore";
-import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { logger } from "firebase-functions/logger";
+const nodemailer = require("nodemailer");
+const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 
-initializeApp();
+// Initialize SMTP transporter
+const transporter = nodemailer.createTransport({
+  host: "smtp.mailgun.org", // Mailgun SMTP server
+  port: 587, // TLS port
+  secure: false, // True for port 465 (SSL)
+  auth: {
+    user: process.env.MAILGUN_SMTP_USER, // From .env (e.g., postmaster@sandboxXXX.mailgun.org)
+    pass: process.env.MAILGUN_SMTP_PASS, // Your SMTP password
+  },
+});
 
-export const sendCancellationEmails = onUpdate(
-  { document: "workouts/{workoutId}" },
-  async (event) => {
-    const beforeData = event.data.before.data();
-    const afterData = event.data.after.data();
+exports.sendemail = onDocumentCreated("emails/{docId}", async (event) => {
+  const emailDocRef = event.data.ref; // Reference to the document that triggered the function
+  const emailDocId = event.params.docId; // Get the document ID
 
-    if (beforeData.status !== "cancelled" && afterData.status === "cancelled") {
-      const db = getFirestore();
-      const participants = await db
-        .collection(`workouts/${event.params.workoutId}/participants`)
-        .get();
+  try {
+    const { to, subject, html } = event.data.data();
 
-      const batch = db.batch();
-      const mailCollection = db.collection("mail");
+    if (!to) throw new Error('Missing "to" address');
+    if (!html) throw new Error("Missing email content");
 
-      participants.forEach((doc) => {
-        const user = doc.data();
-        batch.set(mailCollection.doc(), {
-          to: user.email,
-          message: {
-            subject: `Cancelled: ${afterData.className}`,
-            html: `
-              <h2>Class Cancelled</h2>
-              <p>${afterData.className} on ${new Date(
-              afterData.time
-            ).toLocaleString()} has been cancelled.</p>
-            `,
-          },
-        });
-      });
+    const info = await transporter.sendMail({
+      from: '"Vanklas" <hello@vanklas.com>',
+      to,
+      subject: subject || "Vanklas Notification",
+      html: html || "<p>Hello</p>",
+    });
 
-      await batch.commit();
-      logger.log(
-        `Sent cancellation emails to ${participants.size} participants`
-      );
-    }
-    return null;
+    console.log("Message sent: %s", info.messageId);
+
+    // Write delivery status back to Firestore
+    await emailDocRef.update({
+      status: "delivered",
+      messageId: info.messageId,
+      deliveredAt: admin.firestore.FieldValue.serverTimestamp(),
+      error: null, // Clear any previous error
+    });
+  } catch (error) {
+    console.error("Full error:", error);
+
+    // Write error status to Firestore
+    await emailDocRef.update({
+      status: "failed",
+      error: {
+        message: error.message,
+        stack: error.stack || null,
+        code: error.code || null,
+      },
+      failedAt: new Date().toISOString(), // Stores as a string
+    });
+
+    throw new functions.https.HttpsError("internal", error.message);
   }
-);
+});
