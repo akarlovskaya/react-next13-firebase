@@ -232,6 +232,7 @@ function WorkoutPageContent({ workout, participants }) {
                       workout={workout}
                       currentUser={currentUser}
                       isFollowing={isFollowing}
+                      setIsFollowing={setIsFollowing}
                     />
                   )
                 )}

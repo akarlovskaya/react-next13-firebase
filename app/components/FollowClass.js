@@ -1,20 +1,24 @@
-import React from "react";
-import { doc, setDoc, getFirestore } from "firebase/firestore";
+"use client";
+import { useState } from "react";
+import { doc, setDoc, getFirestore, deleteDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import toast from "react-hot-toast";
+import Spinner from "../components/Loader.js";
 
-function FollowClass({ workout, currentUser, isFollowing }) {
+function FollowClass({ workout, currentUser, isFollowing, setIsFollowing }) {
   const db = getFirestore();
   const functions = getFunctions();
   const { title, slug, address, time } = workout;
+  const [isLoading, setIsLoading] = useState(false);
 
   async function requestToJoinClass() {
-    alert("in requestToJoinClass");
+    // alert("in requestToJoinClass");
+    setIsLoading(true);
 
     try {
-      console.log(
-        `Writing to: users/${workout.uid}/workouts/${slug}/participants/${currentUser.uid}`
-      );
+      // console.log(
+      //   `Writing to: users/${workout.uid}/workouts/${slug}/participants/${currentUser.uid}`
+      // );
 
       await setDoc(
         // Path: users/{userId}/workouts/{workoutId}/participants/{userId}
@@ -49,19 +53,47 @@ function FollowClass({ workout, currentUser, isFollowing }) {
       toast.success(
         `Success! You're now following ${title} class! Check your email for confirmation.`
       );
-
-      // alert(
-      //   `Request to join ${title} at ${time}, ${address.place} sent successfully!`
-      // );
+      setIsFollowing(true);
     } catch (error) {
       console.error("Error joining class:", error);
-      alert("Failed to follow class. Please try again." + error.message);
       toast.error("Failed to follow class. Please try again.");
     }
+
+    setIsLoading(false);
   }
 
-  function unFollowClass() {
-    alert("in unFollowClass");
+  async function unFollowClass() {
+    setIsLoading(true);
+
+    try {
+      // Delete the participant document
+      await deleteDoc(
+        doc(
+          db,
+          "users",
+          workout.uid,
+          "workouts",
+          slug,
+          "participants",
+          currentUser.uid
+        )
+      );
+
+      toast.success(`You've successfully unfollowed the ${title} class.`);
+      setIsFollowing(false);
+    } catch (error) {
+      console.error("Error unfollowing class:", error);
+      toast.error("Failed to unfollow class. Please try again.");
+    }
+    setIsLoading(false);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <Spinner show={isLoading} />
+      </div>
+    );
   }
 
   return (
