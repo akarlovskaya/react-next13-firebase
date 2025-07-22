@@ -3,16 +3,13 @@ import {
   doc,
   getDocs,
   getDoc,
-  collectionGroup,
-  query,
-  limit,
+  collection,
   getFirestore,
 } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import WorkoutPageContent from "../../components/WorkoutPageContent";
-// import AuthCheck from '@components/AuthCheck';
 
 // Metatags
 export async function generateMetadata({ params }) {
@@ -49,36 +46,49 @@ export async function generateMetadata({ params }) {
 
 // Data fetching
 async function getWorkoutData(username, slug) {
-  try {
-    // Fetch workout data from firebase
-    const userDoc = await getUserWithUsername(username);
-    // getUserWithUsername returns a plain object (no ref there), we need to recreate the path
-    const userPath = `users/${userDoc.uid}`;
+  const db = getFirestore();
 
-    if (!userDoc) {
-      return null;
-    }
+  // Fetch workout data from firebase
+  const userDoc = await getUserWithUsername(username);
+  if (!userDoc) {
+    return { workout: null, participants: [] };
+  }
+  // getUserWithUsername returns a plain object (no ref there), we need to recreate the path
+  const userPath = `users/${userDoc.uid}`;
 
-    const postRef = doc(getFirestore(), userPath, "workouts", slug);
-    const postSnapshot = await getDoc(postRef);
+  // Get workout
+  const workoutRef = doc(db, userPath, "workouts", slug);
+  const workoutSnap = await getDoc(workoutRef);
 
-    if (!postSnapshot.exists()) {
-      return null;
-    }
-
-    // Verify fetched data
-    // console.log('Verify fetched Workout data:', postToJSON(postSnapshot));
-    return postToJSON(postSnapshot);
-  } catch (error) {
-    console.error("Error fetching workout:", error);
+  if (!workoutSnap.exists()) {
     return null;
   }
+
+  // Get participants (empty array if subcollection doesn't exist)
+  let participants = [];
+
+  try {
+    const participantsSnap = await getDocs(
+      collection(db, userPath, "workouts", slug, "participants")
+    );
+    participants = participantsSnap.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (e) {
+    console.log("No participants yet", e);
+  }
+
+  return {
+    workout: postToJSON(workoutSnap),
+    participants,
+  };
 }
 
 // Dynamic page component
 export default async function WorkoutPage({ params }) {
   const { username, slug } = await params;
-  const workout = await getWorkoutData(username, slug);
+  const { workout, participants = [] } = await getWorkoutData(username, slug);
 
   if (!workout) {
     notFound();
@@ -89,7 +99,7 @@ export default async function WorkoutPage({ params }) {
 
   return (
     <main>
-      <WorkoutPageContent workout={workout} />
+      <WorkoutPageContent workout={workout} participants={participants} />
     </main>
   );
 }

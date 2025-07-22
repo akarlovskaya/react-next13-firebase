@@ -11,6 +11,7 @@ import {
   connectFirestoreEmulator,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -44,14 +45,35 @@ export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
-// Turn on emulator
-// connectFirestoreEmulator(firestore, "localhost", 8080);
-// console.log("Firestore instance:", firestore._databaseId.projectId);
-// if (firestore._settings.host?.includes("localhost")) {
-//   console.log("Using Firestore Emulator!");
-// } else {
-//   console.log("Using Production Firestore!");
-// }
+// Turn on emulator and Initialize only once
+let functions;
+if (!getApps().length) {
+  const app = initializeApp(firebaseConfig);
+
+  // Firestore setup
+  firestore = getFirestore(app);
+  if (process.env.NODE_ENV === "development") {
+    try {
+      connectFirestoreEmulator(firestore, "localhost", 8080);
+      console.log("Firestore emulator connected");
+    } catch (e) {
+      console.warn("Firestore emulator connection failed", e);
+    }
+  }
+
+  // Functions setup (for Trigger Email)
+  functions = getFunctions(app);
+  if (process.env.NODE_ENV === "development") {
+    try {
+      connectFunctionsEmulator(functions, "localhost", 5001);
+      console.log("Functions emulator connected");
+    } catch (e) {
+      console.warn("Functions emulator connection failed", e);
+    }
+  }
+}
+
+export { functions };
 
 // GetUserWithUsername function gets user data and returns a plain object
 export async function getUserWithUsername(username) {

@@ -1,14 +1,32 @@
 "use client";
 import Link from "next/link";
 import { UserContext } from "../Provider";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import ShareLink from "./ShareLink";
 import { FaArrowLeft, FaMapMarker } from "react-icons/fa";
 import InstructorInfo from "./InstructorInfo.js";
 import ReactMarkdown from "react-markdown";
+import FollowClass from "./FollowClass";
 
-function WorkoutPageContent({ workout }) {
+function WorkoutPageContent({ workout, participants }) {
   const { user: currentUser } = useContext(UserContext);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if current user is a participant
+    if (currentUser && participants) {
+      const userIsFollowing = participants.some(
+        (participant) => participant.id === currentUser.uid
+      );
+      setIsFollowing(userIsFollowing);
+      setLoading(false);
+    }
+  }, [currentUser, participants]);
+
+  console.log("currentUser", currentUser);
+  console.log("workout", workout);
+  console.log("participants from WorkoutPageContent", participants);
 
   if (!workout) {
     return (
@@ -58,6 +76,10 @@ function WorkoutPageContent({ workout }) {
         .join(", ");
     }
     return "";
+  }
+
+  if (loading) {
+    <p>loading</p>;
   }
 
   return (
@@ -190,6 +212,29 @@ function WorkoutPageContent({ workout }) {
                     No payment options available
                   </p>
                 )}
+
+                {/* Follow Class Button */}
+                {!currentUser ? (
+                  <div className="mt-6 p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
+                    <p className="text-gray-700 mb-2">
+                      Please log in to request to join the class.
+                    </p>
+                    <Link
+                      href="/sign-in"
+                      className="text-navy-light font-semibold hover:underline"
+                    >
+                      Sign In
+                    </Link>
+                  </div>
+                ) : (
+                  currentUser?.uid !== workout?.uid && (
+                    <FollowClass
+                      workout={workout}
+                      currentUser={currentUser}
+                      isFollowing={isFollowing}
+                    />
+                  )
+                )}
               </div>
 
               {currentUser?.uid === workout?.uid && (
@@ -213,3 +258,5 @@ function WorkoutPageContent({ workout }) {
 }
 
 export default WorkoutPageContent;
+
+//ok. let start with Start with "confirmed".  I want to do two things now:  write code tosend email confirmatin to participant and email to instructor about new class follower.
