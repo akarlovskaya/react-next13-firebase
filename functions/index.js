@@ -1,57 +1,67 @@
-const nodemailer = require("nodemailer");
+// Load environment variables
+require("dotenv").config();
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
+const nodemailer = require("nodemailer");
 
-// Initialize SMTP transporter
+// Initialize Firebase
+const admin = require("firebase-admin");
+admin.initializeApp();
+
+// Email transporter setup
 const transporter = nodemailer.createTransport({
-  host: "smtp.mailgun.org", // Mailgun SMTP server
-  port: 587, // TLS port
-  secure: false, // True for port 465 (SSL)
+  // Real Mailgun configuration
+  host: "smtp.mailgun.org",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.MAILGUN_SMTP_USER, // From .env (e.g., postmaster@sandboxXXX.mailgun.org)
-    pass: process.env.MAILGUN_SMTP_PASS, // Your SMTP password
+    user: process.env.MAILGUN_SMTP_USER,
+    pass: process.env.MAILGUN_SMTP_PASS,
   },
 });
 
-exports.sendemail = onDocumentCreated("emails/{docId}", async (event) => {
-  const emailDocRef = event.data.ref; // Reference to the document that triggered the function
-  const emailDocId = event.params.docId; // Get the document ID
-
-  try {
-    const { to, subject, html } = event.data.data();
-
-    if (!to) throw new Error('Missing "to" address');
-    if (!html) throw new Error("Missing email content");
-
-    const info = await transporter.sendMail({
-      from: '"Vanklas" <hello@vanklas.com>',
-      to,
-      subject: subject || "Vanklas Notification",
-      html: html || "<p>Hello</p>",
-    });
-
-    console.log("Message sent: %s", info.messageId);
-
-    // Write delivery status back to Firestore
-    await emailDocRef.update({
-      status: "delivered",
-      messageId: info.messageId,
-      deliveredAt: admin.firestore.FieldValue.serverTimestamp(),
-      error: null, // Clear any previous error
-    });
-  } catch (error) {
-    console.error("Full error:", error);
-
-    // Write error status to Firestore
-    await emailDocRef.update({
-      status: "failed",
-      error: {
-        message: error.message,
-        stack: error.stack || null,
-        code: error.code || null,
-      },
-      failedAt: new Date().toISOString(), // Stores as a string
-    });
-
-    throw new functions.https.HttpsError("internal", error.message);
+// Verify connection configuration
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("Nodemailer connection error:", error);
+  } else {
+    console.log("Nodemailer is ready to send messages", success);
   }
 });
+
+// Cloud Function
+exports.sendFollowNotification = onDocumentCreated(
+  "users/{userId}/workouts/{workoutId}/participants/{participantId}",
+  async (event) => {
+    console.log("🔥 FUNCTION ENTERED - STARTING EXECUTION");
+    console.log("PRODUCTION MODE - SENDING REAL EMAIL");
+    console.log("🔥 FUNCTION TRIGGERED AT PATH:", event.params);
+    const snapshot = event.data;
+    console.log("Function triggered!");
+    console.log("Document data:", snapshot);
+    console.log("Event params:", event.params);
+
+    if (!snapshot) {
+      console.log("No data associated with the event");
+      return;
+    }
+
+    // const db = getFirestore();
+    const participantData = snapshot.data();
+
+    // Only process newly created participants with 'pending' status
+    if (participantData.status !== "pending") {
+      console.log("Participant already processed or not pending");
+      return;
+    }
+
+    await transporter
+      .sendMail({
+        from: '"Test" <hello@vanklas.info>',
+        to: participantData.email,
+        subject: "You Watch Class Changes",
+        html: `<p>Hi ${participantData.userName}, you've subscribed to watch the class changes!</p>`,
+      })
+      .then(console.log)
+      .catch(console.error);
+  }
+);

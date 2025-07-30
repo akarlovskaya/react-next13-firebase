@@ -217,7 +217,7 @@ function WorkoutPageContent({ workout, participants }) {
                 {!currentUser ? (
                   <div className="mt-6 p-4 bg-gray-100 border border-gray-300 rounded-lg text-center">
                     <p className="text-gray-700 mb-2">
-                      Please log in to request to join the class.
+                      Please log in to subscribe to class updates.
                     </p>
                     <Link
                       href="/sign-in"

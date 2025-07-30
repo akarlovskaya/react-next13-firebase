@@ -1,4 +1,4 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import {
   getFirestore,
@@ -8,10 +8,9 @@ import {
   query,
   limit,
   Timestamp,
-  connectFirestoreEmulator,
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -22,7 +21,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// console.log("API Key:", process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
 // Initialize Firebase
 function createFirebaseApp(config) {
   try {
@@ -45,46 +43,9 @@ export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const STATE_CHANGED = "state_changed";
 
-// Turn on emulator and Initialize only once
-let functions;
-if (!getApps().length) {
-  const app = initializeApp(firebaseConfig);
-
-  // Firestore setup
-  firestore = getFirestore(app);
-  if (process.env.NODE_ENV === "development") {
-    try {
-      connectFirestoreEmulator(firestore, "localhost", 8080);
-      console.log("Firestore emulator connected");
-    } catch (e) {
-      console.warn("Firestore emulator connection failed", e);
-    }
-  }
-
-  // Functions setup (for Trigger Email)
-  functions = getFunctions(app);
-  if (process.env.NODE_ENV === "development") {
-    try {
-      connectFunctionsEmulator(functions, "localhost", 5001);
-      console.log("Functions emulator connected");
-    } catch (e) {
-      console.warn("Functions emulator connection failed", e);
-    }
-  }
-}
-
-export { functions };
-
 // GetUserWithUsername function gets user data and returns a plain object
 export async function getUserWithUsername(username) {
   try {
-    // console.log(
-    //   `${
-    //     typeof window === "undefined" ? "Server" : "Client"
-    //   } Searching for username:`,
-    //   username
-    // );
-
     const q = query(
       collection(firestore, "users"),
       where("username", "==", username),
@@ -92,14 +53,6 @@ export async function getUserWithUsername(username) {
     );
 
     const querySnapshot = await getDocs(q);
-    // console.log(
-    //   `${
-    //     typeof window === "undefined" ? "Server" : "Client"
-    //   } Query for username:`,
-    //   username,
-    //   "returned size:",
-    //   querySnapshot.size
-    // );
 
     if (querySnapshot.empty) {
       console.log(
@@ -178,5 +131,18 @@ export function userToJSON(userDoc) {
     // Convert Firestore Timestamp to milliseconds
     createdAt:
       data?.createdAt instanceof Timestamp ? data.createdAt.toMillis() : 0,
+  };
+}
+
+export function participantToJSON(participantDoc) {
+  const data = participantDoc.data();
+  const participantId = participantDoc.id;
+
+  return {
+    id: participantId,
+    ...data,
+    // Convert Firestore Timestamp to milliseconds (or null if not exists)
+    joinedAt:
+      data?.joinedAt instanceof Timestamp ? data.joinedAt.toMillis() : null,
   };
 }

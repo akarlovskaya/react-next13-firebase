@@ -1,4 +1,9 @@
-import { firestore, getUserWithUsername, postToJSON } from "../../lib/firebase";
+import {
+  firestore,
+  getUserWithUsername,
+  postToJSON,
+  participantToJSON,
+} from "../../lib/firebase";
 import {
   doc,
   getDocs,
@@ -71,10 +76,11 @@ async function getWorkoutData(username, slug) {
     const participantsSnap = await getDocs(
       collection(db, userPath, "workouts", slug, "participants")
     );
-    participants = participantsSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // participants = participantsSnap.docs.map((doc) => ({
+    //   id: doc.id,
+    //   ...doc.data(),
+    // }));
+    participants = participantsSnap.docs.map(participantToJSON); // use custom participantToJSON to convert to plain objects
   } catch (e) {
     console.log("No participants yet", e);
   }
