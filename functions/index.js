@@ -2,10 +2,11 @@
 require("dotenv").config();
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const nodemailer = require("nodemailer");
+const admin = require("firebase-admin");
 
 // Initialize Firebase
-const admin = require("firebase-admin");
 admin.initializeApp();
+const db = admin.firestore();
 
 // Email transporter setup
 const transporter = nodemailer.createTransport({
@@ -38,15 +39,15 @@ exports.sendFollowNotification = onDocumentCreated(
     const snapshot = event.data;
     console.log("Function triggered!");
     console.log("Document data:", snapshot);
-    console.log("Event params:", event.params);
+    console.log("😍 Evvent params:", event.params);
 
     if (!snapshot) {
       console.log("No data associated with the event");
       return;
     }
 
-    // const db = getFirestore();
     const participantData = snapshot.data();
+    console.log("PARTICIPANT data", participantData);
 
     // Only process newly created participants with 'pending' status
     if (participantData.status !== "pending") {
@@ -54,14 +55,60 @@ exports.sendFollowNotification = onDocumentCreated(
       return;
     }
 
-    await transporter
-      .sendMail({
-        from: '"Test" <hello@vanklas.info>',
+    try {
+      // Get instructor details
+      const instructorRef = db.doc(`users/${event.params.userId}`);
+      const instructorSnap = await instructorRef.get();
+      if (!instructorSnap.exists) {
+        console.log("Instructor not found");
+        return;
+      }
+      const instructor = instructorSnap.data();
+      console.log("INSTRUCTOR data", instructor);
+
+      // Email to participant
+      const participantEmail = {
         to: participantData.email,
-        subject: "You Watch Class Changes",
-        html: `<p>Hi ${participantData.userName}, you've subscribed to watch the class changes!</p>`,
-      })
-      .then(console.log)
-      .catch(console.error);
+        subject: `You Watching ${event.params.workoutId} Class Changes`,
+        html: `
+        <p>Hi ${participantData.userName},</p>
+        <p>You've successfully subscribed to watch "${event.params.workoutId}" class changes.</p>
+        <p>Cheers,</p>
+        <p>Vanklas Team</p>
+      `,
+      };
+
+      // Email to instructor
+      // TO DO - make class name Uppercase
+      // ADD email signature and avatar
+      const instructorEmail = {
+        to: instructor.contactEmail,
+        subject: `New Participant for "${event.params.workoutId}" Class`,
+        html: `
+              <p>Hi ${instructor.displayName}!</p>
+              <p>${participantData.userName} has subscribed to follow your 
+              "${event.params.workoutId}" class changes.</p>
+              <p>Cheers,</p>
+              <p>Vanklas Team</p>
+            `,
+      };
+
+      console.log("INSTRUCTOR instructorEmail", instructorEmail);
+      console.log("participantEmail", participantEmail);
+
+      // Send both emails
+      await transporter.sendMail({
+        from: '"Vanklas" <hello@vanklas.com>',
+        ...participantEmail,
+      });
+
+      await transporter.sendMail({
+        from: '"Vanklas" <hello@vanklas.com>',
+        ...instructorEmail,
+      });
+    } catch (error) {
+      console.error("Error sending follow notification emails:", error);
+      throw error;
+    }
   }
 );
