@@ -3,14 +3,12 @@ import { useState } from "react";
 import {
   getFirestore,
   doc,
-  setDoc,
-  updateDoc,
   increment,
   serverTimestamp,
   writeBatch,
 } from "firebase/firestore";
-// import { useAuthContext } from "@/contexts/AuthContext";
 import { toast } from "react-hot-toast";
+import Spinner from "../components/Loader.js";
 
 const db = getFirestore();
 
@@ -20,10 +18,7 @@ export default function FollowClass({
   isFollowing,
   setIsFollowing,
 }) {
-  // const { currentUser } = useAuthContext();
   const [isLoading, setIsLoading] = useState(false);
-  // const [isFollowing, setIsFollowing] = useState(false);
-
   const { title, slug } = workout;
 
   async function requestToJoinClass() {
@@ -87,38 +82,91 @@ export default function FollowClass({
     }
   }
 
+  async function unFollowClass() {
+    setIsLoading(true);
+
+    try {
+      const batch = writeBatch(db);
+
+      // Delete the participant document
+      const participantRef = doc(
+        db,
+        "users",
+        workout.uid,
+        "workouts",
+        slug,
+        "participants",
+        currentUser.uid
+      );
+      batch.delete(participantRef);
+
+      // Update participant count
+      const workoutRef = doc(db, `users/${workout.uid}/workouts/${slug}`);
+      batch.update(workoutRef, {
+        participantCount: increment(-1),
+      });
+
+      // Execute the batch
+      await batch.commit();
+
+      toast.success(
+        `Huray! You've successfully unfollowed the ${title} class.`
+      );
+      setIsFollowing(false);
+    } catch (error) {
+      console.error("Error unfollowing class:", error);
+      toast.error("Failed to unfollow class. Please try again.");
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <Spinner show={isLoading} />
+      </div>
+    );
+  }
+
   return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-
-      <button
-        onClick={requestToJoinClass}
-        disabled={isLoading || isFollowing}
-        className={`px-4 py-2 rounded-md font-medium transition-colors ${
-          isFollowing
-            ? "bg-green-100 text-green-800 cursor-not-allowed"
-            : isLoading
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-blue-600 text-white hover:bg-blue-700"
-        }`}
-      >
-        {isLoading ? (
-          <>
-            <span className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
-            Joining...
-          </>
-        ) : isFollowing ? (
-          "Registration Submitted"
-        ) : (
-          "Join Class"
-        )}
-      </button>
-
-      {isFollowing && (
-        <p className="text-sm text-gray-600 mt-2">
-          📧 Check your email for confirmation. If you don't receive it, your
-          registration will be cancelled automatically.
-        </p>
+    <div className="bg-white p-6 text-center mt-6">
+      {isFollowing ? (
+        <>
+          <div className="inline-flex items-center px-3 py-2 bg-beige text-blue-600 font-medium rounded-md text-sm">
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+            You are Following the Class Changes
+          </div>
+          <br></br>
+          <button
+            onClick={unFollowClass}
+            className="text-blue-600 text-sm font-medium hover:underline mt-4"
+          >
+            Unfollow Class
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="mb-4">Get Notified About Class Changes</p>
+          <button
+            onClick={requestToJoinClass}
+            className="flex justify-center w-40 justify-self-center bg-orange-dark text-white px-7 py-3 mt-5 text-sm font-medium rounded shadow-md hover:bg-orange-light"
+          >
+            Follow Class
+          </button>
+        </>
       )}
     </div>
   );
