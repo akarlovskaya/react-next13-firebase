@@ -109,9 +109,7 @@ export default function FollowClass({
       // Execute the batch
       await batch.commit();
 
-      toast.success(
-        `Huray! You've successfully unfollowed the ${title} class.`
-      );
+      toast.success(`You've successfully unfollowed the ${title} class.`);
       setIsFollowing(false);
     } catch (error) {
       console.error("Error unfollowing class:", error);

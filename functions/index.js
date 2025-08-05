@@ -20,6 +20,31 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+/**
+ * Formats workout names from URL parameters into display-ready text
+ * @param {string} workoutId - The workout ID from URL params (e.g., "sunrise-strength-bootcamp")
+ * @return {string} Formatted workout name (e.g., "Sunrise Strength Bootcamp")
+ */
+function formatWorkoutName(workoutId) {
+  let formatted = workoutId
+    .split("-")
+    .map((word) => {
+      // Preserve acronyms (like HIIT)
+      if (word === word.toUpperCase() && word.length <= 4) {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(" ");
+  // Handle special cases
+  formatted = formatted
+    .replace(/\s+&\s+/g, " & ") // Fix ampersand spacing
+    .replace(/\s+-\s+/g, " – ") // Replace hyphens between words with en-dashes
+    .replace(/\s+\+\s+/g, " + "); // Fix plus sign spacing
+
+  return formatted;
+}
+
 // Verify connection configuration
 transporter.verify((error, success) => {
   if (error) {
@@ -65,32 +90,74 @@ exports.sendFollowNotification = onDocumentCreated(
       }
       const instructor = instructorSnap.data();
       console.log("INSTRUCTOR data", instructor);
+      const formattedWorkoutName = formatWorkoutName(event.params.workoutId);
 
       // Email to participant
       const participantEmail = {
         to: participantData.email,
-        subject: `You Watching ${event.params.workoutId} Class Changes`,
+        subject: `You're now watching updates for ${formattedWorkoutName} class`,
         html: `
-        <p>Hi ${participantData.userName},</p>
-        <p>You've successfully subscribed to watch "${event.params.workoutId}" class changes.</p>
-        <p>Cheers,</p>
-        <p>Vanklas Team</p>
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Class Subscription Confirmation</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
+              <h2 style="color: #002379;">You're now watching "${formattedWorkoutName}" updates!</h2>
+    
+              <p>Hi ${participantData.userName},</p>
+    
+              <p>Thanks for subscribing! You're now set to receive updates about changes 
+              to the <strong>"${formattedWorkoutName}"</strong> class.</p>
+    
+              <p>We'll keep you in the loop with schedule changes, updates, or any important announcements.</p>
+    
+              <p>If you have any questions, feel free to reach out anytime.</p>
+    
+              <p style="margin-top: 30px;">Best regards,<br />The Vanklas Team</p>
+            </div>
+          </body>
+        </html>
       `,
       };
 
       // Email to instructor
-      // TO DO - make class name Uppercase
       // ADD email signature and avatar
       const instructorEmail = {
         to: instructor.contactEmail,
-        subject: `New Participant for "${event.params.workoutId}" Class`,
+        subject: `A new participant has started to follow your ${formattedWorkoutName} class`,
         html: `
-              <p>Hi ${instructor.displayName}!</p>
-              <p>${participantData.userName} has subscribed to follow your 
-              "${event.params.workoutId}" class changes.</p>
-              <p>Cheers,</p>
-              <p>Vanklas Team</p>
-            `,
+        <!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <title>New Class Follower Notification</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
+              <h2 style="color: #002379;">New Follower for Your "${formattedWorkoutName}" Class! 👋</h2>
+    
+              <p>Hi ${instructor.displayName},</p>
+    
+              <p>We're excited to let you know that <strong>${participantData.userName}</strong> 
+              has subscribed to follow updates for your <strong>"${formattedWorkoutName}"</strong> class.</p>
+    
+              <p>This means they'll be notified about any changes you make to the class schedule or details.</p>
+    
+              <p style="margin-top: 30px;">Keep up the great work!<br />The Vanklas Team</p>
+              
+              <p style="font-size: 12px; color: #999999; margin-top: 30px; border-top: 1px solid #eeeeee; 
+              padding-top: 15px;">
+                You're receiving this notification because you're the instructor of this class.
+              </p>
+            </div>
+          </body>
+        </html>
+      `,
       };
 
       console.log("INSTRUCTOR instructorEmail", instructorEmail);
