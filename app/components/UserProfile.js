@@ -11,6 +11,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
+import NotificationBell from "./NotificationBell.js";
 
 function UserProfile({ usernameParam, userDataFromParam, role }) {
   const db = getFirestore();
@@ -114,7 +115,7 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
                   {role === "instructor" ? (
                     <Link
                       href="/admin"
-                      className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:outline-none focus:shadow-outline"
+                      className="w-40 flex bg-navy hover:bg-gray-900 justify-center text-white py-4 rounded items-center focus:shadow-outline"
                     >
                       <IoCreateOutline className="mr-2 text-xl" /> Create Class
                     </Link>
@@ -122,11 +123,13 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
 
                   <button
                     type="button"
-                    className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 mt-5 font-medium rounded shadow-md focus:outline-none focus:shadow-outline hover:bg-gray-900"
+                    className="w-40 bg-slate-600 text-white px-7 py-3 mb-7 mt-5 font-medium rounded shadow-md focus:shadow-outline hover:bg-gray-900"
                     onClick={(e) => setIsEditing(!isEditing)}
                   >
                     Edit Profile
                   </button>
+
+                  <NotificationBell />
                 </div>
               )}
             </aside>
