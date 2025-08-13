@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import Spinner from "./Loader.js";
 import { HiOutlineMail } from "react-icons/hi";
+import NotificationBell from "./NotificationBell.js";
 
-const Message = ({ instructorId, workout = false, contactEmail }) => {
+const Message = ({
+  instructorId,
+  workout = false,
+  contactEmail,
+  instructorName,
+}) => {
   const [authUserId, setAuthUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [messageInstructor, setMessageInstructor] = useState(false);
@@ -97,6 +103,15 @@ const Message = ({ instructorId, workout = false, contactEmail }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {isCreator && (
+        <NotificationBell
+          instructorId={instructorId}
+          workoutTitle={workout.slug}
+          instructorName={instructorName}
+          instructorEmail={contactEmail}
+        />
       )}
     </>
   );

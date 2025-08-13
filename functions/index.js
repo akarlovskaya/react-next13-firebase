@@ -20,12 +20,28 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// TO DO: add to emails
+// ${process.env.UNSUBSCRIBE_URL ? `
+// <p style="font-size: 12px; margin-top: 20px;">
+//   <a href="${process.env.UNSUBSCRIBE_URL}"
+//   style="color: #999999; text-decoration: none;">
+//     Unsubscribe from these notifications
+//   </a>
+// </p>
+// ` : ''}
+
 /**
  * Formats workout names from URL parameters into display-ready text
  * @param {string} workoutId - The workout ID from URL params (e.g., "sunrise-strength-bootcamp")
  * @return {string} Formatted workout name (e.g., "Sunrise Strength Bootcamp")
  */
 function formatWorkoutName(workoutId) {
+  console.log("formatWorkoutName called with:", workoutId);
+  if (!workoutId.includes("-")) {
+    // If no hyphen, just capitalize the first letter
+    return workoutId.charAt(0).toUpperCase() + workoutId.slice(1);
+  }
+
   let formatted = workoutId
     .split("-")
     .map((word) => {
@@ -54,7 +70,7 @@ transporter.verify((error, success) => {
   }
 });
 
-// Cloud Function
+// Cloud Function to email class subsription to notifications
 exports.sendFollowNotification = onDocumentCreated(
   "users/{userId}/workouts/{workoutId}/participants/{participantId}",
   async (event) => {
@@ -176,6 +192,142 @@ exports.sendFollowNotification = onDocumentCreated(
     } catch (error) {
       console.error("Error sending follow notification emails:", error);
       throw error;
+    }
+  }
+);
+
+// Cloud Function to send class updates from instructor to participants
+exports.sendClassNotification = onDocumentCreated(
+  "users/{userId}/workouts/{workoutId}/notifications/{notificationId}",
+  async (event) => {
+    console.log("🔥 ENTERED sendClassNotification - STARTING EXECUTION");
+    const snapshot = event.data;
+    const { userId, workoutId } = event.params;
+    const notification = snapshot.data();
+    console.log("Notification event:", event);
+    console.log("Notification event.params:", event.params);
+    console.log("Notification event.data:", event.data);
+    console.log("Notification data:", notification);
+
+    try {
+      // 1. Get class details
+      const workoutDoc = await admin
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("workouts")
+        .doc(workoutId)
+        .get();
+
+      if (!workoutDoc.exists) {
+        console.log("Workout exists?", workoutDoc.exists);
+        throw new Error("Class not found");
+      }
+
+      // 2. Fetch participants
+      const participantsSnapshot = await admin
+        .firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("workouts")
+        .doc(workoutId)
+        .collection("participants")
+        .get();
+
+      console.log(`Found ${participantsSnapshot.size} participants`);
+
+      if (participantsSnapshot.empty) {
+        throw new Error("No participants found");
+      }
+
+      // 3. Send emails
+      const emails = participantsSnapshot.docs
+        .map((doc) => doc.data().email)
+        .filter((email) => email && email.includes("@")); // Remove empty emails
+      const className = formatWorkoutName(workoutId) || "your class";
+      const instructorName = notification.instructorName || "the instructor";
+      const instructorEmail =
+        notification.instructorEmail || "hello@vanklas.info";
+
+      console.log("Recipient emails:", emails);
+
+      // 4. Send email via Nodemailer
+      await transporter.sendMail({
+        from: `"Vanklas Class Notification" <hello@vanklas.info>`,
+        to: emails.join(", "),
+        cc: instructorEmail, // Instructor gets a copy
+        // to: "hello@vanklas.info",
+        // bcc: emails,
+        subject: notification.subject,
+        html: `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Class Update: ${className}</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; 
+          padding: 20px; margin: 0;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
+              <h1 style="color: #002379; margin-top: 0;">${
+                notification.subject
+              }</h1>
+              
+              <div style="font-size: 16px; line-height: 1.6;">
+                ${notification.message.replace(/\n/g, "<br>")}
+              </div>
+      
+              <hr style="border: none; height: 1px; background-color: #e0e0e0; margin: 25px 0;" />
+      
+              <div style="font-size: 14px; color: #666666;">
+                <p>
+                  You're receiving this email because you're subscribed to 
+                  <strong>${instructorName}</strong>'s 
+                  "<strong>${className}</strong>" class notifications.
+                </p>
+                
+                <p>
+                  Questions? <a href="mailto:${instructorEmail}" 
+                  style="color: #0066cc;">Contact the instructor directly</a>.
+                </p>
+      
+                <p style="margin-top: 25px;">
+                  Best regards,<br />
+                  <strong>The Vanklas Team</strong>
+                </p>
+      
+                <div style="text-align: center; margin-top: 20px;">
+                  <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
+                  <img src="https://www.vanklas.info/linkedin-icon.png" width="24" alt="LinkedIn"></a>
+                  <a href="https://vanklas.info" style="margin: 0 5px;">
+                  <img src="https://www.vanklas.info/vanklas-logo.png" width="24" alt="Vanklas Website"></a>
+                </div>
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        // Plain text fallback
+        text: `${notification.message}\n\n---\nYou're receiving this email because you're subscribed to 
+        ${instructorName}'s "${className}" class notifications.\nQuestions? Contact the instructor at 
+        ${instructorEmail}.\n\nBest regards,\nThe Vanklas Team`,
+      });
+
+      // 4. Update notification status
+      await snapshot.ref.update({
+        status: "sent",
+        sentAt: admin.firestore.FieldValue.serverTimestamp(),
+        recipientCount: emails.length,
+      });
+    } catch (error) {
+      console.error("❌ FULL ERROR:", error);
+      await snapshot.ref.update({
+        status: "failed",
+        error: error.message,
+      });
+      console.error("Failed to send notification:", error);
     }
   }
 );

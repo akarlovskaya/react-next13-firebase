@@ -11,7 +11,6 @@ import { IoCreateOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { notFound } from "next/navigation";
 import UserDataFromParamView from "./GuestProfileView.js";
-import NotificationBell from "./NotificationBell.js";
 
 function UserProfile({ usernameParam, userDataFromParam, role }) {
   const db = getFirestore();
@@ -128,8 +127,6 @@ function UserProfile({ usernameParam, userDataFromParam, role }) {
                   >
                     Edit Profile
                   </button>
-
-                  <NotificationBell />
                 </div>
               )}
             </aside>

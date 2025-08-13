@@ -26,7 +26,7 @@ function WorkoutPageContent({ workout, participants }) {
 
   console.log("currentUser", currentUser);
   console.log("workout", workout);
-  console.log("participants from WorkoutPageContent", participants);
+  console.log("participants from WorkoutPageContent", participants?.lenght);
 
   if (!workout) {
     return (
@@ -106,6 +106,14 @@ function WorkoutPageContent({ workout, participants }) {
 
                 <h1 className="text-3xl font-bold mb-4">
                   {title || "No Title Available"}
+                  {participants?.length > 0 && (
+                    <p className="text-base font-normal text-gray-600">
+                      {participants.length}{" "}
+                      {participants.length === 1
+                        ? "class follower"
+                        : "class followers"}
+                    </p>
+                  )}
                 </h1>
                 {address?.city && (
                   <div className="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">

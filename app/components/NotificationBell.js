@@ -1,32 +1,59 @@
+"use client";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiBell, FiSend, FiX } from "react-icons/fi";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { toast } from "react-hot-toast";
+import Spinner from "../components/Loader.js";
 
-const NotificationBell = () => {
+const db = getFirestore();
+
+const NotificationBell = ({
+  instructorId,
+  workoutTitle,
+  instructorName,
+  instructorEmail,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const { register, handleSubmit, reset } = useForm();
+  console.log("BELL instructorId", instructorId);
+  console.log("BELL workoutTitle", workoutTitle);
 
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     setIsSending(true);
     try {
-      // Call Firebase function to send notifications
-      const response = await fetch("/api/send-notification", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) throw new Error("Failed to send notification");
+      // Write directly to Firestore to trigger the Cloud Function
+      // path users/${uid}/workouts/${slug}/notifications
+      await addDoc(
+        collection(
+          db,
+          "users",
+          instructorId,
+          "workouts",
+          workoutTitle,
+          "notifications"
+        ),
+        {
+          ...data,
+          status: "pending",
+          createdAt: serverTimestamp(),
+          instructorName: instructorName,
+          instructorEmail: instructorEmail,
+        }
+      );
 
       reset();
       setIsOpen(false);
-      // Show success toast
+      toast.success("Notification sent successfully!");
     } catch (error) {
-      console.error(error);
-      // Show error toast
+      console.error("Error sending notification:", error);
+      toast.error("Failed to send notification. Please try again.");
     } finally {
       setIsSending(false);
     }
@@ -36,7 +63,7 @@ const NotificationBell = () => {
     <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-40 flex justify-center text-navy rounded items-center focus:shadow-outline hover:text-orange-dark"
+        className="w-40 m-auto flex justify-center text-navy rounded items-center focus:shadow-outline hover:text-orange-dark"
       >
         <FiBell className="mr-2 text-xl" />
         Notify Class
@@ -87,7 +114,7 @@ const NotificationBell = () => {
               <button
                 type="submit"
                 disabled={isSending}
-                className="w-full flex justify-center items-center py-2 px-4 bg-navy text-white rounded-md hover:bg-gray-900 disabled:bg-blue-300"
+                className="w-full flex justify-center items-center py-2 px-4 bg-navy text-white rounded-md hover:bg-gray-900 disabled:bg-navy-light"
               >
                 {isSending ? (
                   "Sending..."

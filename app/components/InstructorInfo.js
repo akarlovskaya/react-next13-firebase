@@ -128,6 +128,7 @@ function InstructorInfo({ workout, currentUser }) {
                   instructorId={workout.uid}
                   workout={workout}
                   contactEmail={instructorData.contactEmail}
+                  instructorName={instructorData.displayName}
                 />
               </>
             )}
