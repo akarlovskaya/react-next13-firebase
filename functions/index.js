@@ -20,16 +20,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// TO DO: add to emails
-// ${process.env.UNSUBSCRIBE_URL ? `
-// <p style="font-size: 12px; margin-top: 20px;">
-//   <a href="${process.env.UNSUBSCRIBE_URL}"
-//   style="color: #999999; text-decoration: none;">
-//     Unsubscribe from these notifications
-//   </a>
-// </p>
-// ` : ''}
-
 /**
  * Formats workout names from URL parameters into display-ready text
  * @param {string} workoutId - The workout ID from URL params (e.g., "sunrise-strength-bootcamp")
@@ -80,7 +70,7 @@ exports.sendFollowNotification = onDocumentCreated(
     const snapshot = event.data;
     console.log("Function triggered!");
     console.log("Document data:", snapshot);
-    console.log("😍 Evvent params:", event.params);
+    console.log("😍 Event params:", event.params);
 
     if (!snapshot) {
       console.log("No data associated with the event");
@@ -122,7 +112,7 @@ exports.sendFollowNotification = onDocumentCreated(
           <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; padding: 20px;">
             <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
             border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
-              <h2 style="color: #002379;">You're now watching "${formattedWorkoutName}" updates!</h2>
+              <h2 style="color: #002379;">You're now watching "${formattedWorkoutName}" class updates!</h2>
     
               <p>Hi ${participantData.userName},</p>
     
@@ -162,7 +152,8 @@ exports.sendFollowNotification = onDocumentCreated(
               <p>We're excited to let you know that <strong>${participantData.userName}</strong> 
               has subscribed to follow updates for your <strong>"${formattedWorkoutName}"</strong> class.</p>
     
-              <p>This means they'll be notified about any changes you make to the class schedule or details.</p>
+              <p>This means they'll be notified about class changes when you send them a notification using 
+              Notify Class Bell button.</p>
     
               <p style="margin-top: 30px;">Keep up the great work!<br />The Vanklas Team</p>
               
@@ -181,12 +172,12 @@ exports.sendFollowNotification = onDocumentCreated(
 
       // Send both emails
       await transporter.sendMail({
-        from: '"Vanklas" <hello@vanklas.com>',
+        from: `"Vanklas" <hello@${process.env.MAILGUN_DOMAIN}>`,
         ...participantEmail,
       });
 
       await transporter.sendMail({
-        from: '"Vanklas" <hello@vanklas.com>',
+        from: `"Vanklas" <hello@${process.env.MAILGUN_DOMAIN}`,
         ...instructorEmail,
       });
     } catch (error) {
@@ -247,16 +238,16 @@ exports.sendClassNotification = onDocumentCreated(
       const className = formatWorkoutName(workoutId) || "your class";
       const instructorName = notification.instructorName || "the instructor";
       const instructorEmail =
-        notification.instructorEmail || "hello@vanklas.info";
+        notification.instructorEmail || `hello@${process.env.MAILGUN_DOMAIN}`;
 
       console.log("Recipient emails:", emails);
 
       // 4. Send email via Nodemailer
       await transporter.sendMail({
-        from: `"Vanklas Class Notification" <hello@vanklas.info>`,
+        from: `"Vanklas Class Notification" <hello@${process.env.MAILGUN_DOMAIN}>`,
         to: emails.join(", "),
         cc: instructorEmail, // Instructor gets a copy
-        // to: "hello@vanklas.info",
+        // to: `hello@${process.env.MAILGUN_DOMAIN}`,
         // bcc: emails,
         subject: notification.subject,
         html: `
@@ -278,9 +269,8 @@ exports.sendClassNotification = onDocumentCreated(
               <div style="font-size: 16px; line-height: 1.6;">
                 ${notification.message.replace(/\n/g, "<br>")}
               </div>
-      
               <hr style="border: none; height: 1px; background-color: #e0e0e0; margin: 25px 0;" />
-      
+
               <div style="font-size: 14px; color: #666666;">
                 <p>
                   You're receiving this email because you're subscribed to 
@@ -297,13 +287,11 @@ exports.sendClassNotification = onDocumentCreated(
                   Best regards,<br />
                   <strong>The Vanklas Team</strong>
                 </p>
-      
-                <div style="text-align: center; margin-top: 20px;">
-                  <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
-                  <img src="https://www.vanklas.info/linkedin-icon.png" width="24" alt="LinkedIn"></a>
-                  <a href="https://vanklas.info" style="margin: 0 5px;">
-                  <img src="https://www.vanklas.info/vanklas-logo.png" width="24" alt="Vanklas Website"></a>
-                </div>
+              </div>
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="https://vanklas.info" style="margin: 0 5px;">Vanklas</a>
+                <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
+                LinkedIn</a>
               </div>
             </div>
           </body>
@@ -331,3 +319,7 @@ exports.sendClassNotification = onDocumentCreated(
     }
   }
 );
+
+// exports.unsubscribeEmail = async () => {
+//   console.log("🔥 ENTERED unsubscribeEmail - STARTING EXECUTION");
+// };

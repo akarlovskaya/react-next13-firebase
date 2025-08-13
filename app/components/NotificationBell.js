@@ -60,7 +60,7 @@ const NotificationBell = ({
   };
 
   return (
-    <div>
+    <div className="mt-6">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-40 m-auto flex justify-center text-navy rounded items-center focus:shadow-outline hover:text-orange-dark"
