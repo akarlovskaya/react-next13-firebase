@@ -9,6 +9,7 @@ const Message = ({
   workout = false,
   contactEmail,
   instructorName,
+  instructorUserName,
 }) => {
   const [authUserId, setAuthUserId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -111,6 +112,7 @@ const Message = ({
           workoutTitle={workout.slug}
           instructorName={instructorName}
           instructorEmail={contactEmail}
+          instructorUserName={instructorUserName}
         />
       )}
     </>

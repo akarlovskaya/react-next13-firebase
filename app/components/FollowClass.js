@@ -45,10 +45,24 @@ export default function FollowClass({
       );
 
       batch.set(participantRef, {
+        emailSubscribed: true,
         joinedAt: serverTimestamp(),
         userName: currentUser.displayName,
         email: currentUser.email,
         status: "pending", // This triggers cloud function
+      });
+
+      // Also update the user's main emailPreferences to enable workoutUpdates
+      const userRef = doc(db, "users", currentUser.uid);
+      batch.update(userRef, {
+        emailPreferences: {
+          globalUnsubscribe: false,
+          categoryPreferences: {
+            workoutUpdates: true, // Enable workout updates when following a class
+            announcements: false,
+            marketing: false,
+          },
+        },
       });
 
       // Update participant count
@@ -99,6 +113,19 @@ export default function FollowClass({
         currentUser.uid
       );
       batch.delete(participantRef);
+
+      // Also update the user's main emailPreferences to disable workoutUpdates
+      const userRef = doc(db, "users", currentUser.uid);
+      batch.update(userRef, {
+        emailPreferences: {
+          globalUnsubscribe: false,
+          categoryPreferences: {
+            workoutUpdates: false, // Disable workout updates when unfollowing
+            announcements: false,
+            marketing: false,
+          },
+        },
+      });
 
       // Update participant count
       const workoutRef = doc(db, `users/${workout.uid}/workouts/${slug}`);

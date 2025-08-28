@@ -109,21 +109,31 @@ exports.sendFollowNotification = onDocumentCreated(
             <meta charset="UTF-8" />
             <title>Class Subscription Confirmation</title>
           </head>
-          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; padding: 20px;">
+          <body style="font-family: Arial, sans-serif; color: #333333 !important; 
+            background-color: #f9f9f9; padding: 20px;">
             <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
             border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
               <h2 style="color: #002379;">You're now watching "${formattedWorkoutName}" class updates!</h2>
     
               <p>Hi ${participantData.userName},</p>
     
-              <p>Thanks for subscribing! You're now set to receive updates about changes 
+              <p>Thanks for subscribing! <br />
+              You're now set to receive updates about changes 
               to the <strong>"${formattedWorkoutName}"</strong> class.</p>
     
-              <p>We'll keep you in the loop with schedule changes, updates, or any important announcements.</p>
+              <p>We'll keep you updated with schedule changes or any important announcements from the instructor.</p>
     
               <p>If you have any questions, feel free to reach out anytime.</p>
     
-              <p style="margin-top: 30px;">Best regards,<br />The Vanklas Team</p>
+              <p style="margin-top: 25px;">
+                Best regards,<br />
+                <strong>The Vanklas Team</strong>
+              </p>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+              <a href="https://vanklas.info" style="margin: 0 5px;">Vanklas</a>
+              <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
+              LinkedIn</a>
             </div>
           </body>
         </html>
@@ -131,7 +141,6 @@ exports.sendFollowNotification = onDocumentCreated(
       };
 
       // Email to instructor
-      // ADD email signature and avatar
       const instructorEmail = {
         to: instructor.contactEmail,
         subject: `A new participant has started to follow your ${formattedWorkoutName} class`,
@@ -142,7 +151,8 @@ exports.sendFollowNotification = onDocumentCreated(
             <meta charset="UTF-8" />
             <title>New Class Follower Notification</title>
           </head>
-          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; padding: 20px;">
+          <body style="font-family: Arial, sans-serif; color: #333333 !important; 
+          background-color: #f9f9f9; padding: 20px;">
             <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
             border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
               <h2 style="color: #002379;">New Follower for Your "${formattedWorkoutName}" Class! 👋</h2>
@@ -155,8 +165,15 @@ exports.sendFollowNotification = onDocumentCreated(
               <p>This means they'll be notified about class changes when you send them a notification using 
               Notify Class Bell button.</p>
     
-              <p style="margin-top: 30px;">Keep up the great work!<br />The Vanklas Team</p>
+              <p style="margin-top: 25px;">Keep up the great work!<br />
+                <strong>The Vanklas Team</strong>
+              </p>
               
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+              <a href="https://vanklas.info" style="margin: 0 5px;">Vanklas</a>
+              <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
+              LinkedIn</a>
               <p style="font-size: 12px; color: #999999; margin-top: 30px; border-top: 1px solid #eeeeee; 
               padding-top: 15px;">
                 You're receiving this notification because you're the instructor of this class.
@@ -237,16 +254,17 @@ exports.sendClassNotification = onDocumentCreated(
         .filter((email) => email && email.includes("@")); // Remove empty emails
       const className = formatWorkoutName(workoutId) || "your class";
       const instructorName = notification.instructorName || "the instructor";
+      const instructorUserName = notification.instructorUserName || "";
       const instructorEmail =
         notification.instructorEmail || `hello@${process.env.MAILGUN_DOMAIN}`;
+      const unsubscribeUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/${instructorUserName}/${workoutId}`;
 
       console.log("Recipient emails:", emails);
-
       // 4. Send email via Nodemailer
+      // to participants
       await transporter.sendMail({
         from: `"Vanklas Class Notification" <hello@${process.env.MAILGUN_DOMAIN}>`,
         to: emails.join(", "),
-        cc: instructorEmail, // Instructor gets a copy
         // to: `hello@${process.env.MAILGUN_DOMAIN}`,
         // bcc: emails,
         subject: notification.subject,
@@ -258,7 +276,7 @@ exports.sendClassNotification = onDocumentCreated(
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Class Update: ${className}</title>
           </head>
-          <body style="font-family: Arial, sans-serif; color: #333333; background-color: #f9f9f9; 
+          <body style="font-family: Arial, sans-serif; color: #333333 !important; background-color: #f9f9f9; 
           padding: 20px; margin: 0;">
             <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
             border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
@@ -280,7 +298,78 @@ exports.sendClassNotification = onDocumentCreated(
                 
                 <p>
                   Questions? <a href="mailto:${instructorEmail}" 
-                  style="color: #0066cc;">Contact the instructor directly</a>.
+                  style="color: #0066cc;">Contact</a> the instructor directly.
+                </p>
+      
+                <p style="margin-top: 25px;">
+                  Best regards,<br />
+                  <strong>The Vanklas Team</strong>
+                </p>
+              </div>
+              <div style="text-align: center; margin-top: 20px;">
+                <a href="https://vanklas.info" style="margin: 0 5px;">Vanklas</a>
+                <a href="https://www.linkedin.com/company/106700596/admin/dashboard/" style="margin: 0 5px;">
+                LinkedIn</a>
+                <p>
+                  <small style="font-size: 12px; color: #999999;">
+                    If you no longer wish to receive the class updates,
+                    <a href="${unsubscribeUrl}">unfollow</a> the class.
+                  </small>
+                </p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        // Plain text fallback
+        text: `${notification.message}\n\n---\nYou're receiving this email because you're subscribed to 
+        ${instructorName}'s "${className}" class notifications.\nQuestions? Contact the instructor at 
+        ${instructorEmail}.\n\nBest regards,\nThe Vanklas Team`,
+      });
+
+      // to instructor
+      await transporter.sendMail({
+        from: `"Vanklas Class Notification" <hello@${process.env.MAILGUN_DOMAIN}>`,
+        to: instructorEmail, // Instructor gets a copy
+        // to: `hello@${process.env.MAILGUN_DOMAIN}`,
+        // bcc: emails,
+        subject: notification.subject,
+        html: `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Class Update: ${className}</title>
+          </head>
+          <body style="font-family: Arial, sans-serif; color: #333333 !important; background-color: #f9f9f9; 
+          padding: 20px; margin: 0;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; 
+            border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);">
+            <p>
+              <small style="font-size: 12px; color: #999999;">
+                This is a copy of the notification sent to your class followers.
+              </small>
+            </p>
+              <h1 style="color: #002379; margin-top: 0;">${
+                notification.subject
+              }</h1>
+              
+              <div style="font-size: 16px; line-height: 1.6;">
+                ${notification.message.replace(/\n/g, "<br>")}
+              </div>
+              <hr style="border: none; height: 1px; background-color: #e0e0e0; margin: 25px 0;" />
+
+              <div style="font-size: 14px; color: #666666;">
+                <p>
+                  You're receiving this email because you're subscribed to 
+                  <strong>${instructorName}</strong>'s 
+                  "<strong>${className}</strong>" class notifications.
+                </p>
+                
+                <p>
+                  Questions? <a href="mailto:${instructorEmail}" 
+                  style="color: #0066cc;">Contact</a> the instructor directly.
                 </p>
       
                 <p style="margin-top: 25px;">
@@ -320,6 +409,6 @@ exports.sendClassNotification = onDocumentCreated(
   }
 );
 
-// exports.unsubscribeEmail = async () => {
-//   console.log("🔥 ENTERED unsubscribeEmail - STARTING EXECUTION");
-// };
+/** To Do - when need to implement Global Unsubscribe (Footer Link, "stop all emails" legal requirement)
+ * with Mailgun's Suppression Lists, have to switch from smtp to API key and use Mailgun Unsubscribe webhook.
+ */

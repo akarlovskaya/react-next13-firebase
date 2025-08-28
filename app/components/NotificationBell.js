@@ -18,6 +18,7 @@ const NotificationBell = ({
   workoutTitle,
   instructorName,
   instructorEmail,
+  instructorUserName,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -45,12 +46,13 @@ const NotificationBell = ({
           createdAt: serverTimestamp(),
           instructorName: instructorName,
           instructorEmail: instructorEmail,
+          instructorUserName: instructorUserName,
         }
       );
 
       reset();
       setIsOpen(false);
-      toast.success("Notification sent successfully!");
+      toast.success("Notification sent!");
     } catch (error) {
       console.error("Error sending notification:", error);
       toast.error("Failed to send notification. Please try again.");
