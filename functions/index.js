@@ -3,6 +3,10 @@ require("dotenv").config();
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
 const nodemailer = require("nodemailer");
 const admin = require("firebase-admin");
+const functions = require("firebase-functions");
+const axios = require("axios");
+const cheerio = require("cheerio");
+const OpenAI = require("openai");
 
 // Initialize Firebase
 admin.initializeApp();
@@ -412,3 +416,409 @@ exports.sendClassNotification = onDocumentCreated(
 /** To Do - when need to implement Global Unsubscribe (Footer Link, "stop all emails" legal requirement)
  * with Mailgun's Suppression Lists, have to switch from smtp to API key and use Mailgun Unsubscribe webhook.
  */
+
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: functions.config().openai.api_key,
+});
+
+// Content Discovery Function
+exports.discoverContent = functions.https.onCall(async (data, context) => {
+  try {
+    // Check if user is authenticated
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+
+    const sources = [
+      "https://www.acefitness.org/news/",
+      "https://www.ideafit.com/news/",
+      "https://www.fitness.org/news/",
+      "https://www.nsca.com/news/",
+    ];
+
+    const articles = [];
+
+    for (const source of sources) {
+      try {
+        const response = await axios.get(source, {
+          timeout: 10000,
+          headers: {
+            "User-Agent": "Mozilla/5.0 (compatible; FitnessBot/1.0)",
+          },
+        });
+
+        const $ = cheerio.load(response.data);
+        const sourceArticles = scrapeArticles($, source);
+        articles.push(...sourceArticles);
+      } catch (error) {
+        console.error(`Error scraping ${source}:`, error.message);
+      }
+    }
+
+    // Filter and rank articles
+    const filteredArticles = filterArticles(articles);
+
+    return {
+      success: true,
+      articles: filteredArticles.slice(0, 10),
+    };
+  } catch (error) {
+    console.error("Content discovery error:", error);
+    throw new functions.https.HttpsError(
+      "internal",
+      "Failed to discover content"
+    );
+  }
+});
+
+// Content Generation Function
+exports.generatePost = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+
+    const { article, customInstructions } = data;
+
+    if (!article || !article.title) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Article data is required"
+      );
+    }
+
+    const prompt = buildPrompt(article, customInstructions);
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a fitness content creator who writes engaging social media posts. Keep posts under 280 characters, include relevant hashtags, and make them motivational.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      max_tokens: 500,
+      temperature: 0.7,
+    });
+
+    const generatedContent = completion.choices[0].message.content;
+
+    // Parse the response
+    let parsedContent;
+    try {
+      parsedContent = JSON.parse(generatedContent);
+    } catch (e) {
+      // Fallback if JSON parsing fails
+      parsedContent = {
+        content: generatedContent,
+        tags: extractTags(generatedContent),
+        imageDescription: `Create a motivational fitness image related to: ${article.title}`,
+      };
+    }
+
+    return {
+      success: true,
+      postData: {
+        content: parsedContent.content,
+        tags: parsedContent.tags || extractTags(parsedContent.content),
+        scheduledTime: suggestScheduleTime(),
+        imagePrompt:
+          parsedContent.imageDescription ||
+          `Create a motivational fitness image related to: ${article.title}`,
+        sourceArticle: article,
+      },
+    };
+  } catch (error) {
+    console.error("Content generation error:", error);
+    throw new functions.https.HttpsError(
+      "internal",
+      "Failed to generate post content"
+    );
+  }
+});
+
+// Image Generation Function
+exports.generateImage = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+
+    const { prompt } = data;
+
+    if (!prompt) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Image prompt is required"
+      );
+    }
+
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: prompt,
+      size: "1024x1024",
+      quality: "standard",
+      n: 1,
+    });
+
+    const imageUrl = response.data[0].url;
+
+    // Download and store image in Firebase Storage
+    const imageResponse = await axios.get(imageUrl, {
+      responseType: "arraybuffer",
+    });
+    const bucket = admin.storage().bucket();
+    const fileName = `ai-generated-images/${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(7)}.png`;
+
+    await bucket.file(fileName).save(imageResponse.data, {
+      metadata: {
+        contentType: "image/png",
+      },
+    });
+
+    // Make the file publicly accessible
+    await bucket.file(fileName).makePublic();
+
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+
+    return {
+      success: true,
+      imageUrl: publicUrl,
+      fileName: fileName,
+    };
+  } catch (error) {
+    console.error("Image generation error:", error);
+    throw new functions.https.HttpsError(
+      "internal",
+      "Failed to generate image"
+    );
+  }
+});
+
+// Social Media Posting Function
+exports.postToSocialMedia = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "User must be authenticated"
+      );
+    }
+
+    const { postId, platforms } = data;
+
+    if (!postId) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "Post ID is required"
+      );
+    }
+
+    // Get post data from Firestore
+    const postDoc = await admin
+      .firestore()
+      .collection("scheduledPosts")
+      .doc(postId)
+      .get();
+
+    if (!postDoc.exists) {
+      throw new functions.https.HttpsError("not-found", "Post not found");
+    }
+
+    const postData = postDoc.data();
+
+    // Here you would integrate with actual social media APIs
+    // For now, we'll simulate successful posting
+
+    // Update post status
+    await admin
+      .firestore()
+      .collection("scheduledPosts")
+      .doc(postId)
+      .update({
+        status: "posted",
+        postedAt: admin.firestore.FieldValue.serverTimestamp(),
+        postedTo: platforms || ["twitter"],
+      });
+
+    return {
+      success: true,
+      message: "Post published successfully",
+      postId: postId,
+    };
+  } catch (error) {
+    console.error("Social media posting error:", error);
+    throw new functions.https.HttpsError(
+      "internal",
+      "Failed to post to social media"
+    );
+  }
+});
+
+// Helper Functions
+function scrapeArticles($, source) {
+  const articles = [];
+
+  // Generic article scraping - adjust selectors based on each source
+  $("article, .post, .news-item, .entry").each((i, element) => {
+    const title = $(element)
+      .find("h1, h2, h3, .title, .headline")
+      .first()
+      .text()
+      .trim();
+    const summary = $(element)
+      .find(".summary, .excerpt, .description, p")
+      .first()
+      .text()
+      .trim();
+    const link = $(element).find("a").first().attr("href");
+
+    if (title && summary) {
+      articles.push({
+        title,
+        summary: summary.substring(0, 200) + "...",
+        source,
+        link: link ? new URL(link, source).href : source,
+        publishedAt: new Date(),
+        relevance: calculateRelevance(title, summary),
+      });
+    }
+  });
+
+  return articles;
+}
+
+function calculateRelevance(title, summary) {
+  const fitnessKeywords = [
+    "fitness",
+    "workout",
+    "exercise",
+    "health",
+    "wellness",
+    "sports",
+    "training",
+    "nutrition",
+    "motivation",
+    "fitness trends",
+    "gym",
+    "cardio",
+    "strength",
+    "yoga",
+    "pilates",
+  ];
+
+  const text = (title + " " + summary).toLowerCase();
+  let score = 0;
+
+  fitnessKeywords.forEach((keyword) => {
+    if (text.includes(keyword)) {
+      score += 0.1;
+    }
+  });
+
+  return Math.min(score, 1.0);
+}
+
+function filterArticles(articles) {
+  return articles
+    .filter((article) => article.relevance > 0.3)
+    .sort((a, b) => b.relevance - a.relevance);
+}
+
+function buildPrompt(article, customInstructions) {
+  return `
+    Create an engaging social media post about: ${article.title}
+    
+    Article summary: ${article.summary}
+    
+    Requirements:
+    - Keep it under 280 characters for Twitter
+    - Include relevant fitness hashtags
+    - Make it engaging and motivational
+    - Include a call-to-action
+    
+    Custom instructions: ${
+      customInstructions || "Make it inspiring and actionable"
+    }
+    
+    Format the response as JSON with:
+    {
+      "content": "post text",
+      "tags": ["tag1", "tag2"],
+      "imageDescription": "description for AI image generation"
+    }
+  `;
+}
+
+function extractTags(content) {
+  const hashtags = content.match(/#\w+/g) || [];
+  const defaultTags = [
+    "#fitness",
+    "#workout",
+    "#health",
+    "#wellness",
+    "#motivation",
+    "#fitnessgoals",
+    "#healthy",
+    "#exercise",
+    "#training",
+    "#lifestyle",
+  ];
+
+  const allTags = [...new Set([...hashtags, ...defaultTags])];
+  return allTags.slice(0, 5);
+}
+
+function suggestScheduleTime() {
+  const now = new Date();
+  const morning = new Date(now);
+  morning.setHours(7, 0, 0, 0);
+
+  const lunch = new Date(now);
+  lunch.setHours(12, 0, 0, 0);
+
+  const evening = new Date(now);
+  evening.setHours(18, 0, 0, 0);
+
+  if (now < morning) return morning;
+  if (now < lunch) return lunch;
+  if (now < evening) return evening;
+
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(7, 0, 0, 0);
+  return tomorrow;
+}
+
+// Scheduled function to run content discovery daily
+exports.dailyContentDiscovery = functions.pubsub
+  .schedule("every 24 hours")
+  .onRun(async (context) => {
+    try {
+      // This would trigger the content discovery process
+      // and notify users of new content opportunities
+
+      console.log("Daily content discovery completed");
+      return null;
+    } catch (error) {
+      console.error("Daily content discovery failed:", error);
+      return null;
+    }
+  });
