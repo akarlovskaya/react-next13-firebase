@@ -41,12 +41,6 @@ export default function Navbar() {
               </li>
             )}
 
-            <li className="content-center">
-              <Link href="/ai-agent" className={LinkClass("/ai-agent")}>
-                AI Agent
-              </Link>
-            </li>
-
             <li className="content-center capitalize">
               <Link href={`/${username}`} className={LinkClass(`/${username}`)}>
                 {`${username}`}

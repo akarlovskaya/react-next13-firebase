@@ -1,49 +1,79 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAuth } from "../lib/hooks.js";
+import { useUserData } from "../lib/hooks.js";
 import { aiAgent } from "../lib/ai-agent.js";
-import ContentDiscovery from "./AIAgent/ContentDiscovery.js";
-import PostApproval from "./AIAgent/PostApproval.js";
-import ContentGeneration from "./AIAgent/ContentGeneration.js";
+import ArticleDiscovery from "./AIAgent/ArticleDiscovery.js";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AIAgentDashboard() {
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = "discovery";
+  const { user } = useUserData();
+  const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [pendingPosts, setPendingPosts] = useState([]);
+  const [approvedArticles, setApprovedArticles] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
-    if (user) {
-      loadPendingPosts();
+    if (user && user.uid === process.env.NEXT_PUBLIC_AI_AGENT_ACCESS_USER_ID) {
+      // User has access - load articles
+      loadArticles();
     }
   }, [user]);
 
-  const loadPendingPosts = async () => {
+  const loadArticles = async () => {
+    setIsLoading(true);
     try {
-      const posts = await aiAgent.getPendingPosts();
-      setPendingPosts(posts);
+      const discoveredArticles = await aiAgent.getArticlesFromLast7Days();
+      setArticles(discoveredArticles);
+
+      // Count approved articles
+      const approved = discoveredArticles.filter((article) => article.approved);
+      setApprovedArticles(approved);
     } catch (error) {
-      console.error("Failed to load pending posts:", error);
+      console.error("Failed to load articles:", error);
+      toast.error("Failed to load articles. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const handleRefreshContent = async () => {
+    setIsLoading(true);
+    try {
+      await aiAgent.runContentDiscovery();
+      await loadArticles(); // Reload articles after discovery
+      toast.success("Content discovery completed!");
+    } catch (error) {
+      console.error("Content discovery failed:", error);
+      toast.error("Failed to discover new content. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "discovery":
-        return <ContentDiscovery onPostGenerated={loadPendingPosts} />;
-      case "generation":
-        return <ContentGeneration onPostGenerated={loadPendingPosts} />;
-      case "approval":
-        return (
-          <PostApproval posts={pendingPosts} onPostUpdated={loadPendingPosts} />
-        );
-      default:
-        return <ContentDiscovery onPostGenerated={loadPendingPosts} />;
+  const handleArticleApproval = async (articleId, approved) => {
+    try {
+      if (approved) {
+        const result = await aiAgent.approveArticle(articleId);
+        if (result.success) {
+          toast.success("Article approved!");
+          // Update local state
+          setArticles((prev) =>
+            prev.map((article) =>
+              article.id === articleId
+                ? { ...article, approved: true }
+                : article
+            )
+          );
+          setApprovedArticles((prev) =>
+            prev.filter((article) => article.id !== articleId)
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Failed to approve article:", error);
+      toast.error("Failed to approve article. Please try again.");
     }
   };
 
@@ -63,117 +93,143 @@ export default function AIAgentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            AI Content Agent Dashboard
-          </h1>
-          <p className="text-gray-600">
-            Automatically discover fitness content, generate engaging posts, and
-            manage your social media presence.
-          </p>
-        </div>
+    <>
+      {user?.uid === process.env.NEXT_PUBLIC_AI_AGENT_ACCESS_USER_ID ? (
+        <div className="min-h-screen bg-gray-50 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                AI Content Discovery Dashboard
+              </h1>
+              <p className="text-gray-600">
+                Discover fitness articles from the last 7 days and approve the
+                ones you want to use for content creation.
+              </p>
+            </div>
 
-        {/* Navigation Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
-            {[
-              { id: "discovery", name: "Content Discovery", icon: "🔍" },
-              { id: "generation", name: "Post Generation", icon: "✍️" },
-              { id: "approval", name: "Post Approval", icon: "✅" },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                }`}
-              >
-                <span className="mr-2">{tab.icon}</span>
-                {tab.name}
-                {tab.id === "approval" && pendingPosts.length > 0 && (
-                  <span className="ml-2 bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
-                    {pendingPosts.length}
-                  </span>
-                )}
-              </button>
-            ))}
-          </nav>
-        </div>
+            {/* Action Buttons */}
+            <div className="mb-6 flex justify-between items-center">
+              <div className="flex space-x-4">
+                <button
+                  onClick={handleRefreshContent}
+                  disabled={isLoading}
+                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-md transition-colors flex items-center"
+                >
+                  {isLoading ? (
+                    <>
+                      <span className="mr-2">⏳</span>
+                      Discovering...
+                    </>
+                  ) : (
+                    <>
+                      <span className="mr-2">🔍</span>
+                      Discover New Content
+                    </>
+                  )}
+                </button>
 
-        {/* Tab Content */}
-        <div className="bg-white rounded-lg shadow">{renderTabContent()}</div>
-
-        {/* Quick Stats */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">📊</span>
-                </div>
+                <button
+                  onClick={loadArticles}
+                  disabled={isLoading}
+                  className="bg-gray-600 hover:bg-gray-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                  Refresh List
+                </button>
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">Total Posts</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {pendingPosts.filter((p) => p.status === "posted").length}
-                </p>
+
+              <div className="text-sm text-gray-600">
+                Last updated: {new Date().toLocaleString()}
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">⏳</span>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">📰</span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">
+                      Total Articles
+                    </p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {articles.length}
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">
-                  Pending Approval
-                </p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {
-                    pendingPosts.filter((p) => p.status === "pending_approval")
-                      .length
-                  }
-                </p>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">✅</span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">
+                      Approved Articles
+                    </p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {approvedArticles.length}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
+                      <span className="text-white text-sm font-medium">⏳</span>
+                    </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="text-sm font-medium text-gray-500">
+                      Pending Review
+                    </p>
+                    <p className="text-2xl font-semibold text-gray-900">
+                      {articles.length - approvedArticles.length}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">🚀</span>
-                </div>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-500">
-                  Success Rate
-                </p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {pendingPosts.length > 0
-                    ? Math.round(
-                        (pendingPosts.filter((p) => p.status === "posted")
-                          .length /
-                          pendingPosts.length) *
-                          100
-                      )
-                    : 0}
-                  %
-                </p>
-              </div>
+            {/* Articles List */}
+            <div className="bg-white rounded-lg shadow">
+              <ArticleDiscovery
+                articles={articles}
+                onArticleApproval={handleArticleApproval}
+                isLoading={isLoading}
+              />
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        <div className="min-h-screen bg-gray-50 py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                You are not authorized to access this page
+              </h2>
+              <p className="text-gray-600">
+                Return to{" "}
+                <Link
+                  href="/"
+                  className="text-navy-light font-semibold hover:underline"
+                >
+                  Home Page
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
