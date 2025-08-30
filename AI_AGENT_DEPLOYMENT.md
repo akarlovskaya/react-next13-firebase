@@ -2,7 +2,12 @@
 
 ## 🎯 **Overview**
 
-The AI Agent functions are now separated into their own file (`functions/ai-agent.js`) for better organization and independent deployment. This guide shows you how to deploy them separately or together with your main functions.
+The AI Agent system consists of two main components:
+
+- **Backend**: Cloud Functions in `functions/ai-agent.js` for server-side operations
+- **Frontend**: Client library in `app/lib/ai-agent.js` for React components
+
+This guide shows you how to deploy the Cloud Functions separately or together with your main functions.
 
 ## 📁 **File Structure**
 
@@ -11,6 +16,14 @@ functions/
 ├── index.js          # Main functions (email notifications)
 ├── ai-agent.js       # AI Agent functions (content discovery)
 └── package.json      # Shared dependencies
+
+app/
+├── lib/
+│   └── ai-agent.js   # Frontend client library
+├── components/
+│   └── AIAgentDashboard.js  # Main dashboard component
+└── ai-agent-dashboard/
+    └── page.js       # AI Agent Dashboard page route
 ```
 
 ## 🚀 **Deployment Options**
@@ -41,13 +54,29 @@ firebase deploy --only functions:discoverContent,functions:getArticlesFromLast7D
 
 ## ⚙️ **Configuration Setup**
 
-### **1. Set OpenAI API Key (if needed later)**
+### **1. Set AI Agent Access Control**
+
+```bash
+# Set the user ID who can access AI Agent functions
+firebase functions:config:set ai_agent.access_user_id="your_firebase_user_uid_here"
+```
+
+### **2. Set OpenAI API Key (if needed later)**
 
 ```bash
 firebase functions:config:set openai.api_key="your_openai_api_key_here"
 ```
 
-### **2. Verify Configuration**
+### **3. Set Frontend Environment Variables**
+
+Create `.env.development` file in your project root:
+
+```bash
+# AI Agent Access Control (must match Firebase config)
+NEXT_PUBLIC_AI_AGENT_ACCESS_USER_ID="your_firebase_user_uid_here"
+```
+
+### **4. Verify Configuration**
 
 ```bash
 firebase functions:config:get
@@ -108,11 +137,18 @@ curl -X POST "https://us-central1-YOUR_PROJECT.cloudfunctions.net/aiAgentHealth"
 
 ## 🔒 **Security Considerations**
 
+### **Multi-Layer Access Control**
+
+- **Frontend**: Dashboard checks `NEXT_PUBLIC_AI_AGENT_ACCESS_USER_ID` against user UID
+- **Backend**: Cloud Functions verify user authentication and authorization
+- **Page Route**: `/ai-agent-dashboard` route protected by component-level access control
+
 ### **Authentication Required**
 
 - All AI Agent functions require user authentication
 - Functions check `context.auth` before processing
-- Only authenticated users can access the functions
+- Only users with matching UID can access the functions
+- Access control happens both client-side and server-side
 
 ### **Rate Limiting**
 
@@ -205,20 +241,54 @@ firebase functions:rollback --only discoverContent,getArticlesFromLast7Days,appr
 
 ## 📝 **Next Steps**
 
-1. **Deploy AI Agent functions** using one of the deployment options above
-2. **Test the functions** using the testing commands
-3. **Monitor performance** in Firebase Console
-4. **Adjust configuration** as needed for your use case
+1. **Set environment variables** in `.env.development` and Firebase config
+2. **Deploy AI Agent functions** using one of the deployment options above
+3. **Test the dashboard** at `/ai-agent-dashboard` route
+4. **Test the functions** using the testing commands
+5. **Monitor performance** in Firebase Console
+6. **Adjust configuration** as needed for your use case
+
+## 🌐 **Frontend Deployment**
+
+### **Deploy Frontend Changes**
+
+```bash
+# Deploy Next.js app (if using hosting)
+firebase deploy --only hosting
+
+# Or build and deploy manually
+npm run build
+# Deploy your built files to your hosting provider
+```
+
+### **Access the AI Agent Dashboard**
+
+- Navigate to `/ai-agent-dashboard` in your deployed app
+- Only users with matching UID can access the dashboard
+- Unauthorized users will see access denied message
 
 ## 🆘 **Support**
 
 If you encounter issues:
 
-1. Check Firebase function logs
-2. Verify function configuration
-3. Test individual functions
-4. Check authentication setup
+1. **Frontend Issues**:
+
+   - Check browser console for errors
+   - Verify `NEXT_PUBLIC_AI_AGENT_ACCESS_USER_ID` is set correctly
+   - Ensure user is authenticated with Firebase
+
+2. **Backend Issues**:
+
+   - Check Firebase function logs
+   - Verify function configuration
+   - Test individual functions
+   - Check authentication setup
+
+3. **Access Control Issues**:
+   - Verify UID matches between frontend and backend
+   - Check Firebase Auth configuration
+   - Ensure user has proper permissions
 
 ---
 
-**Note**: The AI Agent functions are designed to work independently but can be deployed together with your main functions if preferred.
+**Note**: The AI Agent system now includes both frontend and backend components. The Cloud Functions can be deployed independently, but the frontend dashboard requires proper environment variable configuration to function correctly.

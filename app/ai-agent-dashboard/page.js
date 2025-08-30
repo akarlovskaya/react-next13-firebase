@@ -6,6 +6,6 @@ export const metadata = {
     "AI-powered content discovery and social media post generation for fitness professionals",
 };
 
-export default function AIAgentPage() {
+export default function AIAgentDashboardPage() {
   return <AIAgentDashboard />;
 }

@@ -3,6 +3,7 @@ require("dotenv").config();
 const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 const nodemailer = require("nodemailer");
 const admin = require("firebase-admin");
+const aiAgentFunctions = require("./ai-agent");
 
 // Initialize Firebase
 admin.initializeApp();
@@ -61,7 +62,7 @@ transporter.verify((error, success) => {
 });
 
 // Cloud Function to email class subsription to notifications
-exports.sendFollowNotification = onDocumentCreated(
+const sendFollowNotification = onDocumentCreated(
   "users/{userId}/workouts/{workoutId}/participants/{participantId}",
   async (event) => {
     console.log("🔥 FUNCTION ENTERED - STARTING EXECUTION");
@@ -205,7 +206,7 @@ exports.sendFollowNotification = onDocumentCreated(
 );
 
 // Cloud Function to send class updates from instructor to participants
-exports.sendClassNotification = onDocumentCreated(
+const sendClassNotification = onDocumentCreated(
   "users/{userId}/workouts/{workoutId}/notifications/{notificationId}",
   async (event) => {
     console.log("🔥 ENTERED sendClassNotification - STARTING EXECUTION");
@@ -408,6 +409,13 @@ exports.sendClassNotification = onDocumentCreated(
     }
   }
 );
+
+// Export all functions
+module.exports = {
+  ...aiAgentFunctions,
+  sendFollowNotification,
+  sendClassNotification
+};
 
 /** To Do - when need to implement Global Unsubscribe (Footer Link, "stop all emails" legal requirement)
  * with Mailgun's Suppression Lists, have to switch from smtp to API key and use Mailgun Unsubscribe webhook.
