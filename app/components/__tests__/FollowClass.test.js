@@ -32,7 +32,7 @@ describe("FollowClass Component", () => {
   });
 
   afterEach(() => {
-    cleanup(); // This is the correct way to clean up rendered components
+    cleanup();
     jest.restoreAllMocks();
   });
 
